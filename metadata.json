@@ -1,0 +1,6 @@
+{
+  "name": "JobMatch",
+  "description": "Plateforme SaaS de génération et d'optimisation de CV et lettres de motivation sur-mesure pour les offres d'emploi avec scoring de correspondance ATS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
