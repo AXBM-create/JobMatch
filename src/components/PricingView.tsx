@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Check, Sparkles, Zap, Shield, HelpCircle, ArrowRight, Loader2, CreditCard } from "lucide-react";
 import { User } from "../firebase";
 import { UserProfile, SubscriptionPlan } from "../types";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface PricingViewProps {
   onStartFree: () => void;
@@ -20,6 +21,7 @@ export const PricingView: React.FC<PricingViewProps> = ({
   onOpenAuth,
   onOpenLegalModal
 }) => {
+  const { t } = useLanguage();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   const handleSubscribe = async (plan: "pro" | "executive") => {

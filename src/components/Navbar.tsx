@@ -3,6 +3,8 @@ import { Sparkles, History as HistoryIcon, CreditCard, LayoutDashboard, PlusCirc
 import { ViewState } from "../types";
 import { User, signOut, auth } from "../firebase";
 import { Logo } from "./Logo";
+import { LanguageSelector } from "./LanguageSelector";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface NavbarProps {
   currentView: ViewState;
@@ -19,6 +21,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   user,
   onOpenAuth
 }) => {
+  const { t } = useLanguage();
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -50,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            Dashboard
+            {t("nav_dashboard")}
             {(currentView === "dashboard" || currentView === "editor") && (
               <span className="absolute bottom-0 left-3.5 right-3.5 h-0.5 bg-slate-900 rounded-full" />
             )}
@@ -65,7 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            Tarifs
+            {t("nav_pricing")}
             {currentView === "pricing" && (
               <span className="absolute bottom-0 left-3.5 right-3.5 h-0.5 bg-slate-900 rounded-full" />
             )}
@@ -80,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            Historique
+            {t("nav_history")}
             {currentView === "history" && (
               <span className="absolute bottom-0 left-3.5 right-3.5 h-0.5 bg-slate-900 rounded-full" />
             )}
@@ -88,14 +92,17 @@ export const Navbar: React.FC<NavbarProps> = ({
         </nav>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Language Selector */}
+          <LanguageSelector variant="nav" />
+
           <button
             onClick={onNewApplication}
             id="btn-new-application"
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
           >
             <PlusCircle className="w-3.5 h-3.5 text-emerald-600" />
-            Nouvelle offre
+            {t("nav_new_application")}
           </button>
 
           {user ? (
@@ -112,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <button
                 onClick={handleLogout}
-                title="Se déconnecter"
+                title={t("nav_logout")}
                 className="text-slate-500 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
@@ -122,19 +129,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onOpenAuth}
               id="nav-btn-login"
-              className="text-sm font-medium text-slate-700 hover:text-slate-900 px-3 py-1.5 transition-colors"
+              className="text-sm font-medium text-slate-700 hover:text-slate-900 px-2.5 sm:px-3 py-1.5 transition-colors"
             >
-              Connexion
+              {t("nav_login")}
             </button>
           )}
 
           <button
             onClick={() => onNavigate("dashboard")}
             id="nav-btn-try-free"
-            className="bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-full transition-all shadow-xs hover:shadow active:scale-95 flex items-center gap-1.5"
+            className="bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium px-3.5 sm:px-4 py-2 rounded-full transition-all shadow-xs hover:shadow active:scale-95 flex items-center gap-1.5"
           >
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Créer un CV</span>
+            <span className="hidden sm:inline">{t("nav_create_cv")}</span>
+            <span className="sm:hidden">CV</span>
           </button>
         </div>
       </div>

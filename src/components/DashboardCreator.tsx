@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Sparkles,
   Briefcase,
@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { PRESET_PROFILES, PRESET_JOBS } from "../data/mockData";
 import { CandidateFormInput, JobFormInput, UserProfile } from "../types";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface DashboardCreatorProps {
   onGenerate: (candidate: CandidateFormInput, job: JobFormInput, options: { language: string; tone: string }) => void;
@@ -36,11 +37,19 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
   userProfile,
   onOpenPricing,
 }) => {
+  const { t, language: uiLang } = useLanguage();
   const [selectedProfileId, setSelectedProfileId] = useState("alexandre");
   const [selectedJobId, setSelectedJobId] = useState("innovatetech");
 
-  const [language, setLanguage] = useState<string>("fr");
+  const [language, setLanguage] = useState<string>(uiLang || "fr");
   const [tone, setTone] = useState<string>("Professionnel & Axé Résultats");
+
+  // Keep draft generation language in sync with UI language on switch
+  useEffect(() => {
+    if (uiLang) {
+      setLanguage(uiLang);
+    }
+  }, [uiLang]);
 
   // CV Parsing state
   const [isParsingCV, setIsParsingCV] = useState(false);
@@ -229,13 +238,16 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
       <div className="text-center max-w-3xl mx-auto mb-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold mb-4">
           <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Générateur de candidatures sur-mesure de nouvelle génération</span>
+          <span>{t("hero_badge")}</span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
-          Générez un CV & une Lettre de motivation taillés pour l'offre cible
+          {t("hero_title_1")}
+          <span className="text-emerald-700 underline decoration-emerald-300 decoration-wavy underline-offset-4">
+            {t("hero_title_accent")}
+          </span>
         </h1>
         <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-6">
-          Notre moteur analyse les mots-clés ATS, restructure vos réussites et maximise instantanément votre taux de réponse.
+          {t("hero_subtitle")}
         </p>
 
         {/* Quota & Credits Pill */}
@@ -247,7 +259,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
             <span className="text-slate-300">|</span>
             <span>Crédits :</span>
             <span className="font-bold text-emerald-700">
-              {isUnlimited ? "Illimités" : `${remainingCredits} restante`}
+              {isUnlimited ? t("hero_unlimited") : `${remainingCredits} ${remainingCredits > 1 ? t("hero_credits_left_plural") : t("hero_credits_left")}`}
             </span>
           </div>
 
@@ -256,7 +268,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
               onClick={onOpenPricing}
               className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-3.5 py-1.5 rounded-xl transition-colors shadow-2xs"
             >
-              Passer à Pro (Illimité) →
+              {t("nav_upgrade_pro")} →
             </button>
           )}
         </div>
@@ -269,7 +281,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
             className="text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors shadow-2xs flex items-center gap-2"
           >
             <Layers className="w-4 h-4 text-emerald-600" />
-            <span>Voir un exemple complet (Product Designer @ InnovateTech)</span>
+            <span>{t("hero_sample_btn")} (Product Designer @ InnovateTech)</span>
           </button>
         </div>
       </div>
@@ -279,7 +291,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
         {/* Candidate presets */}
         <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-2xs">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-            1. Profil candidat prédéfini ou personnalisé
+            {t("preset_candidate_title")}
           </label>
           <div className="grid grid-cols-3 gap-2">
             {PRESET_PROFILES.map((p) => (
@@ -303,7 +315,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
         {/* Target job presets */}
         <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-2xs">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-            2. Offre d'emploi cible
+            {t("preset_job_title")}
           </label>
           <div className="grid grid-cols-3 gap-2">
             {PRESET_JOBS.map((j) => (
@@ -333,7 +345,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
           <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
               <User className="w-5 h-5 text-slate-700" />
-              <h2 className="text-lg font-bold text-slate-900">Vos Informations & Parcours</h2>
+              <h2 className="text-lg font-bold text-slate-900">{t("preset_candidate_title")}</h2>
             </div>
 
             {/* Quick Upload CV Drag & Drop banner */}
@@ -357,12 +369,10 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-900">
-                    {isParsingCV ? "Analyse du CV en cours..." : "Glissez-déposez votre CV (PDF, DOCX, TXT)"}
+                    {isParsingCV ? t("upload_cv_parsing") : t("upload_cv_title")}
                   </p>
                   <p className="text-[11px] text-slate-500">
-                    {isParsingCV
-                      ? "Extraction automatique du profil, expériences et compétences..."
-                      : "Extraction multimodale instantanée sans saisie manuelle"}
+                    {t("upload_cv_subtitle")}
                   </p>
                 </div>
               </div>
@@ -375,7 +385,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
                   className="px-3.5 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-800 text-xs font-semibold rounded-lg transition-colors shadow-2xs flex items-center gap-1.5 disabled:opacity-50"
                 >
                   <Upload className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Parcourir</span>
+                  <span>{t("upload_cv_title").split(" ")[0]}...</span>
                 </button>
                 <input
                   ref={fileInputRef}
@@ -400,7 +410,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Nom complet</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_fullname")}</label>
                 <input
                   type="text"
                   required
@@ -411,7 +421,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Titre professionnel</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_jobtitle")}</label>
                 <input
                   type="text"
                   required
@@ -424,7 +434,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Email</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_email")}</label>
                 <input
                   type="email"
                   required
@@ -435,7 +445,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Téléphone</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_phone")}</label>
                 <input
                   type="text"
                   value={candidate.phone}
@@ -445,7 +455,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Localisation</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_location")}</label>
                 <input
                   type="text"
                   value={candidate.location}
@@ -457,7 +467,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Résumé ou accroche professionnelle
+                {t("form_summary")}
               </label>
               <textarea
                 rows={2}
@@ -469,7 +479,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Expériences clés (Postes, entreprises, réalisations)
+                {t("form_experience")}
               </label>
               <textarea
                 rows={4}
@@ -483,7 +493,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Compétences (séparées par des virgules)
+                  {t("form_skills")}
                 </label>
                 <textarea
                   rows={2}
@@ -496,7 +506,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Formations & Diplômes
+                  {t("form_education")}
                 </label>
                 <textarea
                   rows={2}
@@ -513,12 +523,12 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
             <div className="space-y-4">
               <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
                 <Briefcase className="w-5 h-5 text-slate-700" />
-                <h2 className="text-lg font-bold text-slate-900">Détails de l'Offre Visée</h2>
+                <h2 className="text-lg font-bold text-slate-900">{t("preset_job_title")}</h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Intitulé du poste ciblé</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_target_job_title")}</label>
                   <input
                     type="text"
                     required
@@ -529,7 +539,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Nom de l'entreprise</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_target_company")}</label>
                   <input
                     type="text"
                     required
@@ -542,7 +552,7 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Lieu / Adresse</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_target_location")}</label>
                   <input
                     type="text"
                     value={job.companyAddress}
@@ -552,12 +562,12 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Responsable du recrutement</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_target_recruiter")}</label>
                   <input
                     type="text"
                     value={job.hiringManagerName}
                     onChange={(e) => setJob({ ...job, hiringManagerName: e.target.value })}
-                    placeholder="ex: Marie Laurent, Responsable RH"
+                    placeholder={t("form_target_recruiter_placeholder")}
                     className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:bg-white focus:outline-hidden focus:border-slate-900"
                   />
                 </div>
@@ -566,16 +576,16 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-xs font-semibold text-slate-700">
-                    Description & Exigences de l'offre d'emploi
+                    {t("form_target_desc")}
                   </label>
-                  <span className="text-[11px] text-emerald-700 font-medium">Recommandé pour scoring ATS</span>
+                  <span className="text-[11px] text-emerald-700 font-medium">{t("form_target_desc_badge")}</span>
                 </div>
                 <textarea
                   rows={8}
                   required
                   value={job.jobDescription}
                   onChange={(e) => setJob({ ...job, jobDescription: e.target.value })}
-                  placeholder="Collez ici le texte complet de l'offre d'emploi..."
+                  placeholder={t("form_target_desc_placeholder")}
                   className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:bg-white focus:outline-hidden focus:border-slate-900 font-sans leading-relaxed"
                 />
               </div>
@@ -583,30 +593,32 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
               {/* Customization parameters */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Langue de rédaction</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_options_lang")}</label>
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
                     className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 focus:outline-hidden focus:border-slate-900"
                   >
-                    <option value="fr">Français</option>
-                    <option value="en">English (US/UK)</option>
-                    <option value="es">Español</option>
-                    <option value="de">Deutsch</option>
+                    <option value="fr">Français 🇫🇷</option>
+                    <option value="en">English (US/UK) 🇬🇧</option>
+                    <option value="es">Español 🇪🇸</option>
+                    <option value="de">Deutsch 🇩🇪</option>
+                    <option value="it">Italiano 🇮🇹</option>
+                    <option value="pt">Português 🇵🇹</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Tonalité souhaitée</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">{t("form_options_tone")}</label>
                   <select
                     value={tone}
                     onChange={(e) => setTone(e.target.value)}
                     className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 focus:outline-hidden focus:border-slate-900"
                   >
-                    <option value="Professionnel & Axé Résultats">Professionnel & Axé Résultats</option>
-                    <option value="Dynamique & Moderne">Dynamique & Moderne</option>
-                    <option value="Exécutif & Leadership">Exécutif & Leadership</option>
-                    <option value="Concis & Direct">Concis & Direct</option>
+                    <option value="Professionnel & Axé Résultats">{t("tone_professional")}</option>
+                    <option value="Dynamique & Moderne">{t("tone_dynamic")}</option>
+                    <option value="Exécutif & Leadership">{t("tone_executive")}</option>
+                    <option value="Concis & Direct">{t("tone_concise")}</option>
                   </select>
                 </div>
               </div>
@@ -623,11 +635,11 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
             className="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-base shadow-lg hover:shadow-xl transition-all active:scale-98 flex items-center justify-center gap-3 mx-auto disabled:opacity-50"
           >
             <Sparkles className="w-5 h-5 text-emerald-400" />
-            <span>Générer ma candidature personnalisée (CV + Lettre)</span>
+            <span>{isLoading ? t("btn_generating") : t("btn_generate")}</span>
             <ArrowRight className="w-5 h-5 text-slate-400" />
           </button>
           <p className="text-xs text-slate-400 mt-2">
-            Optimisé pour les filtres ATS & recruteurs de {job.companyName || "votre entreprise cible"}.
+            {t("btn_generate_subtext")} {job.companyName || "votre entreprise cible"}.
           </p>
         </div>
       </form>

@@ -25,6 +25,7 @@ import {
   Sliders,
 } from "lucide-react";
 import { ApplicationResult, ExperienceItem } from "../types";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface GeneratedDocsViewProps {
   application: ApplicationResult;
@@ -41,6 +42,7 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
   onOpenRegenerateModal,
   onOpenSendModal,
 }) => {
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [showPhoto, setShowPhoto] = useState(true);
   const [showCompanyLogo, setShowCompanyLogo] = useState(false);
@@ -153,10 +155,10 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 mb-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900" id="docs-main-title">
-            Application Documents Generated
+            {t("docs_title")}
           </h1>
           <p className="text-slate-500 text-sm mt-1">
-            Review and refine your materials before downloading.
+            {t("docs_subtitle")}
           </p>
         </div>
 
@@ -167,10 +169,10 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
             onClick={onOpenScoreModal}
             id="btn-match-score"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs sm:text-sm font-medium hover:bg-emerald-100 transition-colors shadow-2xs"
-            title="Cliquez pour voir le diagnostic détaillé ATS et mots-clés"
+            title="Diagnostic détaillé ATS et mots-clés"
           >
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>{matchScore}% de correspondance</span>
+            <span>{matchScore}% {t("docs_score_match")}</span>
           </button>
 
           {/* Edit Inline Toggle */}
@@ -184,7 +186,7 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
             }`}
           >
             <Edit3 className="w-4 h-4" />
-            <span>{isEditing ? "Mode Édition Actif" : "Edit Inline"}</span>
+            <span>{isEditing ? t("docs_edit_mode_active") : t("docs_edit_inline")}</span>
           </button>
 
           {/* Regenerate with AI */}
@@ -194,7 +196,7 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs sm:text-sm font-medium transition-colors"
           >
             <Sparkles className="w-4 h-4 text-emerald-600" />
-            <span>Regenerate</span>
+            <span>{t("docs_regenerate")}</span>
           </button>
 
           {/* Send Application */}
@@ -204,7 +206,7 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs sm:text-sm font-medium transition-colors"
           >
             <Mail className="w-4 h-4 text-slate-600" />
-            <span>Send</span>
+            <span>{t("docs_send")}</span>
           </button>
 
           {/* Download PDF (Emerald Primary CTA) */}
@@ -214,7 +216,7 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
             className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#10b981] hover:bg-[#059669] text-white text-xs sm:text-sm font-medium transition-all shadow-sm active:scale-95"
           >
             <Download className="w-4 h-4" />
-            <span>Download PDF</span>
+            <span>{t("docs_download_pdf")}</span>
           </button>
         </div>
       </div>
