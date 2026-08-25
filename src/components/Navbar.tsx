@@ -1,6 +1,6 @@
 import React from "react";
 import { Sparkles, History as HistoryIcon, CreditCard, LayoutDashboard, PlusCircle, User as UserIcon, LogOut } from "lucide-react";
-import { ViewState } from "../types";
+import { ViewState, UserProfile } from "../types";
 import { User, signOut, auth } from "../firebase";
 import { Logo } from "./Logo";
 import { LanguageSelector } from "./LanguageSelector";
@@ -11,6 +11,7 @@ interface NavbarProps {
   onNavigate: (view: ViewState) => void;
   onNewApplication: () => void;
   user: User | null;
+  userProfile?: UserProfile | null;
   onOpenAuth: () => void;
 }
 
@@ -19,6 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate, 
   onNewApplication,
   user,
+  userProfile,
   onOpenAuth
 }) => {
   const { t } = useLanguage();
@@ -40,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="cursor-pointer transition-transform duration-200 active:scale-98"
           id="nav-logo"
         >
-          <Logo size="md" />
+          <Logo size="md" plan={userProfile?.plan || "starter"} />
         </div>
 
         {/* Center / Right Navigation */}

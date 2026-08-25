@@ -13,6 +13,11 @@ const PORT = 3000;
 // Middleware - raw body for stripe webhook if needed
 app.use(express.json({ limit: "15mb" }));
 
+// Health check endpoint
+app.get("/api/health", (_req: Request, res: Response) => {
+  res.json({ status: "ok", service: "JobMatch AI", time: new Date().toISOString() });
+});
+
 // Lazy initialize Stripe client
 let stripeClient: Stripe | null = null;
 function getStripe(): Stripe | null {

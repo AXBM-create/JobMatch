@@ -25,7 +25,7 @@ import {
 } from "./services/firestoreService";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<ViewState>("editor");
+  const [currentView, setCurrentView] = useState<ViewState>("dashboard");
   const [currentApplication, setCurrentApplication] = useState<ApplicationResult>(DEFAULT_ALEXANDRE_DUBOIS);
   const [history, setHistory] = useState<ApplicationResult[]>([DEFAULT_ALEXANDRE_DUBOIS]);
   const [isLoading, setIsLoading] = useState(false);
@@ -265,6 +265,7 @@ export default function App() {
             onNavigate={(view) => setCurrentView(view)}
             onNewApplication={() => setCurrentView("dashboard")}
             user={user}
+            userProfile={userProfile}
             onOpenAuth={() => setShowAuthModal(true)}
           />
 

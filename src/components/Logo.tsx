@@ -1,4 +1,6 @@
 import React from "react";
+import { SubscriptionPlan } from "../types";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface LogoProps {
   size?: "sm" | "md" | "lg" | "xl";
@@ -6,6 +8,7 @@ interface LogoProps {
   showBadge?: boolean;
   className?: string;
   variant?: "dark" | "light";
+  plan?: SubscriptionPlan | "free" | "starter" | "pro" | "executive" | string;
 }
 
 export const Logo: React.FC<LogoProps> = ({
@@ -14,7 +17,17 @@ export const Logo: React.FC<LogoProps> = ({
   showBadge = true,
   className = "",
   variant = "dark",
+  plan = "starter",
 }) => {
+  let t: ((key: any) => string) | null = null;
+  try {
+    const langContext = useLanguage();
+    t = langContext.t;
+  } catch {
+    // If rendered outside LanguageProvider
+    t = null;
+  }
+
   const iconSizes = {
     sm: "w-7 h-7",
     md: "w-9 h-9",
@@ -28,6 +41,30 @@ export const Logo: React.FC<LogoProps> = ({
     lg: "text-2xl",
     xl: "text-3xl",
   };
+
+  const getBadgeDetails = (userPlan?: string) => {
+    const p = (userPlan || "starter").toLowerCase();
+    if (p === "executive") {
+      return {
+        label: "Executive",
+        className: "bg-purple-50 text-purple-700 border-purple-200/80",
+      };
+    }
+    if (p === "pro") {
+      return {
+        label: "Pro",
+        className: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
+      };
+    }
+    // Starter / Free
+    const freeLabel = t ? t("plan_starter_price") || "Gratuit" : "Gratuit";
+    return {
+      label: freeLabel,
+      className: "bg-slate-100 text-slate-600 border-slate-200",
+    };
+  };
+
+  const badge = getBadgeDetails(plan);
 
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
@@ -97,8 +134,8 @@ export const Logo: React.FC<LogoProps> = ({
               JobMatch
             </span>
             {showBadge && (
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 uppercase tracking-wide">
-                Pro
+              <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold border uppercase tracking-wide transition-colors ${badge.className}`}>
+                {badge.label}
               </span>
             )}
           </div>
