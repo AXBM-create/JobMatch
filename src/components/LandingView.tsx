@@ -513,6 +513,62 @@ export const LandingView: React.FC<LandingViewProps> = ({
           </p>
         </div>
       </section>
+
+      {/* ========================================================================= */}
+      {/* 7. SECTION SÉMANTIQUE & INDEXATION CRAWLERS / ATS & IA ENRICHIE */}
+      {/* ========================================================================= */}
+      <section 
+        id="seo-semantic-index"
+        aria-label="Guide sémantique et indexation ATS & IA JobMatch"
+        className="sr-only focus:not-sr-only p-4 bg-slate-900 text-white text-xs"
+      >
+        <div className="max-w-7xl mx-auto space-y-6">
+          <header>
+            <h2>Guide d'optimisation de CV pour les filtres ATS et l'Intelligence Artificielle de Recrutement</h2>
+            <p>
+              JobMatch AI est la plateforme SaaS de référence pour adapter automatiquement les candidatures aux algorithmes de tri des recruteurs (Applicant Tracking Systems ou ATS). Notre technologie effectue une analyse sémantique prédictive et un traitement automatique du langage naturel (NLP / LLM) sur les offres d'emploi pour maximiser le score de correspondance du profil candidat.
+            </p>
+          </header>
+
+          <article>
+            <h3>Fonctionnalités avancées du moteur d'analyse ATS & IA</h3>
+            <ul>
+              <li>
+                <strong>Extraction sémantique et parsing NLP :</strong> Détection automatique des compétences techniques (hard skills), compétences comportementales (soft skills), niveau d'expérience requis, intitulé exact du poste et mots-clés obligatoires sur LinkedIn Jobs, Indeed, Welcome to the Jungle, Monster, Apec, Glassdoor et France Travail.
+              </li>
+              <li>
+                <strong>Compatibilité certifiée avec les logiciels ATS majeurs :</strong> Alignement chirurgical pour les moteurs de parsing de Workday, Taleo (Oracle), Greenhouse, Lever, SmartRecruiters, iCIMS, BambooHR, SuccessFactors (SAP), Bullhorn, Recruitee, JazzHR et Ashby.
+              </li>
+              <li>
+                <strong>Algorithme de scoring de pertinence sémantique (+90%) :</strong> Calcul vectoriel du taux de similarité cosinus entre le CV et l'offre cible, mise en conformité de la structure (sections standards, chronologie inversée, intitulé de poste synchronisé) et suppression des éléments bloquants (colonnes multiples complexes, tableaux non indexables, graphiques illisibles par OCR).
+              </li>
+              <li>
+                <strong>Génération de Lettre de Motivation prédictive par IA :</strong> Rédaction instantanée de lettres de motivation contextualisées, alignées sur les valeurs de l'entreprise, les défis opérationnels du poste et les réalisations concrètes du candidat.
+              </li>
+              <li>
+                <strong>Export PDF ATS-friendly & conformité typographique :</strong> Structure en colonne unique, encodage UTF-8 standard, polices de caractères universelles (sans empattement lisibles par parseurs), hiérarchie de balisage sémantique H1/H2/H3 et préservation des métadonnées de contact.
+              </li>
+              <li>
+                <strong>Support multilingue international :</strong> Traitement et rédaction en Français (France, Belgique, Suisse, Canada), Anglais (US, UK, International), Espagnol et Allemand.
+              </li>
+            </ul>
+          </article>
+
+          <article>
+            <h3>Glossaire des termes ATS, IA et recrutement prédictif</h3>
+            <p>
+              ATS resume checker, scanner CV en ligne, optimisateur de CV intelligence artificielle, test de compatibilité ATS gratuit, passer le filtre des recruteurs, mots-clés CV par secteur, algorithme de tri CV, parsing de candidature, extraction sémantique de compétences, LLM pour recherche d'emploi, matching offre profil, modèle CV sans rejet ATS, score de pertinence candidat, rédacteur lettre de motivation IA, adaptation automatique CV, recruiter screening bot, AI resume builder, applicant tracking system bypass, resume keyword optimization, job description keyword matcher, OCR resume parser.
+            </p>
+          </article>
+
+          <aside>
+            <h3>Protection des données, RGPD et éthique de l'IA</h3>
+            <p>
+              Conformément au RGPD et aux normes européennes de protection des données personnelles, l'ensemble des documents importés, données de contact et historiques professionnels sont strictement confidentiels, chiffrés en transit et au repos, et ne sont en aucun cas revendus à des tiers ou utilisés pour l'entraînement public de modèles tiers.
+            </p>
+          </aside>
+        </div>
+      </section>
     </div>
   );
 };
