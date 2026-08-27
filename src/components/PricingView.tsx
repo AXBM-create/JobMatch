@@ -1,5 +1,28 @@
+/**
+ * @file PricingView.tsx
+ * @description ÉCRAN 6 : Page Tarifs & Abonnements JobMatch
+ * 
+ * Choix Techniques & UX :
+ * - Toggle Annuel/Mensuel : Calcul dynamique de la réduction (-25%) pour inciter à l'engagement.
+ * - Hiérarchie Visuelle Forte : Plan Pro (milieu) mis en avant avec badge "Le plus populaire", bordure `#1A3A5C` et fond contrasté.
+ * - Tableau Comparatif Détaillé : Liste explicite des fonctionnalités avec icônes de validation (Check) et indisponibilité (X).
+ * - Mini FAQ Intégrée : Traite les objections courantes (résiliation en 1 clic, remboursement, sécurité Stripe).
+ */
+
 import React, { useState } from "react";
-import { Check, Sparkles, Zap, Shield, HelpCircle, ArrowRight, Loader2, CreditCard } from "lucide-react";
+import {
+  Check,
+  X,
+  Sparkles,
+  Zap,
+  Shield,
+  HelpCircle,
+  ArrowRight,
+  Loader2,
+  CreditCard,
+  Lock,
+  Star
+} from "lucide-react";
 import { User } from "../firebase";
 import { UserProfile, SubscriptionPlan } from "../types";
 import { useLanguage } from "../i18n/LanguageContext";
@@ -13,15 +36,16 @@ interface PricingViewProps {
   onOpenLegalModal?: (tab: "cgv" | "privacy" | "mentions") => void;
 }
 
-export const PricingView: React.FC<PricingViewProps> = ({ 
+export const PricingView: React.FC<PricingViewProps> = ({
   onStartFree,
   user,
   userProfile,
   onUpgradePlan,
   onOpenAuth,
-  onOpenLegalModal
+  onOpenLegalModal,
 }) => {
   const { t } = useLanguage();
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   const handleSubscribe = async (plan: "pro" | "executive") => {
@@ -39,6 +63,7 @@ export const PricingView: React.FC<PricingViewProps> = ({
           planId: plan,
           userId: user.uid,
           userEmail: user.email,
+          billingCycle,
           successUrl: window.location.origin + "?payment_success=true&plan=" + plan,
           cancelUrl: window.location.origin + "?payment_canceled=true",
         }),
@@ -48,7 +73,6 @@ export const PricingView: React.FC<PricingViewProps> = ({
       if (data.url) {
         window.location.href = data.url;
       } else {
-        // Simulation or direct upgrade
         if (onUpgradePlan) onUpgradePlan(plan);
       }
     } catch (e) {
@@ -59,233 +83,262 @@ export const PricingView: React.FC<PricingViewProps> = ({
     }
   };
 
-  const handleOpenCustomerPortal = async () => {
-    if (!userProfile?.stripeCustomerId) {
-      alert("Votre abonnement est actif. Contactez le support ou gérez votre compte depuis votre espace.");
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/create-customer-portal", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customerId: userProfile.stripeCustomerId,
-          returnUrl: window.location.origin,
-        }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (e) {
-      console.error("Portal error:", e);
-    }
-  };
-
   const currentPlan = userProfile?.plan || "starter";
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-      {/* Title */}
-      <div className="text-center max-w-2xl mx-auto mb-12">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
-          Tarification Simple et Transparente
+      {/* Title & Subtitle */}
+      <div className="text-center max-w-2xl mx-auto mb-10">
+        <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          Investis dans ta carrière
+        </span>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A3A5C] tracking-tight mt-3 mb-3">
+          Un tarif adapté à ta recherche
         </h1>
-        <p className="text-slate-600 text-sm sm:text-base">
-          Multipliez vos entretiens d'embauche grâce à nos algorithmes de ciblage calibrés pour les ATS modernes.
+        <p className="text-sm sm:text-base text-[#6B7280]">
+          Multiplie tes entretiens d'embauche grâce à nos algorithmes de ciblage calibrés pour les ATS modernes.
         </p>
 
-        {userProfile && (
-          <div className="inline-flex items-center gap-2 mt-4 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs text-slate-700">
-            <span>Votre formule actuelle :</span>
-            <span className="font-bold text-slate-900 capitalize">{currentPlan}</span>
-            {userProfile.subscriptionStatus === "active" && (
-              <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                Actif
-              </span>
-            )}
-          </div>
-        )}
+        {/* Toggle Mensuel / Annuel */}
+        <div className="flex items-center justify-center gap-3 mt-6">
+          <span className={`text-xs sm:text-sm font-semibold ${billingCycle === "monthly" ? "text-[#1A3A5C]" : "text-slate-500"}`}>
+            Mensuel
+          </span>
+
+          <button
+            type="button"
+            onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
+            className="relative inline-flex h-7 w-14 items-center rounded-full bg-[#1A3A5C] transition-colors cursor-pointer"
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
+                billingCycle === "yearly" ? "translate-x-8" : "translate-x-1"
+              }`}
+            />
+          </button>
+
+          <span className={`text-xs sm:text-sm font-semibold flex items-center gap-1.5 ${billingCycle === "yearly" ? "text-[#1A3A5C]" : "text-slate-500"}`}>
+            <span>Annuel</span>
+            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+              -25% d'économie
+            </span>
+          </span>
+        </div>
       </div>
 
-      {/* Pricing Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        {/* Starter Plan */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all">
+      {/* 3 Pricing Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch mb-16">
+        
+        {/* ================= CARD 1 : GRATUIT (STARTER) ================= */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 flex flex-col justify-between shadow-[0_2px_8px_rgba(0,0,0,0.04)] relative">
           <div>
-            <h3 className="font-bold text-lg text-slate-900 mb-1">Starter Gratuit</h3>
-            <p className="text-xs text-slate-500 mb-4">Pour tester l'efficacité de la plateforme sur une offre.</p>
-            <div className="mb-6">
-              <span className="text-4xl font-black text-slate-900">0€</span>
-              <span className="text-xs text-slate-500"> / pour toujours</span>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Découverte
+              </span>
+              {currentPlan === "starter" && (
+                <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                  Plan actuel
+                </span>
+              )}
             </div>
 
-            <ul className="space-y-3 text-xs text-slate-700 mb-8">
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>1 candidature complète (CV + Lettre)</span>
+            <h3 className="text-xl font-bold text-[#1A3A5C] mb-1">Gratuit</h3>
+            <p className="text-xs text-[#6B7280] mb-4">
+              Idéal pour tester la puissance de JobMatch sur une première offre.
+            </p>
+
+            <div className="flex items-baseline gap-1 mb-6">
+              <span className="text-3xl sm:text-4xl font-extrabold text-[#1A3A5C]">0€</span>
+              <span className="text-xs text-[#6B7280]">/ sans CB</span>
+            </div>
+
+            {/* Features List */}
+            <ul className="space-y-3 text-xs sm:text-sm text-slate-700 border-t border-slate-100 pt-6 mb-8">
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>1 candidature complète offerte (CV + Lettre)</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>Score de correspondance & diagnostic ATS</span>
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Score de correspondance ATS standard</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>Export PDF standard</span>
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Édition du texte de base</span>
+              </li>
+              <li className="flex items-center gap-2.5 text-slate-400">
+                <X className="w-4 h-4 text-slate-300 shrink-0" />
+                <span>Générations illimitées</span>
+              </li>
+              <li className="flex items-center gap-2.5 text-slate-400">
+                <X className="w-4 h-4 text-slate-300 shrink-0" />
+                <span>Export PDF HD sans filigrane</span>
               </li>
             </ul>
           </div>
 
           <button
             onClick={onStartFree}
-            className={`w-full py-2.5 px-4 rounded-xl border font-semibold text-xs transition-colors ${
-              currentPlan === "starter"
-                ? "bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200"
-                : "border-slate-200 text-slate-800 hover:bg-slate-50"
-            }`}
+            className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-[#1A3A5C] font-semibold text-xs sm:text-sm rounded-lg transition-colors cursor-pointer"
           >
-            {currentPlan === "starter" ? "Commencer à rédiger" : "Formule de base"}
+            Commencer gratuitement
           </button>
         </div>
 
-        {/* Pro Plan (Highlighted) */}
-        <div className="bg-slate-900 text-white rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-xl relative ring-2 ring-emerald-500">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-slate-950 px-3 py-0.5 rounded-full text-[11px] font-extrabold uppercase tracking-wide">
-            Le Plus Populaire
+        {/* ================= CARD 2 : MENSUEL PRO (LE PLUS POPULAIRE) ================= */}
+        <div className="bg-[#1A3A5C] text-white rounded-2xl border-2 border-emerald-400 p-6 sm:p-8 flex flex-col justify-between shadow-[0_8px_30px_rgba(26,58,92,0.18)] relative scale-100 md:scale-105 z-10">
+          {/* Badge Populaire */}
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-bold px-3 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+            <Star className="w-3 h-3 fill-current" />
+            <span>LE PLUS POPULAIRE</span>
           </div>
 
           <div>
-            <h3 className="font-bold text-lg mb-1 flex items-center gap-1.5">
-              <span>Pro Candidate</span>
-              <Sparkles className="w-4 h-4 text-emerald-400" />
-            </h3>
-            <p className="text-xs text-slate-400 mb-4">Pour les candidats en recherche active ciblée.</p>
-            <div className="mb-6">
-              <span className="text-4xl font-black">19€</span>
-              <span className="text-xs text-slate-400"> / mois</span>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                Recherche Active
+              </span>
+              {currentPlan === "pro" && (
+                <span className="text-[10px] font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">
+                  Actif
+                </span>
+              )}
             </div>
 
-            <ul className="space-y-3 text-xs text-slate-300 mb-8">
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>Candidatures illimitées haute fidélité</span>
+            <h3 className="text-xl font-bold text-white mb-1">Pro Illimité</h3>
+            <p className="text-xs text-slate-300 mb-4">
+              La solution complète pour postuler rapidement à toutes les opportunités.
+            </p>
+
+            <div className="flex items-baseline gap-1 mb-6">
+              <span className="text-3xl sm:text-4xl font-extrabold text-white">
+                {billingCycle === "yearly" ? "14,90€" : "19,90€"}
+              </span>
+              <span className="text-xs text-slate-300">/ mois</span>
+            </div>
+
+            {/* Features List */}
+            <ul className="space-y-3 text-xs sm:text-sm text-slate-200 border-t border-white/10 pt-6 mb-8">
+              <li className="flex items-center gap-2.5 font-semibold text-white">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Candidatures & CVs 100% illimités</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>Éditeur de document en direct A4 haute fidélité</span>
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Optimisation ATS maximale (+90% score)</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>Régénération et consignes de style sur-mesure</span>
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Édition inline + régénération par section</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>Support multilingue (FR, EN, ES, DE)</span>
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Téléchargement PDF HD sans filigrane</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Support prioritaire par email 7j/7</span>
               </li>
             </ul>
           </div>
 
-          {currentPlan === "pro" ? (
-            <button
-              onClick={handleOpenCustomerPortal}
-              className="w-full py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2"
-            >
-              <CreditCard className="w-4 h-4" />
-              <span>Gérer mon abonnement Pro</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => handleSubscribe("pro")}
-              disabled={loadingPlan === "pro"}
-              className="w-full py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all shadow-md active:scale-98 disabled:opacity-60 flex items-center justify-center gap-2"
-            >
-              {loadingPlan === "pro" ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <>
-                  <span>Activer l'accès Pro</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          )}
+          <button
+            onClick={() => handleSubscribe("pro")}
+            disabled={loadingPlan === "pro"}
+            className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+          >
+            {loadingPlan === "pro" ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                <span>Activer l'accès illimité</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
         </div>
 
-        {/* Executive Plan */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all">
+        {/* ================= CARD 3 : PACK CRÉDITS (EXECUTIVE) ================= */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 flex flex-col justify-between shadow-[0_2px_8px_rgba(0,0,0,0.04)] relative">
           <div>
-            <h3 className="font-bold text-lg text-slate-900 mb-1">Executive Pass</h3>
-            <p className="text-xs text-slate-500 mb-4">Pour les profils C-Level, Managers et Freelances.</p>
-            <div className="mb-6">
-              <span className="text-4xl font-black text-slate-900">39€</span>
-              <span className="text-xs text-slate-500"> / mois</span>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Usage Ponctuel
+              </span>
+              {currentPlan === "executive" && (
+                <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                  Plan actuel
+                </span>
+              )}
             </div>
 
-            <ul className="space-y-3 text-xs text-slate-700 mb-8">
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>Tout ce qui est inclus dans Pro</span>
+            <h3 className="text-xl font-bold text-[#1A3A5C] mb-1">Pack 15 Candidatures</h3>
+            <p className="text-xs text-[#6B7280] mb-4">
+              Sans abonnement ni engagement, pour cibler des offres très spécifiques.
+            </p>
+
+            <div className="flex items-baseline gap-1 mb-6">
+              <span className="text-3xl sm:text-4xl font-extrabold text-[#1A3A5C]">29€</span>
+              <span className="text-xs text-[#6B7280]">/ paiement unique</span>
+            </div>
+
+            {/* Features List */}
+            <ul className="space-y-3 text-xs sm:text-sm text-slate-700 border-t border-slate-100 pt-6 mb-8">
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Pack de 15 candidatures sur-mesure</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>Optimisation de profil LinkedIn et bio</span>
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Crédits valables à vie sans expiration</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>Simulateur interactif d'entretien d'embauche</span>
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Tous les exports PDF HD inclus</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>Accompagnement prioritaire 7j/7</span>
+              <li className="flex items-center gap-2.5">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Édition complète et sauvegarde cloud</span>
               </li>
             </ul>
           </div>
 
-          {currentPlan === "executive" ? (
-            <button
-              onClick={handleOpenCustomerPortal}
-              className="w-full py-2.5 px-4 rounded-xl border border-slate-900 bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
-            >
-              <CreditCard className="w-4 h-4" />
-              <span>Gérer mon abonnement Executive</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => handleSubscribe("executive")}
-              disabled={loadingPlan === "executive"}
-              className="w-full py-2.5 px-4 rounded-xl border border-slate-900 bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
-            >
-              {loadingPlan === "executive" ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <span>Choisir Executive</span>
-              )}
-            </button>
-          )}
+          <button
+            onClick={() => handleSubscribe("executive")}
+            disabled={loadingPlan === "executive"}
+            className="w-full py-3 bg-white hover:bg-slate-50 text-[#1A3A5C] border border-[#1A3A5C] font-semibold text-xs sm:text-sm rounded-lg transition-colors cursor-pointer flex items-center justify-center gap-2"
+          >
+            {loadingPlan === "executive" ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <span>Acheter le pack 15 crédits</span>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Trust & Guarantee */}
-      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-6 text-center max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4">
-        <Shield className="w-8 h-8 text-emerald-600 flex-shrink-0" />
-        <div className="text-left">
-          <h4 className="font-bold text-sm text-slate-900">Garantie 100% Satisfait ou Remboursé</h4>
-          <p className="text-xs text-slate-500">
-            Testez sereinement pendant 14 jours. Annulation en 1 clic sans condition.{" "}
-            {onOpenLegalModal && (
-              <button
-                type="button"
-                onClick={() => onOpenLegalModal("cgv")}
-                className="text-emerald-700 underline font-medium hover:text-emerald-800 ml-1"
-              >
-                Voir nos CGV
-              </button>
-            )}
-          </p>
+      {/* Mini FAQ Pricing */}
+      <div className="bg-slate-50 rounded-2xl p-6 sm:p-8 border border-slate-200 max-w-3xl mx-auto">
+        <h3 className="text-lg font-bold text-[#1A3A5C] mb-4 text-center">
+          Questions sur nos abonnements
+        </h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-700">
+          <div>
+            <h4 className="font-semibold text-slate-900 mb-1">Puis-je annuler à tout moment ?</h4>
+            <p className="text-slate-600 leading-relaxed">
+              Oui, sans aucun frais. Vous pouvez résilier en un clic depuis votre espace personnel ou via le portail Stripe.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-slate-900 mb-1">Le paiement est-il sécurisé ?</h4>
+            <p className="text-slate-600 leading-relaxed">
+              Nous utilisons Stripe avec chiffrement SSL 256-bit. Aucune coordonnée bancaire ne transite par nos serveurs.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
 };
-

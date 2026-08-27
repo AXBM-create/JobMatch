@@ -18,6 +18,65 @@ app.get("/api/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", service: "JobMatch AI", time: new Date().toISOString() });
 });
 
+// Dynamic Sitemap.xml generation for Search Engines (SEO)
+app.get("/sitemap.xml", (_req: Request, res: Response) => {
+  const currentDate = new Date().toISOString().split("T")[0];
+  const baseUrl = "https://jobmatch.ai";
+
+  const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>${baseUrl}/</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/?lang=en" />
+  </url>
+  <url>
+    <loc>${baseUrl}/#how-it-works</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/#pricing</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/#faq</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>`;
+
+  res.setHeader("Content-Type", "application/xml; charset=utf-8");
+  res.setHeader("Cache-Control", "public, max-age=86400"); // 24h cache
+  res.send(sitemapXml.trim());
+});
+
+// Dynamic Robots.txt for Crawler Indexation Management (SEO)
+app.get("/robots.txt", (_req: Request, res: Response) => {
+  const robotsTxt = `User-agent: *
+Allow: /
+Allow: /#how-it-works
+Allow: /#pricing
+Allow: /#faq
+Disallow: /api/
+Disallow: /editor/
+Disallow: /history/
+
+Sitemap: https://jobmatch.ai/sitemap.xml
+`;
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.setHeader("Cache-Control", "public, max-age=86400");
+  res.send(robotsTxt.trim());
+});
+
 // Lazy initialize Stripe client
 let stripeClient: Stripe | null = null;
 function getStripe(): Stripe | null {

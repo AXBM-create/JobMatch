@@ -114,4 +114,4 @@ export interface UserProfile {
   createdAt: string;
 }
 
-export type ViewState = "dashboard" | "loading" | "editor" | "history" | "pricing";
+export type ViewState = "landing" | "onboarding" | "dashboard" | "loading" | "editor" | "history" | "pricing";

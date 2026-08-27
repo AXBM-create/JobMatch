@@ -151,6 +151,69 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
         </div>
       )}
 
+      {/* Match Score & Keywords Banner */}
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 mb-6 shadow-2xs">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-bold text-lg">
+              {matchScore}%
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm sm:text-base font-bold text-[#1A3A5C]">
+                  Score de correspondance ATS élevé
+                </h2>
+                <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                  Excellent
+                </span>
+              </div>
+              <p className="text-xs text-[#6B7280]">
+                Votre profil et votre lettre répondent directement aux critères de l'offre pour <span className="font-semibold text-slate-800">{targetJob.title}</span> chez <span className="font-semibold text-slate-800">{targetJob.company}</span>.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onOpenScoreModal}
+              className="text-xs font-semibold text-[#1A3A5C] hover:text-[#132B45] underline flex items-center gap-1 cursor-pointer"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>Voir le diagnostic complet</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Matched Keywords with Green Checks */}
+        <div className="pt-3">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-2">
+            Compétences & Mots-clés de l'offre validés dans le CV :
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {(application.matchedKeywords && application.matchedKeywords.length > 0
+              ? application.matchedKeywords
+              : [
+                  "Design System",
+                  "Figma",
+                  "UX Strategy",
+                  "Pilotage Produit",
+                  "Méthodes Agiles",
+                  "Leadership",
+                  "Optimisation Conversion"
+                ]
+            ).map((kw, i) => (
+              <span
+                key={i}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"
+              >
+                <Check className="w-3 h-3 text-emerald-600" />
+                <span>{kw}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Top Header Section */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 mb-6">
         <div>

@@ -3,6 +3,7 @@ import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { GeneratedDocsView } from "./components/GeneratedDocsView";
 import { AILoadingScreen } from "./components/AILoadingScreen";
+import { LandingView } from "./components/LandingView";
 import { DashboardCreator } from "./components/DashboardCreator";
 import { HistoryView } from "./components/HistoryView";
 import { PricingView } from "./components/PricingView";
@@ -25,7 +26,7 @@ import {
 } from "./services/firestoreService";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<ViewState>("dashboard");
+  const [currentView, setCurrentView] = useState<ViewState>("landing");
   const [currentApplication, setCurrentApplication] = useState<ApplicationResult>(DEFAULT_ALEXANDRE_DUBOIS);
   const [history, setHistory] = useState<ApplicationResult[]>([DEFAULT_ALEXANDRE_DUBOIS]);
   const [isLoading, setIsLoading] = useState(false);
@@ -271,6 +272,17 @@ export default function App() {
 
           {/* Main Body */}
           <main className="flex-1 w-full">
+            {currentView === "landing" && (
+              <LandingView
+                onStart={() => setCurrentView("dashboard")}
+                onViewPricing={() => setCurrentView("pricing")}
+                onQuickViewSample={() => {
+                  setCurrentApplication(DEFAULT_ALEXANDRE_DUBOIS);
+                  setCurrentView("editor");
+                }}
+              />
+            )}
+
             {currentView === "editor" && (
               <GeneratedDocsView
                 application={currentApplication}
@@ -281,7 +293,7 @@ export default function App() {
               />
             )}
 
-            {currentView === "dashboard" && (
+            {(currentView === "dashboard" || currentView === "onboarding") && (
               <DashboardCreator
                 onGenerate={handleGenerate}
                 isLoading={isLoading}
