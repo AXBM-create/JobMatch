@@ -29,7 +29,7 @@ import {
   Info,
   X
 } from "lucide-react";
-import { ApplicationResult, ExperienceItem } from "../types";
+import { ApplicationResult, ExperienceItem, UserProfile } from "../types";
 import { useLanguage } from "../i18n/LanguageContext";
 import { 
   generateJobApplicationMetadata, 
@@ -40,18 +40,22 @@ import {
 
 interface GeneratedDocsViewProps {
   application: ApplicationResult;
+  userProfile?: UserProfile | null;
   onUpdateApplication: (updated: ApplicationResult) => void;
   onOpenScoreModal: () => void;
   onOpenRegenerateModal: () => void;
   onOpenSendModal: () => void;
+  onOpenPricing?: () => void;
 }
 
 export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
   application,
+  userProfile,
   onUpdateApplication,
   onOpenScoreModal,
   onOpenRegenerateModal,
   onOpenSendModal,
+  onOpenPricing,
 }) => {
   const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
@@ -190,6 +194,38 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
       )}
 
       {/* Match Score & Keywords Banner */}
+      {/* 0 Credits Remaining Paywall Banner for Free Tier */}
+      {(!userProfile || userProfile.plan === "starter") && (
+        <div className="bg-gradient-to-r from-[#1A3A5C] to-slate-800 text-white rounded-2xl p-4 sm:p-5 mb-6 shadow-md border border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-400 shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  Offre Spéciale Candidat
+                </span>
+                <span className="text-[10px] font-bold bg-amber-400/20 text-amber-300 px-2 py-0.2 rounded border border-amber-400/30">
+                  1er essai gratuit terminé
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-200 mt-0.5">
+                Passez à <strong>JobMatch Pro</strong> pour générer des CV illimités, débloquer les formats HD et postuler 5x plus vite.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={onOpenPricing}
+            className="shrink-0 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
+          >
+            <span>Passer en Pro (19€/mois)</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 mb-6 shadow-2xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-100">
           <div className="flex items-center gap-3">

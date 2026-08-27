@@ -13,6 +13,7 @@ import { SendApplicationModal } from "./components/SendApplicationModal";
 import { AuthModal } from "./components/AuthModal";
 import { LegalModal } from "./components/LegalModal";
 import { UpgradeModal } from "./components/UpgradeModal";
+import { FirstGenerationSuccessModal } from "./components/FirstGenerationSuccessModal";
 import { DEFAULT_ALEXANDRE_DUBOIS } from "./data/mockData";
 import { ApplicationResult, CandidateFormInput, JobFormInput, ViewState, UserProfile, SubscriptionPlan } from "./types";
 import { auth, onAuthStateChanged, User } from "./firebase";
@@ -46,6 +47,7 @@ export default function App() {
   const [showRegenerateModal, setShowRegenerateModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showFirstGenSuccessModal, setShowFirstGenSuccessModal] = useState(false);
   const [legalModalTab, setLegalModalTab] = useState<"cgv" | "privacy" | "mentions" | null>(null);
 
   // Loading state tracking
@@ -249,6 +251,13 @@ export default function App() {
         saveHistory(updatedHistory, generatedData);
         setIsLoading(false);
         setCurrentView("editor");
+
+        // Automatically prompt to upgrade right after the first free trial generation
+        if (!userProfile || userProfile.plan === "starter") {
+          setTimeout(() => {
+            setShowFirstGenSuccessModal(true);
+          }, 800);
+        }
       }, remainingTime);
     } catch (error) {
       console.error("Error generating application:", error);
@@ -312,10 +321,12 @@ export default function App() {
             {currentView === "editor" && (
               <GeneratedDocsView
                 application={currentApplication}
+                userProfile={userProfile}
                 onUpdateApplication={handleUpdateCurrentApplication}
                 onOpenScoreModal={() => setShowScoreModal(true)}
                 onOpenRegenerateModal={() => setShowRegenerateModal(true)}
                 onOpenSendModal={() => setShowSendModal(true)}
+                onOpenPricing={() => setCurrentView("pricing")}
               />
             )}
 
@@ -373,6 +384,16 @@ export default function App() {
             userProfile={userProfile}
             onSuccessUpgrade={handleUpgradePlan}
             onOpenAuth={() => setShowAuthModal(true)}
+          />
+
+          <FirstGenerationSuccessModal
+            isOpen={showFirstGenSuccessModal}
+            onClose={() => setShowFirstGenSuccessModal(false)}
+            onUpgrade={handleUpgradePlan}
+            onOpenPricing={() => setCurrentView("pricing")}
+            matchScore={currentApplication.matchScore}
+            jobTitle={currentApplication.targetJob.title}
+            companyName={currentApplication.targetJob.company}
           />
 
           <LegalModal
