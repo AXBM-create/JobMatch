@@ -31,26 +31,45 @@ app.get("/sitemap.xml", (_req: Request, res: Response) => {
     <lastmod>${currentDate}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/?lang=fr" />
     <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="${baseUrl}/?lang=es" />
+    <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/" />
+  </url>
+  <url>
+    <loc>${baseUrl}/onboarding</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/onboarding?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/onboarding?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="${baseUrl}/onboarding?lang=es" />
+    <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/onboarding?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/onboarding" />
+  </url>
+  <url>
+    <loc>${baseUrl}/pricing</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/pricing?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/pricing?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="${baseUrl}/pricing?lang=es" />
+    <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/pricing?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/pricing" />
   </url>
   <url>
     <loc>${baseUrl}/#how-it-works</loc>
     <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/#pricing</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>${baseUrl}/#faq</loc>
     <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>`;
 
