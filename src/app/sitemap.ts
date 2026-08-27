@@ -1,3 +1,5 @@
+import { ATS_SYSTEMS_DATA, JOB_ROLES_DATA } from '../data/seoProgrammaticData';
+
 export interface SitemapItem {
   url: string;
   lastModified: Date;
@@ -12,7 +14,7 @@ export default function sitemap(): SitemapItem[] {
   const baseUrl = 'https://www.jobmatch.company';
   const lastModified = new Date();
 
-  return [
+  const staticPages: SitemapItem[] = [
     {
       url: `${baseUrl}/`,
       lastModified,
@@ -42,6 +44,34 @@ export default function sitemap(): SitemapItem[] {
       },
     },
     {
+      url: `${baseUrl}/test-score-ats`,
+      lastModified,
+      changeFrequency: 'daily',
+      priority: 0.9,
+      alternates: {
+        languages: {
+          fr: `${baseUrl}/test-score-ats?lang=fr`,
+          en: `${baseUrl}/test-score-ats?lang=en`,
+          es: `${baseUrl}/test-score-ats?lang=es`,
+          de: `${baseUrl}/test-score-ats?lang=de`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/guides`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+      alternates: {
+        languages: {
+          fr: `${baseUrl}/guides?lang=fr`,
+          en: `${baseUrl}/guides?lang=en`,
+          es: `${baseUrl}/guides?lang=es`,
+          de: `${baseUrl}/guides?lang=de`,
+        },
+      },
+    },
+    {
       url: `${baseUrl}/pricing`,
       lastModified,
       changeFrequency: 'weekly',
@@ -56,4 +86,38 @@ export default function sitemap(): SitemapItem[] {
       },
     },
   ];
+
+  // Dynamic ATS Guides Pages
+  const atsPages: SitemapItem[] = ATS_SYSTEMS_DATA.map((ats) => ({
+    url: `${baseUrl}/ats/${ats.slug}`,
+    lastModified,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+    alternates: {
+      languages: {
+        fr: `${baseUrl}/ats/${ats.slug}?lang=fr`,
+        en: `${baseUrl}/ats/${ats.slug}?lang=en`,
+        es: `${baseUrl}/ats/${ats.slug}?lang=es`,
+        de: `${baseUrl}/ats/${ats.slug}?lang=de`,
+      },
+    },
+  }));
+
+  // Dynamic Job Role Pages
+  const jobPages: SitemapItem[] = JOB_ROLES_DATA.map((job) => ({
+    url: `${baseUrl}/optimiser-cv/${job.slug}`,
+    lastModified,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+    alternates: {
+      languages: {
+        fr: `${baseUrl}/optimiser-cv/${job.slug}?lang=fr`,
+        en: `${baseUrl}/optimiser-cv/${job.slug}?lang=en`,
+        es: `${baseUrl}/optimiser-cv/${job.slug}?lang=es`,
+        de: `${baseUrl}/optimiser-cv/${job.slug}?lang=de`,
+      },
+    },
+  }));
+
+  return [...staticPages, ...atsPages, ...jobPages];
 }

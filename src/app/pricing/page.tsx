@@ -1,5 +1,5 @@
-import { generatePageMetadata, NextLikeMetadata } from '@/src/seo/metadata';
-import { PricingView } from '@/src/components/PricingView';
+import { generatePageMetadata, NextLikeMetadata } from '../../seo/metadata';
+import { PricingView } from '../../components/PricingView';
 
 export const dynamic = 'force-static';
 export const revalidate = 86400; // Cache 24h

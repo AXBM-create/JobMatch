@@ -1,5 +1,5 @@
-import { generatePageMetadata, NextLikeMetadata } from '@/src/seo/metadata';
-import { DashboardCreator } from '@/src/components/DashboardCreator';
+import { generatePageMetadata, NextLikeMetadata } from '../../seo/metadata';
+import { DashboardCreator } from '../../components/DashboardCreator';
 
 export const dynamic = 'force-static';
 

@@ -24,6 +24,11 @@ import {
   consumeUserCredit,
   upgradeUserPlan
 } from "./services/firestoreService";
+import { 
+  updateDOMMetaTags, 
+  METADATA_DICTIONARY, 
+  generateJobApplicationMetadata 
+} from "./seo/metadata";
 
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewState>("landing");
@@ -94,6 +99,27 @@ export default function App() {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, [user]);
+
+  // Sync Browser Title & SEO Meta Tags on View / Application changes
+  useEffect(() => {
+    if (currentView === "editor" && currentApplication?.targetJob) {
+      const meta = generateJobApplicationMetadata(
+        currentApplication.targetJob,
+        currentApplication.resume?.personalInfo?.fullName,
+        currentApplication.matchScore,
+        currentApplication.id
+      );
+      updateDOMMetaTags(meta);
+    } else if (currentView === "pricing") {
+      updateDOMMetaTags(METADATA_DICTIONARY.pricing);
+    } else if (currentView === "dashboard" || currentView === "onboarding") {
+      updateDOMMetaTags(METADATA_DICTIONARY.onboarding);
+    } else if (currentView === "history") {
+      updateDOMMetaTags(METADATA_DICTIONARY.history);
+    } else {
+      updateDOMMetaTags(METADATA_DICTIONARY.landing);
+    }
+  }, [currentView, currentApplication]);
 
   // Load persistence from local storage as offline/initial fallback
   useEffect(() => {

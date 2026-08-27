@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Sparkles,
   Download,
@@ -23,9 +23,20 @@ import {
   Building2,
   User,
   Sliders,
+  Globe,
+  Tag,
+  Copy,
+  Info,
+  X
 } from "lucide-react";
 import { ApplicationResult, ExperienceItem } from "../types";
 import { useLanguage } from "../i18n/LanguageContext";
+import { 
+  generateJobApplicationMetadata, 
+  updateDOMMetaTags, 
+  PageMetadataConfig,
+  METADATA_DICTIONARY 
+} from "../seo/metadata";
 
 interface GeneratedDocsViewProps {
   application: ApplicationResult;
@@ -48,10 +59,37 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
   const [showCompanyLogo, setShowCompanyLogo] = useState(false);
   const [activeTabMobile, setActiveTabMobile] = useState<"resume" | "cover">("resume");
   const [saveToast, setSaveToast] = useState(false);
+  const [showSeoMetaModal, setShowSeoMetaModal] = useState(false);
+  const [copiedMeta, setCopiedMeta] = useState(false);
 
   const printRef = useRef<HTMLDivElement>(null);
 
   const { resume, coverLetter, matchScore, targetJob } = application;
+
+  // Generate dynamic SEO & OpenGraph metadata based on current target job
+  const currentMeta: PageMetadataConfig = generateJobApplicationMetadata(
+    targetJob,
+    resume?.personalInfo?.fullName,
+    matchScore,
+    application?.id
+  );
+
+  // Synchronize browser <title>, meta description, OpenGraph and JSON-LD tags dynamically
+  useEffect(() => {
+    updateDOMMetaTags(currentMeta);
+
+    return () => {
+      // Revert to landing metadata on exit
+      updateDOMMetaTags(METADATA_DICTIONARY.landing);
+    };
+  }, [
+    targetJob?.title, 
+    targetJob?.company, 
+    targetJob?.location, 
+    resume?.personalInfo?.fullName, 
+    matchScore, 
+    application?.id
+  ]);
 
   // Handle direct text updates
   const handleResumeChange = (field: string, value: any) => {
@@ -284,9 +322,9 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
         </div>
       </div>
 
-      {/* Optional Dynamic Image & Layout Toolbar */}
+      {/* Optional Dynamic Image & Layout Toolbar with Live SEO Meta Indicator */}
       <div className="flex items-center justify-between flex-wrap gap-2 mb-4 bg-slate-100/60 p-2.5 rounded-xl text-xs text-slate-600">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center flex-wrap gap-3">
           <span className="font-medium text-slate-700">Options visuelles :</span>
           <label className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
             <input
@@ -307,6 +345,24 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
             />
             <span>En-tête entreprise ({targetJob.company})</span>
           </label>
+        </div>
+
+        {/* Dynamic SEO Meta Tag Live Badge */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowSeoMetaModal(true)}
+            id="btn-view-seo-meta"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-[#1A3A5C] font-semibold text-[11px] transition-colors shadow-2xs cursor-pointer"
+            title="Inspecter le titre et les balises meta générés pour l'indexation de cette offre"
+          >
+            <Tag className="w-3.5 h-3.5 text-blue-600" />
+            <span className="max-w-[280px] sm:max-w-md truncate">
+              SEO: <strong>{currentMeta.title}</strong>
+            </span>
+            <span className="bg-blue-50 text-blue-700 text-[10px] px-1.5 py-0.2 rounded font-bold border border-blue-200">
+              Live
+            </span>
+          </button>
         </div>
 
         {/* Mobile Tab Switcher */}
@@ -779,6 +835,120 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Dynamic SEO & Crawlers Meta Tags Inspector Modal */}
+      {showSeoMetaModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700">
+                  <Globe className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">
+                    Balises SEO & Meta-tags dynamiques de l'offre
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Générés en temps réel d'après le poste visé et l'entreprise cible.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowSeoMetaModal(false)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Google Search Result Live Preview Card */}
+            <div className="mb-6">
+              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-2">
+                Aperçu Google Search (SERP)
+              </span>
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                  <span className="font-semibold text-slate-700">https://www.jobmatch.company</span>
+                  <span>›</span>
+                  <span>application</span>
+                  <span>›</span>
+                  <span className="text-blue-600 truncate">{targetJob.company.toLowerCase()}</span>
+                </div>
+                <h4 className="text-base sm:text-lg font-medium text-[#1a0dab] hover:underline cursor-pointer leading-snug mb-1">
+                  {currentMeta.title}
+                </h4>
+                <p className="text-xs sm:text-sm text-[#4d5156] leading-relaxed">
+                  {currentMeta.description}
+                </p>
+              </div>
+            </div>
+
+            {/* Detailed Meta-Tags List */}
+            <div className="space-y-3 mb-6">
+              <div>
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                  Balise &lt;title&gt; (Page Title)
+                </label>
+                <div className="p-2.5 bg-slate-100 font-mono text-xs text-slate-800 rounded-lg select-all border border-slate-200">
+                  {currentMeta.title}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                  Meta Description (&lt;meta name="description"&gt;)
+                </label>
+                <div className="p-2.5 bg-slate-100 font-mono text-xs text-slate-800 rounded-lg select-all border border-slate-200">
+                  {currentMeta.description}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                  Mots-clés cibles générés (Keywords)
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {currentMeta.keywords.map((kw, idx) => (
+                    <span key={idx} className="bg-blue-50 text-blue-800 text-xs px-2 py-0.5 rounded font-medium border border-blue-100">
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                  Données Structurées JSON-LD (Schema.org JobPosting / DigitalDocument)
+                </label>
+                <pre className="p-3 bg-slate-900 text-slate-200 font-mono text-[11px] rounded-lg overflow-x-auto border border-slate-800">
+                  {JSON.stringify(currentMeta.jsonLd, null, 2)}
+                </pre>
+              </div>
+            </div>
+
+            {/* Action footer */}
+            <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+              <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                <Info className="w-4 h-4 text-slate-400" />
+                <span>Synchronisé automatiquement dans le document HTML &lt;head&gt;</span>
+              </div>
+              <button
+                onClick={() => {
+                  const metaSnippet = `<title>${currentMeta.title}</title>\n<meta name="description" content="${currentMeta.description}">\n<meta property="og:title" content="${currentMeta.title}">`;
+                  navigator.clipboard.writeText(metaSnippet);
+                  setCopiedMeta(true);
+                  setTimeout(() => setCopiedMeta(false), 2000);
+                }}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#1A3A5C] hover:bg-[#132B45] text-white font-semibold text-xs transition-colors cursor-pointer"
+              >
+                {copiedMeta ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                <span>{copiedMeta ? "Copié !" : "Copier le code HTML des balises"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

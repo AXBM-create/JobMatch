@@ -30,6 +30,7 @@ import {
   Lock
 } from "lucide-react";
 import { useLanguage } from "../i18n/LanguageContext";
+import { OptimizedImage } from "./OptimizedImage";
 
 interface LandingViewProps {
   onStart: () => void;
@@ -414,14 +415,17 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 </div>
 
                 <div className="flex items-center gap-3 pt-4 border-t border-slate-200/80">
-                  <img
-                    src={t.avatar}
-                    alt={`Photo de ${t.name}`}
-                    width={44}
-                    height={44}
-                    loading="lazy"
-                    className="w-11 h-11 rounded-full object-cover border border-slate-300"
-                  />
+                  <div className="w-11 h-11 rounded-full overflow-hidden border border-slate-300 shrink-0">
+                    <OptimizedImage
+                      src={t.avatar}
+                      alt={`Photo de ${t.name}`}
+                      width={44}
+                      height={44}
+                      aspectRatio="1/1"
+                      className="w-full h-full object-cover"
+                      sizes="44px"
+                    />
+                  </div>
                   <div>
                     <h4 className="text-sm font-bold text-[#1A3A5C]">{t.name}</h4>
                     <p className="text-xs text-[#6B7280]">{t.role} • {t.company}</p>

@@ -271,11 +271,11 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
               <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 uppercase tracking-wide">
                 Étape 1 sur 2
               </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1A3A5C] mt-2 mb-2">
-                Colle le lien de l'offre d'emploi
-              </h2>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1A3A5C] mt-2 mb-2">
+                Colle le lien de l'offre d'emploi cible
+              </h1>
               <p className="text-sm text-[#6B7280]">
-                L'IA analyse le texte pour extraire les mots-clés, les compétences recherchées et le ton de l'entreprise.
+                L'IA analyse le texte de l'annonce pour extraire les mots-clés, les compétences recherchées et le ton de l'entreprise.
               </p>
             </div>
 

@@ -1,5 +1,5 @@
-import { generatePageMetadata, NextLikeMetadata } from '@/src/seo/metadata';
-import { LandingView } from '@/src/components/LandingView';
+import { generatePageMetadata, NextLikeMetadata } from '../seo/metadata';
+import { LandingView } from '../components/LandingView';
 
 export const dynamic = 'force-static';
 export const revalidate = 86400; // Cache 24h
