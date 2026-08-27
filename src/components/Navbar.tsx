@@ -65,7 +65,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="cursor-pointer transition-transform duration-200 active:scale-98"
           id="nav-logo"
         >
-          <Logo size="md" plan={userProfile?.plan || "starter"} />
+          <Logo size="md" showBadge={false} />
         </div>
 
         {/* Center Navigation Links */}
@@ -79,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-slate-600 hover:text-[#1A3A5C] hover:bg-slate-50"
             }`}
           >
-            Accueil
+            {t("nav_home")}
           </button>
 
           <button
@@ -91,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-slate-600 hover:text-[#1A3A5C] hover:bg-slate-50"
             }`}
           >
-            Générateur & Offres
+            {t("nav_dashboard")}
           </button>
 
           <button
@@ -99,7 +99,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             id="nav-tab-how-it-works"
             className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-[#1A3A5C] hover:bg-slate-50 rounded-lg transition-all cursor-pointer"
           >
-            Comment ça marche
+            {t("nav_how_it_works")}
           </button>
 
           <button
@@ -111,7 +111,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-slate-600 hover:text-[#1A3A5C] hover:bg-slate-50"
             }`}
           >
-            Tarifs
+            {t("nav_pricing")}
           </button>
 
           <button
@@ -119,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             id="nav-tab-faq"
             className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-[#1A3A5C] hover:bg-slate-50 rounded-lg transition-all cursor-pointer"
           >
-            FAQ
+            {t("nav_faq")}
           </button>
 
           {user && (
@@ -132,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : "text-slate-600 hover:text-[#1A3A5C] hover:bg-slate-50"
               }`}
             >
-              Mes Candidatures
+              {t("nav_history")}
             </button>
           )}
         </nav>
@@ -167,7 +167,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               id="nav-btn-login"
               className="text-sm font-semibold text-slate-700 hover:text-[#1A3A5C] px-3 py-2 transition-colors cursor-pointer"
             >
-              Connexion
+              {t("nav_login")}
             </button>
           )}
 
@@ -178,7 +178,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="bg-[#1A3A5C] hover:bg-[#132B45] text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-all shadow-2xs hover:shadow active:scale-98 flex items-center gap-1.5 cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Essayer gratuitement</span>
+            <span>{t("nav_try_free")}</span>
           </button>
 
           {/* Mobile Menu Toggle */}
@@ -199,38 +199,38 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick("landing")}
             className="block w-full text-left px-3 py-2 text-sm font-semibold text-slate-800 rounded-lg hover:bg-slate-100 cursor-pointer"
           >
-            Accueil
+            {t("nav_home")}
           </button>
           <button
             onClick={() => handleNavClick("dashboard")}
             className="block w-full text-left px-3 py-2 text-sm font-semibold text-slate-800 rounded-lg hover:bg-slate-100 cursor-pointer"
           >
-            Générateur & Offres
+            {t("nav_dashboard")}
           </button>
           <button
             onClick={() => handleNavClick("landing", "how-it-works")}
             className="block w-full text-left px-3 py-2 text-sm font-semibold text-slate-800 rounded-lg hover:bg-slate-100 cursor-pointer"
           >
-            Comment ça marche
+            {t("nav_how_it_works")}
           </button>
           <button
             onClick={() => handleNavClick("pricing")}
             className="block w-full text-left px-3 py-2 text-sm font-semibold text-slate-800 rounded-lg hover:bg-slate-100 cursor-pointer"
           >
-            Tarifs
+            {t("nav_pricing")}
           </button>
           <button
             onClick={() => handleNavClick("landing", "faq")}
             className="block w-full text-left px-3 py-2 text-sm font-semibold text-slate-800 rounded-lg hover:bg-slate-100 cursor-pointer"
           >
-            FAQ
+            {t("nav_faq")}
           </button>
           {user && (
             <button
               onClick={() => handleNavClick("history")}
               className="block w-full text-left px-3 py-2 text-sm font-semibold text-slate-800 rounded-lg hover:bg-slate-100 cursor-pointer"
             >
-              Mes Candidatures
+              {t("nav_history")}
             </button>
           )}
         </div>

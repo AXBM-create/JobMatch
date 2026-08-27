@@ -20,7 +20,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegalModal }) => {
           <span className="text-slate-400">© 2026 JobMatch. {t("footer_rights")}</span>
         </div>
 
-        <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
+        <div className="flex items-center flex-wrap gap-x-6 gap-y-3">
           {onOpenLegalModal ? (
             <>
               <button
@@ -63,9 +63,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegalModal }) => {
             <Mail className="w-3.5 h-3.5 text-slate-400" />
             <span>Support</span>
           </a>
+
+          <div className="border-l border-slate-200 pl-4">
+            <LanguageSelector variant="nav" />
+          </div>
         </div>
       </div>
     </footer>
   );
 };
-

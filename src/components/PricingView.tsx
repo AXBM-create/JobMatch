@@ -5,8 +5,7 @@
  * Choix Techniques & UX :
  * - Toggle Annuel/Mensuel : Calcul dynamique de la réduction (-25%) pour inciter à l'engagement.
  * - Hiérarchie Visuelle Forte : Plan Pro (milieu) mis en avant avec badge "Le plus populaire", bordure `#1A3A5C` et fond contrasté.
- * - Tableau Comparatif Détaillé : Liste explicite des fonctionnalités avec icônes de validation (Check) et indisponibilité (X).
- * - Mini FAQ Intégrée : Traite les objections courantes (résiliation en 1 clic, remboursement, sécurité Stripe).
+ * - Multilingue : Tous les libellés, fonctionnalités et FAQs traduits dynamiquement.
  */
 
 import React, { useState } from "react";
@@ -90,19 +89,19 @@ export const PricingView: React.FC<PricingViewProps> = ({
       {/* Title & Subtitle */}
       <div className="text-center max-w-2xl mx-auto mb-10">
         <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-          Investis dans ta carrière
+          {t("pricing_badge")}
         </span>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A3A5C] tracking-tight mt-3 mb-3">
-          Un tarif adapté à ta recherche
+          {t("pricing_title")}
         </h1>
         <p className="text-sm sm:text-base text-[#6B7280]">
-          Multiplie tes entretiens d'embauche grâce à nos algorithmes de ciblage calibrés pour les ATS modernes.
+          {t("pricing_subtitle")}
         </p>
 
         {/* Toggle Mensuel / Annuel */}
         <div className="flex items-center justify-center gap-3 mt-6">
           <span className={`text-xs sm:text-sm font-semibold ${billingCycle === "monthly" ? "text-[#1A3A5C]" : "text-slate-500"}`}>
-            Mensuel
+            {t("pricing_monthly")}
           </span>
 
           <button
@@ -118,9 +117,9 @@ export const PricingView: React.FC<PricingViewProps> = ({
           </button>
 
           <span className={`text-xs sm:text-sm font-semibold flex items-center gap-1.5 ${billingCycle === "yearly" ? "text-[#1A3A5C]" : "text-slate-500"}`}>
-            <span>Annuel</span>
+            <span>{t("pricing_yearly")}</span>
             <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-              -25% d'économie
+              {t("pricing_discount")}
             </span>
           </span>
         </div>
@@ -134,46 +133,46 @@ export const PricingView: React.FC<PricingViewProps> = ({
           <div>
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Découverte
+                {t("pricing_starter_title")}
               </span>
               {currentPlan === "starter" && (
                 <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
-                  Plan actuel
+                  {t("pricing_current_plan")}
                 </span>
               )}
             </div>
 
-            <h3 className="text-xl font-bold text-[#1A3A5C] mb-1">Gratuit</h3>
+            <h3 className="text-xl font-bold text-[#1A3A5C] mb-1">{t("pricing_starter_title")}</h3>
             <p className="text-xs text-[#6B7280] mb-4">
-              Idéal pour tester la puissance de JobMatch sur une première offre.
+              {t("pricing_starter_desc")}
             </p>
 
             <div className="flex items-baseline gap-1 mb-6">
-              <span className="text-3xl sm:text-4xl font-extrabold text-[#1A3A5C]">0€</span>
-              <span className="text-xs text-[#6B7280]">/ sans CB</span>
+              <span className="text-3xl sm:text-4xl font-extrabold text-[#1A3A5C]">{t("pricing_starter_price")}</span>
+              <span className="text-xs text-[#6B7280]">{t("pricing_starter_period")}</span>
             </div>
 
             {/* Features List */}
             <ul className="space-y-3 text-xs sm:text-sm text-slate-700 border-t border-slate-100 pt-6 mb-8">
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>1 candidature complète offerte (CV + Lettre)</span>
+                <span>{t("pricing_starter_f1")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Score de correspondance ATS standard</span>
+                <span>{t("pricing_starter_f2")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Édition du texte de base</span>
+                <span>{t("pricing_starter_f3")}</span>
               </li>
               <li className="flex items-center gap-2.5 text-slate-400">
                 <X className="w-4 h-4 text-slate-300 shrink-0" />
-                <span>Générations illimitées</span>
+                <span>{t("pricing_starter_f4_no")}</span>
               </li>
               <li className="flex items-center gap-2.5 text-slate-400">
                 <X className="w-4 h-4 text-slate-300 shrink-0" />
-                <span>Export PDF HD sans filigrane</span>
+                <span>{t("pricing_starter_f5_no")}</span>
               </li>
             </ul>
           </div>
@@ -182,7 +181,7 @@ export const PricingView: React.FC<PricingViewProps> = ({
             onClick={onStartFree}
             className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-[#1A3A5C] font-semibold text-xs sm:text-sm rounded-lg transition-colors cursor-pointer"
           >
-            Commencer gratuitement
+            {t("pricing_starter_btn")}
           </button>
         </div>
 
@@ -191,54 +190,54 @@ export const PricingView: React.FC<PricingViewProps> = ({
           {/* Badge Populaire */}
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-bold px-3 py-0.5 rounded-full shadow-xs flex items-center gap-1">
             <Star className="w-3 h-3 fill-current" />
-            <span>LE PLUS POPULAIRE</span>
+            <span>{t("pricing_pro_badge")}</span>
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                Recherche Active
+                {t("pricing_pro_cat")}
               </span>
               {currentPlan === "pro" && (
                 <span className="text-[10px] font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">
-                  Actif
+                  {t("pricing_active_plan")}
                 </span>
               )}
             </div>
 
-            <h3 className="text-xl font-bold text-white mb-1">Pro Illimité</h3>
+            <h3 className="text-xl font-bold text-white mb-1">{t("pricing_pro_title")}</h3>
             <p className="text-xs text-slate-300 mb-4">
-              La solution complète pour postuler rapidement à toutes les opportunités.
+              {t("pricing_pro_desc")}
             </p>
 
             <div className="flex items-baseline gap-1 mb-6">
               <span className="text-3xl sm:text-4xl font-extrabold text-white">
-                {billingCycle === "yearly" ? "14,90€" : "19,90€"}
+                {billingCycle === "yearly" ? t("pricing_pro_price_yearly") : t("pricing_pro_price_monthly")}
               </span>
-              <span className="text-xs text-slate-300">/ mois</span>
+              <span className="text-xs text-slate-300">{t("pricing_pro_period")}</span>
             </div>
 
             {/* Features List */}
             <ul className="space-y-3 text-xs sm:text-sm text-slate-200 border-t border-white/10 pt-6 mb-8">
               <li className="flex items-center gap-2.5 font-semibold text-white">
                 <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Candidatures & CVs 100% illimités</span>
+                <span>{t("pricing_pro_f1")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Optimisation ATS maximale (+90% score)</span>
+                <span>{t("pricing_pro_f2")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Édition inline + régénération par section</span>
+                <span>{t("pricing_pro_f3")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Téléchargement PDF HD sans filigrane</span>
+                <span>{t("pricing_pro_f4")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Support prioritaire par email 7j/7</span>
+                <span>{t("pricing_pro_f5")}</span>
               </li>
             </ul>
           </div>
@@ -252,7 +251,7 @@ export const PricingView: React.FC<PricingViewProps> = ({
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <>
-                <span>Activer l'accès illimité</span>
+                <span>{t("pricing_pro_btn")}</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -264,42 +263,42 @@ export const PricingView: React.FC<PricingViewProps> = ({
           <div>
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Usage Ponctuel
+                {t("pricing_exec_cat")}
               </span>
               {currentPlan === "executive" && (
                 <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
-                  Plan actuel
+                  {t("pricing_current_plan")}
                 </span>
               )}
             </div>
 
-            <h3 className="text-xl font-bold text-[#1A3A5C] mb-1">Pack 15 Candidatures</h3>
+            <h3 className="text-xl font-bold text-[#1A3A5C] mb-1">{t("pricing_exec_title")}</h3>
             <p className="text-xs text-[#6B7280] mb-4">
-              Sans abonnement ni engagement, pour cibler des offres très spécifiques.
+              {t("pricing_exec_desc")}
             </p>
 
             <div className="flex items-baseline gap-1 mb-6">
-              <span className="text-3xl sm:text-4xl font-extrabold text-[#1A3A5C]">29€</span>
-              <span className="text-xs text-[#6B7280]">/ paiement unique</span>
+              <span className="text-3xl sm:text-4xl font-extrabold text-[#1A3A5C]">{t("pricing_exec_price")}</span>
+              <span className="text-xs text-[#6B7280]">{t("pricing_exec_period")}</span>
             </div>
 
             {/* Features List */}
             <ul className="space-y-3 text-xs sm:text-sm text-slate-700 border-t border-slate-100 pt-6 mb-8">
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Pack de 15 candidatures sur-mesure</span>
+                <span>{t("pricing_exec_f1")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Crédits valables à vie sans expiration</span>
+                <span>{t("pricing_exec_f2")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Tous les exports PDF HD inclus</span>
+                <span>{t("pricing_exec_f3")}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Édition complète et sauvegarde cloud</span>
+                <span>{t("pricing_exec_f4")}</span>
               </li>
             </ul>
           </div>
@@ -312,7 +311,7 @@ export const PricingView: React.FC<PricingViewProps> = ({
             {loadingPlan === "executive" ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <span>Acheter le pack 15 crédits</span>
+              <span>{t("pricing_exec_btn")}</span>
             )}
           </button>
         </div>
@@ -321,20 +320,20 @@ export const PricingView: React.FC<PricingViewProps> = ({
       {/* Mini FAQ Pricing */}
       <div className="bg-slate-50 rounded-2xl p-6 sm:p-8 border border-slate-200 max-w-3xl mx-auto">
         <h3 className="text-lg font-bold text-[#1A3A5C] mb-4 text-center">
-          Questions sur nos abonnements
+          {t("pricing_faq_title")}
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-700">
           <div>
-            <h4 className="font-semibold text-slate-900 mb-1">Puis-je annuler à tout moment ?</h4>
+            <h4 className="font-semibold text-slate-900 mb-1">{t("pricing_faq_q1")}</h4>
             <p className="text-slate-600 leading-relaxed">
-              Oui, sans aucun frais. Vous pouvez résilier en un clic depuis votre espace personnel ou via le portail Stripe.
+              {t("pricing_faq_a1")}
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-slate-900 mb-1">Le paiement est-il sécurisé ?</h4>
+            <h4 className="font-semibold text-slate-900 mb-1">{t("pricing_faq_q2")}</h4>
             <p className="text-slate-600 leading-relaxed">
-              Nous utilisons Stripe avec chiffrement SSL 256-bit. Aucune coordonnée bancaire ne transite par nos serveurs.
+              {t("pricing_faq_a2")}
             </p>
           </div>
         </div>

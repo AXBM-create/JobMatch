@@ -69,8 +69,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         height={height}
         loading={priority ? "eager" : "lazy"}
         decoding={priority ? "sync" : "async"}
-        // @ts-ignore fetchpriority is standard in modern browsers for Core Web Vitals
-        fetchpriority={priority ? "high" : "low"}
+        fetchPriority={priority ? "high" : "low"}
         sizes={sizes}
         onLoad={() => setIsLoaded(true)}
         className={`w-full h-full object-cover transition-opacity duration-300 ${
