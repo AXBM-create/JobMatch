@@ -921,7 +921,7 @@ async function startServer() {
 
   if (!process.env.VERCEL) {
     app.listen(PORT, "0.0.0.0", () => {
-      console.log(`JobMatch AI server running on port ${PORT}`);
+      console.log(`JobMatch (jobmatch.company) server running on port ${PORT}`);
     });
   }
 }

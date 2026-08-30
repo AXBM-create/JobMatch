@@ -86,7 +86,7 @@ export const AtsGuideDetailView: React.FC<AtsGuideDetailViewProps> = ({
         <div className="mt-10 p-6 bg-[#1A3A5C] text-white rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-bold">Créez un CV certifié compatible {guide.name}</h3>
-            <p className="text-xs text-slate-300 mt-1">Générez votre CV adapté à l'offre en 30 secondes avec JobMatch AI.</p>
+            <p className="text-xs text-slate-300 mt-1">Générez votre CV adapté à l'offre en 30 secondes avec JobMatch.</p>
           </div>
           <button
             onClick={onStartForAts}

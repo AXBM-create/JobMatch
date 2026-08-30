@@ -61,7 +61,7 @@ export const LONG_TAIL_GUIDES_DATA: LongTailGuideData[] = [
     category: "Guide Pratique ATS",
     publishedDate: "2026-02-28",
     author: {
-      name: "Équipe Recrutement JobMatch AI",
+      name: "Équipe Recrutement JobMatch",
       role: "Experts en Algorithmes ATS & RH",
       avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
     },
@@ -136,7 +136,7 @@ export const LONG_TAIL_GUIDES_DATA: LongTailGuideData[] = [
       {
         title: "5. Comment tester et optimiser votre CV en 30 secondes",
         content: [
-          "Pour éviter de passer des heures à reformuler manuellement votre CV pour chaque annonce, l'utilisation d'une intelligence artificielle spécialisée comme JobMatch AI vous permet d'automatiser cette tâche tout en garantissant un score supérieur à 90%.",
+          "Pour éviter de passer des heures à reformuler manuellement votre CV pour chaque annonce, l'utilisation d'une intelligence artificielle spécialisée comme JobMatch vous permet d'automatiser cette tâche tout en garantissant un score supérieur à 90%.",
           "L'outil analyse instantanément le texte de l'annonce cible, compare votre profil initial et réécrit vos expériences avec les formulations les plus valorisantes pour les logiciels ATS et les recruteurs humains."
         ]
       }
@@ -181,7 +181,7 @@ export const LONG_TAIL_GUIDES_DATA: LongTailGuideData[] = [
         title: "1. Comparatif Avant / Après : La transformation d'un profil",
         content: [
           "Examinons le cas d'Alexandre, Chef de projet digital avec 5 ans d'expérience postulant chez un grand groupe bancaire utilisant le logiciel Workday.",
-          "Voici la comparaison directe entre sa version initiale générique et sa version optimisée par l'algorithme de JobMatch AI :"
+          "Voici la comparaison directe entre sa version initiale générique et sa version optimisée par l'algorithme de JobMatch :"
         ],
         table: {
           headers: ["Critère", "CV Classique (Avant)", "CV Optimisé IA JobMatch (Après)"],
@@ -211,7 +211,7 @@ export const LONG_TAIL_GUIDES_DATA: LongTailGuideData[] = [
       {
         title: "3. Exemple complet de modèle de CV prêt à l'emploi",
         content: [
-          "Voici la structure type générée par JobMatch AI, parfaitement reconnue par les parsers Workday, Taleo, Greenhouse et Lever :",
+          "Voici la structure type générée par JobMatch, parfaitement reconnue par les parsers Workday, Taleo, Greenhouse et Lever :",
           "1. En-tête sobre : Nom, Prénom, Titre aligné sur l'offre, Ville, Email, Téléphone, Lien LinkedIn personnalisé.",
           "2. Résumé exécutif (3 lignes percutantes) : Positionnement professionnel, années d'expérience, réalisations phares et adéquation avec les défis de l'employeur.",
           "3. Compétences & Outils clés : Hard skills, méthodologies et outils logiciels sous forme de tags textuels clairs.",
@@ -222,14 +222,14 @@ export const LONG_TAIL_GUIDES_DATA: LongTailGuideData[] = [
       {
         title: "4. Générer votre CV sur-mesure en 30 secondes",
         content: [
-          "Vous souhaitez appliquer cette méthode à votre propre profil ? Avec JobMatch AI, il vous suffit de coller le texte de votre offre d'emploi cible pour obtenir votre CV personnalisé et votre lettre de motivation en 30 secondes."
+          "Vous souhaitez appliquer cette méthode à votre propre profil ? Avec JobMatch, il vous suffit de coller le texte de votre offre d'emploi cible pour obtenir votre CV personnalisé et votre lettre de motivation en 30 secondes."
         ]
       }
     ],
     faq: [
       {
         question: "L'IA invente-t-elle des expériences ou diplômes sur mon CV ?",
-        answer: "Non. JobMatch AI s'appuie exclusivement sur votre parcours réel. Il reformule, structure et met en valeur vos véritables compétences sans jamais créer de fausses informations."
+        answer: "Non. JobMatch s'appuie exclusivement sur votre parcours réel. Il reformule, structure et met en valeur vos véritables compétences sans jamais créer de fausses informations."
       },
       {
         question: "Est-ce visible par le recruteur que le CV a été optimisé par IA ?",
@@ -259,7 +259,7 @@ export const LONG_TAIL_GUIDES_DATA: LongTailGuideData[] = [
       "Les recruteurs rejettent instantanément les modèles types trouvés sur Internet car ils manquent de personnalisation concrète.",
       "La structure gagnante d'une lettre de motivation moderne repose sur le triptyque 'VOUS - MOI - NOUS'.",
       "L'IA analyse la culture et les projets de l'entreprise cible pour créer une accroche sur-mesure percutante.",
-      "Avec JobMatch AI, générez gratuitement votre première lettre de motivation complète sans renseigner de carte bancaire."
+      "Avec JobMatch, générez gratuitement votre première lettre de motivation complète sans renseigner de carte bancaire."
     ],
     sections: [
       {
@@ -287,7 +287,7 @@ export const LONG_TAIL_GUIDES_DATA: LongTailGuideData[] = [
         ]
       },
       {
-        title: "3. Exemple de lettre automatique générée par JobMatch AI",
+        title: "3. Exemple de lettre automatique générée par JobMatch",
         content: [
           "Voici un exemple de lettre générée en 25 secondes par notre modèle IA pour un poste de Responsable Marketing Digital :",
           "----------------------------------------",
@@ -302,7 +302,7 @@ export const LONG_TAIL_GUIDES_DATA: LongTailGuideData[] = [
       {
         title: "4. Comment générer votre lettre automatique gratuite en 3 clics",
         content: [
-          "1. Rendez-vous sur le générateur JobMatch AI (aucun compte bancaire requis).",
+          "1. Rendez-vous sur le générateur JobMatch (aucun compte bancaire requis).",
           "2. Collez le texte ou le lien de l'offre d'emploi qui vous intéresse.",
           "3. Renseignez brièvement votre profil ou importez votre CV existant.",
           "4. Cliquez sur 'Générer' : votre lettre personnalisée et votre CV optimisé ATS sont prêts en 30 secondes."

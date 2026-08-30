@@ -21,26 +21,26 @@ export async function generateMetadata({ params }: Props): Promise<NextLikeMetad
   const job = JOB_ROLES_DATA.find((item) => item.slug === params.slug);
   if (!job) {
     return {
-      title: 'Optimiser son CV — JobMatch AI',
-      description: "Générateur et optimiseur de CV par métier calibré pour les logiciels de recrutement ATS.",
-      keywords: ['optimiser CV', 'CV ATS'],
+      title: 'Optimiser son CV — JobMatch',
+      description: "Générateur et optimiseur de CV par métier calibré pour les logiciels de recrutement ATS sur jobmatch.company.",
+      keywords: ['optimiser CV', 'CV ATS', 'JobMatch', 'jobmatch.company'],
       alternates: {
         canonical: `${SITE_URL}/optimiser-cv/${params.slug}`,
         languages: { 'fr-FR': `${SITE_URL}/optimiser-cv/${params.slug}` },
       },
       openGraph: {
-        title: 'Optimiser son CV — JobMatch AI',
-        description: "Générateur et optimiseur de CV par métier calibré pour les logiciels de recrutement ATS.",
+        title: 'Optimiser son CV — JobMatch',
+        description: "Générateur et optimiseur de CV par métier calibré pour les logiciels de recrutement ATS sur jobmatch.company.",
         url: `${SITE_URL}/optimiser-cv/${params.slug}`,
-        siteName: 'JobMatch AI',
+        siteName: 'JobMatch',
         images: [{ url: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80', width: 1200, height: 630, alt: 'Optimiser CV' }],
         locale: 'fr_FR',
         type: 'article',
       },
       twitter: {
         card: 'summary_large_image',
-        title: 'Optimiser son CV — JobMatch AI',
-        description: "Générateur et optimiseur de CV par métier calibré pour les logiciels de recrutement ATS.",
+        title: 'Optimiser son CV — JobMatch',
+        description: "Générateur et optimiseur de CV par métier calibré pour les logiciels de recrutement ATS sur jobmatch.company.",
         images: ['https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80'],
       },
       robots: 'index, follow',
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<NextLikeMetad
   }
 
   const title = `CV ${job.title} : Modèle & Mots-Clés ATS Recommandés — JobMatch`;
-  const description = `Optimisez votre CV de ${job.title} avec les mots-clés ATS indispensables (${job.topKeywords.slice(0, 5).join(', ')}) et générez une candidature adaptée en 30s.`;
+  const description = `Optimisez votre CV de ${job.title} avec les mots-clés ATS indispensables (${job.topKeywords.slice(0, 5).join(', ')}) et générez une candidature adaptée en 30s sur jobmatch.company.`;
   const canonicalUrl = `${SITE_URL}/optimiser-cv/${job.slug}`;
 
   return {
@@ -58,6 +58,8 @@ export async function generateMetadata({ params }: Props): Promise<NextLikeMetad
       `CV ${job.title}`,
       `Modèle CV ${job.title}`,
       `Mots clés ATS ${job.title}`,
+      "JobMatch",
+      "jobmatch.company",
       ...job.topKeywords,
     ],
     alternates: {
@@ -73,7 +75,7 @@ export async function generateMetadata({ params }: Props): Promise<NextLikeMetad
       title,
       description,
       url: canonicalUrl,
-      siteName: 'JobMatch AI',
+      siteName: 'JobMatch',
       images: [
         {
           url: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80',

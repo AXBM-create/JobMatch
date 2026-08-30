@@ -46,7 +46,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       title: jobMeta.title,
       description: jobMeta.description,
       url: jobMeta.canonicalUrl,
-      siteName: "JobMatch AI",
+      siteName: "JobMatch",
       images: [
         {
           url: jobMeta.ogImage,

@@ -211,7 +211,7 @@ export function generateJobApplicationMetadata(
   const candidateText = candidateName ? ` de ${candidateName}` : "";
 
   const title = `Candidature ${jobTitle} chez ${company} - JobMatch`;
-  const description = `Dossier de candidature${candidateText} optimisé pour le poste de ${jobTitle} chez ${company}${locationText}${scoreText}. CV certifié ATS et lettre de motivation générés avec JobMatch AI.`;
+  const description = `Dossier de candidature${candidateText} optimisé pour le poste de ${jobTitle} chez ${company}${locationText}${scoreText}. CV certifié ATS et lettre de motivation générés avec JobMatch.`;
   const canonicalUrl = applicationId 
     ? `${SITE_URL}/application/${applicationId}`
     : `${SITE_URL}/editor`;
@@ -222,7 +222,8 @@ export function generateJobApplicationMetadata(
     `CV ${jobTitle}`,
     `Lettre de motivation ${company}`,
     "Optimisation CV ATS",
-    "JobMatch AI",
+    "JobMatch",
+    "jobmatch.company",
   ];
 
   const jsonLd = {
