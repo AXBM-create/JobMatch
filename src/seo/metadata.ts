@@ -128,6 +128,48 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow, max-image-preview:large, max-snippet:-1",
   },
+  "guide-comment-passer-les-filtres-ats": {
+    title: "Comment passer les filtres ATS en 2026 : Le Guide Complet Anti-Rejet | JobMatch",
+    description: "Découvrez la méthode étape par étape pour passer les filtres ATS (Workday, Taleo, Greenhouse). Règles de mise en page, choix des mots-clés et erreurs éliminatoires.",
+    keywords: [
+      "comment passer les filtres ATS",
+      "logiciel ATS recrutement",
+      "score CV ATS",
+      "optimisation CV Workday",
+      "contourner filtre robot CV"
+    ],
+    canonicalUrl: `${SITE_URL}/guides/comment-passer-les-filtres-ats`,
+    ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow, max-image-preview:large, max-snippet:-1",
+  },
+  "guide-exemple-de-cv-optimise-ia": {
+    title: "Exemple de CV Optimisé par l'IA : Avant / Après et Modèle Concret | JobMatch",
+    description: "Consultez un exemple concret de CV optimisé par l'intelligence artificielle pour franchir les filtres de recrutement. Analyse comparative Avant/Après et score ATS.",
+    keywords: [
+      "exemple de CV optimisé IA",
+      "CV généré par intelligence artificielle",
+      "modèle CV IA 2026",
+      "score ATS exemple",
+      "CV adapté offre emploi"
+    ],
+    canonicalUrl: `${SITE_URL}/guides/exemple-de-cv-optimise-ia`,
+    ogImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow, max-image-preview:large, max-snippet:-1",
+  },
+  "guide-lettre-de-motivation-automatique-gratuite": {
+    title: "Lettre de Motivation Automatique Gratuite : Générer en 30s par IA | JobMatch",
+    description: "Créez une lettre de motivation personnalisée et automatique en 30 secondes grâce à l'IA. Essai gratuit sans carte bancaire, adaptée à chaque offre d'emploi.",
+    keywords: [
+      "lettre de motivation automatique gratuite",
+      "générateur lettre de motivation IA",
+      "lettre motivation personnalisée gratuite",
+      "IA lettre de motivation",
+      "rédiger lettre motivation 30s"
+    ],
+    canonicalUrl: `${SITE_URL}/guides/lettre-de-motivation-automatique-gratuite`,
+    ogImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow, max-image-preview:large, max-snippet:-1",
+  },
   "mentions-legales": {
     title: "Mentions Légales — JobMatch AI",
     description: "Consultez les mentions légales de JobMatch AI, éditeur du générateur de CV et lettre de motivation optimisés ATS.",

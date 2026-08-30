@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { GoogleGenAI, Type } from "@google/genai";
 import { createServer as createViteServer } from "vite";
 import Stripe from "stripe";
-import { ATS_SYSTEMS_DATA, JOB_ROLES_DATA } from "./src/data/seoProgrammaticData";
+import { ATS_SYSTEMS_DATA, JOB_ROLES_DATA, LONG_TAIL_GUIDES_DATA } from "./src/data/seoProgrammaticData";
 
 dotenv.config();
 
@@ -47,6 +47,18 @@ app.get("/sitemap.xml", (_req: Request, res: Response) => {
     <xhtml:link rel="alternate" hreflang="es" href="${baseUrl}/optimiser-cv/${job.slug}?lang=es" />
     <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/optimiser-cv/${job.slug}?lang=de" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/optimiser-cv/${job.slug}" />
+  </url>`).join("\n");
+
+  const longTailEntries = LONG_TAIL_GUIDES_DATA.map((guide) => `  <url>
+    <loc>${baseUrl}/guides/${guide.slug}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/guides/${guide.slug}?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/guides/${guide.slug}?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="${baseUrl}/guides/${guide.slug}?lang=es" />
+    <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/guides/${guide.slug}?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/guides/${guide.slug}" />
   </url>`).join("\n");
 
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -121,9 +133,11 @@ app.get("/sitemap.xml", (_req: Request, res: Response) => {
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
-  <!-- 7. Guides ATS Détaillés -->
+  <!-- 7. Guides Pratiques & Longue Traîne -->
+${longTailEntries}
+  <!-- 8. Guides ATS Détaillés -->
 ${atsEntries}
-  <!-- 8. Modèles de CV par Métier -->
+  <!-- 9. Modèles de CV par Métier -->
 ${jobEntries}
 </urlset>`;
 

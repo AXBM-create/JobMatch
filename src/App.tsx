@@ -7,6 +7,9 @@ import { LandingView } from "./components/LandingView";
 import { DashboardCreator } from "./components/DashboardCreator";
 import { HistoryView } from "./components/HistoryView";
 import { PricingView } from "./components/PricingView";
+import { BlogGuidesView } from "./components/BlogGuidesView";
+import { AtsGuideDetailView } from "./components/AtsGuideDetailView";
+import { LongTailGuideDetailView } from "./components/LongTailGuideDetailView";
 import { MatchScoreModal } from "./components/MatchScoreModal";
 import { RegenerateModal } from "./components/RegenerateModal";
 import { SendApplicationModal } from "./components/SendApplicationModal";
@@ -15,6 +18,7 @@ import { LegalModal } from "./components/LegalModal";
 import { UpgradeModal } from "./components/UpgradeModal";
 import { FirstGenerationSuccessModal } from "./components/FirstGenerationSuccessModal";
 import { DEFAULT_ALEXANDRE_DUBOIS } from "./data/mockData";
+import { ATS_SYSTEMS_DATA, LONG_TAIL_GUIDES_DATA, AtsSystemData, LongTailGuideData } from "./data/seoProgrammaticData";
 import { ApplicationResult, CandidateFormInput, JobFormInput, ViewState, UserProfile, SubscriptionPlan } from "./types";
 import { auth, onAuthStateChanged, User } from "./firebase";
 import { 
@@ -38,6 +42,10 @@ export default function App() {
   const [history, setHistory] = useState<ApplicationResult[]>([DEFAULT_ALEXANDRE_DUBOIS]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Selected guide states for deep-linking and SEO
+  const [selectedAtsGuide, setSelectedAtsGuide] = useState<AtsSystemData | null>(null);
+  const [selectedLongTailGuide, setSelectedLongTailGuide] = useState<LongTailGuideData | null>(null);
+
   // User auth state & profile
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -54,6 +62,47 @@ export default function App() {
   // Loading state tracking
   const [loadingJobTitle, setLoadingJobTitle] = useState("");
   const [loadingCompany, setLoadingCompany] = useState("");
+
+  // Handle URL Routing on Initial Load and PopState (Browser Back/Forward)
+  useEffect(() => {
+    const handleUrlRouting = () => {
+      const pathname = window.location.pathname.toLowerCase();
+      
+      if (pathname.startsWith("/guides/")) {
+        const slug = pathname.replace("/guides/", "").replace(/\/$/, "");
+        const guide = LONG_TAIL_GUIDES_DATA.find((g) => g.slug === slug);
+        if (guide) {
+          setSelectedLongTailGuide(guide);
+          setCurrentView("long-tail-guide");
+          return;
+        }
+      } else if (pathname === "/guides" || pathname === "/guides/") {
+        setCurrentView("guides");
+        return;
+      } else if (pathname.startsWith("/ats/")) {
+        const slug = pathname.replace("/ats/", "").replace(/\/$/, "");
+        const ats = ATS_SYSTEMS_DATA.find((a) => a.slug === slug);
+        if (ats) {
+          setSelectedAtsGuide(ats);
+          setCurrentView("ats-guide");
+          return;
+        }
+      } else if (pathname === "/pricing" || pathname === "/pricing/") {
+        setCurrentView("pricing");
+        return;
+      } else if (pathname === "/onboarding" || pathname === "/onboarding/" || pathname === "/generator") {
+        setCurrentView("dashboard");
+        return;
+      } else if (pathname === "/history" || pathname === "/history/") {
+        setCurrentView("history");
+        return;
+      }
+    };
+
+    handleUrlRouting();
+    window.addEventListener("popstate", handleUrlRouting);
+    return () => window.removeEventListener("popstate", handleUrlRouting);
+  }, []);
 
   // Listen to Firebase Auth state & fetch user profile
   useEffect(() => {
@@ -130,6 +179,36 @@ export default function App() {
       updateDOMMetaTags(METADATA_DICTIONARY.history);
       path = "/history";
       title = METADATA_DICTIONARY.history.title;
+    } else if (currentView === "guides") {
+      updateDOMMetaTags(METADATA_DICTIONARY.guides);
+      path = "/guides";
+      title = METADATA_DICTIONARY.guides.title;
+    } else if (currentView === "long-tail-guide" && selectedLongTailGuide) {
+      const metaKey = `guide-${selectedLongTailGuide.slug}` as keyof typeof METADATA_DICTIONARY;
+      const meta = METADATA_DICTIONARY[metaKey] || {
+        title: `${selectedLongTailGuide.title} | JobMatch AI`,
+        description: selectedLongTailGuide.metaDescription,
+        keywords: [selectedLongTailGuide.targetKeyword, "JobMatch AI", "score ATS", "optimisation CV"],
+        canonicalUrl: `https://www.jobmatch.company/guides/${selectedLongTailGuide.slug}`,
+        ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
+        robots: "index, follow",
+      };
+      updateDOMMetaTags(meta);
+      path = `/guides/${selectedLongTailGuide.slug}`;
+      title = meta.title;
+    } else if (currentView === "ats-guide" && selectedAtsGuide) {
+      const titleStr = `Comment passer le filtre ATS ${selectedAtsGuide.name} ? — Guide & Conseils | JobMatch`;
+      const meta = {
+        title: titleStr,
+        description: `Guide complet pour optimiser votre CV pour l'ATS ${selectedAtsGuide.name} (${selectedAtsGuide.marketShare}). Conseils, règles et mots-clés essentiels.`,
+        keywords: ["passer filtre ATS", selectedAtsGuide.name, "optimiser CV", ...selectedAtsGuide.atsKeywordsToInclude],
+        canonicalUrl: `https://www.jobmatch.company/ats/${selectedAtsGuide.slug}`,
+        ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
+        robots: "index, follow",
+      };
+      updateDOMMetaTags(meta);
+      path = `/ats/${selectedAtsGuide.slug}`;
+      title = meta.title;
     } else {
       updateDOMMetaTags(METADATA_DICTIONARY.landing);
       path = "/";
@@ -138,7 +217,7 @@ export default function App() {
 
     // Google Analytics (gtag.js) SPA page view tracking
     trackPageView(path, title);
-  }, [currentView, currentApplication]);
+  }, [currentView, currentApplication, selectedLongTailGuide, selectedAtsGuide]);
 
   // Load persistence from local storage as offline/initial fallback
   useEffect(() => {
@@ -328,8 +407,17 @@ export default function App() {
           {/* Top Navbar */}
           <Navbar
             currentView={currentView}
-            onNavigate={(view) => setCurrentView(view)}
-            onNewApplication={() => setCurrentView("dashboard")}
+            onNavigate={(view) => {
+              setCurrentView(view);
+              if (view === "landing") window.history.pushState({}, "JobMatch AI", "/");
+              else if (view === "pricing") window.history.pushState({}, "Tarifs JobMatch", "/pricing");
+              else if (view === "dashboard" || view === "onboarding") window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+              else if (view === "guides") window.history.pushState({}, "Guides & Ressources ATS", "/guides");
+            }}
+            onNewApplication={() => {
+              setCurrentView("dashboard");
+              window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+            }}
             user={user}
             userProfile={userProfile}
             onOpenAuth={() => setShowAuthModal(true)}
@@ -339,8 +427,14 @@ export default function App() {
           <main className="flex-1 w-full">
             {currentView === "landing" && (
               <LandingView
-                onStart={() => setCurrentView("dashboard")}
-                onViewPricing={() => setCurrentView("pricing")}
+                onStart={() => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                }}
+                onViewPricing={() => {
+                  setCurrentView("pricing");
+                  window.history.pushState({}, "Tarifs JobMatch", "/pricing");
+                }}
                 onQuickViewSample={() => {
                   setCurrentApplication(DEFAULT_ALEXANDRE_DUBOIS);
                   setCurrentView("editor");
@@ -356,7 +450,10 @@ export default function App() {
                 onOpenScoreModal={() => setShowScoreModal(true)}
                 onOpenRegenerateModal={() => setShowRegenerateModal(true)}
                 onOpenSendModal={() => setShowSendModal(true)}
-                onOpenPricing={() => setCurrentView("pricing")}
+                onOpenPricing={() => {
+                  setCurrentView("pricing");
+                  window.history.pushState({}, "Tarifs JobMatch", "/pricing");
+                }}
               />
             )}
 
@@ -365,7 +462,10 @@ export default function App() {
                 onGenerate={handleGenerate}
                 isLoading={isLoading}
                 userProfile={userProfile}
-                onOpenPricing={() => setCurrentView("pricing")}
+                onOpenPricing={() => {
+                  setCurrentView("pricing");
+                  window.history.pushState({}, "Tarifs JobMatch", "/pricing");
+                }}
                 onQuickViewSample={() => {
                   setCurrentApplication(DEFAULT_ALEXANDRE_DUBOIS);
                   setCurrentView("editor");
@@ -381,13 +481,19 @@ export default function App() {
                   setCurrentView("editor");
                 }}
                 onDeleteApplication={handleDeleteHistory}
-                onNewApplication={() => setCurrentView("dashboard")}
+                onNewApplication={() => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                }}
               />
             )}
 
             {currentView === "pricing" && (
               <PricingView
-                onStartFree={() => setCurrentView("dashboard")}
+                onStartFree={() => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                }}
                 user={user}
                 userProfile={userProfile}
                 onUpgradePlan={handleUpgradePlan}
@@ -395,10 +501,93 @@ export default function App() {
                 onOpenLegalModal={(tab) => setLegalModalTab(tab)}
               />
             )}
+
+            {currentView === "guides" && (
+              <BlogGuidesView
+                onSelectAtsGuide={(ats) => {
+                  setSelectedAtsGuide(ats);
+                  setCurrentView("ats-guide");
+                  window.history.pushState({}, `Guide ATS ${ats.name}`, `/ats/${ats.slug}`);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onSelectJobRole={(_roleId) => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                }}
+                onSelectLongTailGuide={(guide) => {
+                  setSelectedLongTailGuide(guide);
+                  setCurrentView("long-tail-guide");
+                  window.history.pushState({}, guide.title, `/guides/${guide.slug}`);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onStartGenerator={() => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                }}
+              />
+            )}
+
+            {currentView === "long-tail-guide" && selectedLongTailGuide && (
+              <LongTailGuideDetailView
+                guide={selectedLongTailGuide}
+                onBack={() => {
+                  setCurrentView("guides");
+                  window.history.pushState({}, "Guides & Ressources ATS", "/guides");
+                }}
+                onStartOnboarding={() => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                }}
+                onNavigateHome={() => {
+                  setCurrentView("landing");
+                  window.history.pushState({}, "JobMatch AI", "/");
+                }}
+                onSelectOtherGuide={(slug) => {
+                  const target = LONG_TAIL_GUIDES_DATA.find((g) => g.slug === slug);
+                  if (target) {
+                    setSelectedLongTailGuide(target);
+                    setCurrentView("long-tail-guide");
+                    window.history.pushState({}, target.title, `/guides/${target.slug}`);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }}
+              />
+            )}
+
+            {currentView === "ats-guide" && selectedAtsGuide && (
+              <AtsGuideDetailView
+                guide={selectedAtsGuide}
+                onBack={() => {
+                  setCurrentView("guides");
+                  window.history.pushState({}, "Guides & Ressources ATS", "/guides");
+                }}
+                onStartForAts={() => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                }}
+              />
+            )}
           </main>
 
           {/* Footer */}
-          <Footer onOpenLegalModal={(tab) => setLegalModalTab(tab)} />
+          <Footer 
+            onOpenLegalModal={(tab) => setLegalModalTab(tab)} 
+            onNavigateGuides={(slug) => {
+              if (slug) {
+                const target = LONG_TAIL_GUIDES_DATA.find((g) => g.slug === slug);
+                if (target) {
+                  setSelectedLongTailGuide(target);
+                  setCurrentView("long-tail-guide");
+                  window.history.pushState({}, target.title, `/guides/${target.slug}`);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              } else {
+                setCurrentView("guides");
+                window.history.pushState({}, "Guides & Ressources ATS", "/guides");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+          />
 
           {/* Modals */}
           <AuthModal

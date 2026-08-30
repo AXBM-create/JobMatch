@@ -55,8 +55,41 @@
   <url>
     <loc>https://www.jobmatch.company/guides</loc>
     <lastmod>2026-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.jobmatch.company/guides/comment-passer-les-filtres-ats</loc>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.jobmatch.company/guides/comment-passer-les-filtres-ats?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jobmatch.company/guides/comment-passer-les-filtres-ats?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.jobmatch.company/guides/comment-passer-les-filtres-ats?lang=es" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.jobmatch.company/guides/comment-passer-les-filtres-ats?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.jobmatch.company/guides/comment-passer-les-filtres-ats" />
+  </url>
+  <url>
+    <loc>https://www.jobmatch.company/guides/exemple-de-cv-optimise-ia</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.jobmatch.company/guides/exemple-de-cv-optimise-ia?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jobmatch.company/guides/exemple-de-cv-optimise-ia?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.jobmatch.company/guides/exemple-de-cv-optimise-ia?lang=es" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.jobmatch.company/guides/exemple-de-cv-optimise-ia?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.jobmatch.company/guides/exemple-de-cv-optimise-ia" />
+  </url>
+  <url>
+    <loc>https://www.jobmatch.company/guides/lettre-de-motivation-automatique-gratuite</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.jobmatch.company/guides/lettre-de-motivation-automatique-gratuite?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jobmatch.company/guides/lettre-de-motivation-automatique-gratuite?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.jobmatch.company/guides/lettre-de-motivation-automatique-gratuite?lang=es" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.jobmatch.company/guides/lettre-de-motivation-automatique-gratuite?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.jobmatch.company/guides/lettre-de-motivation-automatique-gratuite" />
   </url>
 
   <!-- 6. Pages Légales & Conformité -->

@@ -33,8 +33,8 @@ export const translations = {
 
     // Hero Section
     hero_badge_confidence: "Algorithme calibré pour les filtres ATS & Recruteurs",
-    hero_h1_main: "Ton CV parfait pour chaque offre,",
-    hero_h1_highlight: "en 30 secondes",
+    hero_h1_main: "Générateur de CV & Lettre de Motivation par IA :",
+    hero_h1_highlight: "Optimisés ATS pour chaque offre en 30s",
     hero_desc: "L'intelligence artificielle analyse l'offre d'emploi cible et adapte automatiquement ton CV et ta lettre de motivation pour passer les filtres ATS et maximiser tes chances d'entretien.",
     hero_cta_free: "Essayer gratuitement — sans carte bancaire",
     hero_cta_sample: "Voir un exemple en direct",
@@ -273,8 +273,8 @@ export const translations = {
 
     // Hero Section
     hero_badge_confidence: "Algorithm calibrated for ATS filters & Recruiters",
-    hero_h1_main: "Your perfect resume for every job offer,",
-    hero_h1_highlight: "in 30 seconds",
+    hero_h1_main: "AI Resume & Cover Letter Generator:",
+    hero_h1_highlight: "Tailored for ATS & every job in 30s",
     hero_desc: "Our AI analyzes the target job post and automatically customizes your resume and cover letter to bypass ATS filters and maximize interview callbacks.",
     hero_cta_free: "Try for free — no credit card needed",
     hero_cta_sample: "View live sample",
@@ -513,8 +513,8 @@ export const translations = {
 
     // Hero Section
     hero_badge_confidence: "Algoritmo calibrado para filtros ATS y Reclutadores",
-    hero_h1_main: "Tu CV perfecto para cada oferta de empleo,",
-    hero_h1_highlight: "en 30 segundos",
+    hero_h1_main: "Generador de CV y Carta de Presentación con IA :",
+    hero_h1_highlight: "Optimizado para filtros ATS en 30s",
     hero_desc: "Nuestra inteligencia artificial analiza la oferta objetivo y adapta automáticamente tu currículum y carta de presentación para superar los filtros ATS y multiplicar tus entrevistas.",
     hero_cta_free: "Probar gratis — sin tarjeta bancaria",
     hero_cta_sample: "Ver ejemplo en vivo",
@@ -753,8 +753,8 @@ export const translations = {
 
     // Hero Section
     hero_badge_confidence: "Algorithmus kalibriert für ATS-Filter & Recruiter",
-    hero_h1_main: "Dein perfekter Lebenslauf für jede Stelle,",
-    hero_h1_highlight: "in 30 Sekunden",
+    hero_h1_main: "KI-Lebenslauf & Anschreiben Generator:",
+    hero_h1_highlight: "ATS-optimiert für jedes Jobangebot in 30s",
     hero_desc: "Künstliche Intelligenz analysiert die Stellenausschreibung und passt deinen Lebenslauf und dein Anschreiben automatisch an, um ATS-Filter zu bestehen und deine Interviewchancen zu maximieren.",
     hero_cta_free: "Kostenlos testen — keine Kreditkarte nötig",
     hero_cta_sample: "Live-Beispiel ansehen",
@@ -993,8 +993,8 @@ export const translations = {
 
     // Hero Section
     hero_badge_confidence: "Algoritmo calibrato per filtri ATS & Selezionatori",
-    hero_h1_main: "Il tuo CV perfetto per ogni offerta di lavoro,",
-    hero_h1_highlight: "in 30 secondi",
+    hero_h1_main: "Generatore di CV e Lettera di Presentazione con IA:",
+    hero_h1_highlight: "Ottimizzati ATS per ogni offerta in 30s",
     hero_desc: "La nostra intelligenza artificiale analizza l'annuncio di lavoro e adatta automaticamente il tuo CV e la lettera di presentazione per superare i filtri ATS e massimizzare i colloqui.",
     hero_cta_free: "Prova gratis — nessuna carta richiesta",
     hero_cta_sample: "Vedi esempio in tempo reale",
@@ -1233,8 +1233,8 @@ export const translations = {
 
     // Hero Section
     hero_badge_confidence: "Algoritmo calibrado para filtros ATS & Recrutadores",
-    hero_h1_main: "O teu currículo perfeito para cada vaga de emprego,",
-    hero_h1_highlight: "em 30 segundos",
+    hero_h1_main: "Gerador de CV e Carta de Apresentação com IA:",
+    hero_h1_highlight: "Otimizados para ATS e cada vaga em 30s",
     hero_desc: "A nossa inteligência artificial analisa a oferta de emprego alvo e adapta automaticamente o teu currículo e carta de apresentação para superar os filtros ATS e multiplicar as tuas entrevistas.",
     hero_cta_free: "Experimentar grátis — sem cartão de crédito",
     hero_cta_sample: "Ver exemplo ao vivo",

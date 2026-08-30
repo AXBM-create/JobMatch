@@ -115,6 +115,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
+            onClick={() => handleNavClick("guides")}
+            id="nav-tab-guides"
+            className={`px-3 py-2 text-sm font-medium transition-all rounded-lg cursor-pointer ${
+              currentView === "guides" || currentView === "ats-guide" || currentView === "long-tail-guide"
+                ? "text-[#1A3A5C] font-bold bg-slate-100/80"
+                : "text-slate-600 hover:text-[#1A3A5C] hover:bg-slate-50"
+            }`}
+          >
+            Guides & Conseils ATS
+          </button>
+
+          <button
             onClick={() => handleNavClick("landing", "faq")}
             id="nav-tab-faq"
             className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-[#1A3A5C] hover:bg-slate-50 rounded-lg transition-all cursor-pointer"

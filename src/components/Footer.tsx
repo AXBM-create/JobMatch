@@ -6,9 +6,10 @@ import { LanguageSelector } from "./LanguageSelector";
 
 interface FooterProps {
   onOpenLegalModal?: (tab: "cgv" | "privacy" | "mentions") => void;
+  onNavigateGuides?: (slug?: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenLegalModal }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenLegalModal, onNavigateGuides }) => {
   const { t } = useLanguage();
 
   return (
@@ -31,6 +32,44 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegalModal }) => {
             />
           </a>
         </div>
+
+        {/* SEO Internal Links to Guides */}
+        {onNavigateGuides && (
+          <div className="w-full pt-4 border-t border-slate-100 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-slate-500 text-[11px] sm:text-xs">
+            <span className="font-semibold text-slate-700">Ressources & Guides :</span>
+            <button
+              type="button"
+              onClick={() => onNavigateGuides("comment-passer-les-filtres-ats")}
+              className="hover:text-[#1A3A5C] hover:underline cursor-pointer transition-colors"
+            >
+              Comment passer les filtres ATS
+            </button>
+            <span className="text-slate-300">•</span>
+            <button
+              type="button"
+              onClick={() => onNavigateGuides("exemple-de-cv-optimise-ia")}
+              className="hover:text-[#1A3A5C] hover:underline cursor-pointer transition-colors"
+            >
+              Exemple de CV optimisé IA
+            </button>
+            <span className="text-slate-300">•</span>
+            <button
+              type="button"
+              onClick={() => onNavigateGuides("lettre-de-motivation-automatique-gratuite")}
+              className="hover:text-[#1A3A5C] hover:underline cursor-pointer transition-colors"
+            >
+              Lettre de motivation automatique gratuite
+            </button>
+            <span className="text-slate-300">•</span>
+            <button
+              type="button"
+              onClick={() => onNavigateGuides()}
+              className="hover:text-[#1A3A5C] hover:underline font-semibold cursor-pointer transition-colors text-emerald-700"
+            >
+              Tous les guides ATS →
+            </button>
+          </div>
+        )}
 
         <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6 pt-4 border-t border-slate-100">
           <div className="flex flex-col sm:flex-row items-center gap-3">

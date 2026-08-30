@@ -1,16 +1,18 @@
 import React from 'react';
-import { BookOpen, ArrowRight, ShieldCheck, CheckCircle2, ChevronRight, Briefcase } from 'lucide-react';
-import { ATS_SYSTEMS_DATA, JOB_ROLES_DATA, AtsSystemData } from '../data/seoProgrammaticData';
+import { BookOpen, ArrowRight, ShieldCheck, CheckCircle2, ChevronRight, Briefcase, Sparkles, Clock } from 'lucide-react';
+import { ATS_SYSTEMS_DATA, JOB_ROLES_DATA, LONG_TAIL_GUIDES_DATA, AtsSystemData, LongTailGuideData } from '../data/seoProgrammaticData';
 
 interface BlogGuidesViewProps {
   onSelectAtsGuide: (guide: AtsSystemData) => void;
   onSelectJobRole: (roleId: string) => void;
+  onSelectLongTailGuide: (guide: LongTailGuideData) => void;
   onStartGenerator: () => void;
 }
 
 export const BlogGuidesView: React.FC<BlogGuidesViewProps> = ({
   onSelectAtsGuide,
   onSelectJobRole,
+  onSelectLongTailGuide,
   onStartGenerator,
 }) => {
   return (
@@ -27,7 +29,54 @@ export const BlogGuidesView: React.FC<BlogGuidesViewProps> = ({
         </p>
       </div>
 
-      {/* Section 1 : Décryptage des Logiciels ATS */}
+      {/* Section 1 : Articles & Guides Longue Traîne (Nouveau) */}
+      <div className="mb-16">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-[#1A3A5C] flex items-center gap-2.5">
+            <Sparkles className="w-6 h-6 text-emerald-600" />
+            Guides Pratiques & Articles Essentiels
+          </h2>
+          <span className="text-xs font-semibold text-slate-500 hidden sm:inline">Articles de fond • 500-800+ mots</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {LONG_TAIL_GUIDES_DATA.map((guide) => (
+            <article
+              key={guide.slug}
+              onClick={() => onSelectLongTailGuide(guide)}
+              className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-emerald-500 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    {guide.category}
+                  </span>
+                  <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {guide.readingTime}
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-[#1A3A5C] transition-colors mb-2.5 line-clamp-2">
+                  {guide.title}
+                </h3>
+                <p className="text-xs text-slate-600 mb-4 line-clamp-3 leading-relaxed">
+                  {guide.metaDescription}
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-bold text-emerald-600 group-hover:text-emerald-700 flex items-center gap-1">
+                  Lire l'article
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium">Par {guide.author.name}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      {/* Section 2 : Décryptage des Logiciels ATS */}
       <div className="mb-16">
         <h2 className="text-2xl font-bold text-[#1A3A5C] mb-6 flex items-center gap-2.5">
           <ShieldCheck className="w-6 h-6 text-emerald-600" />
@@ -65,7 +114,7 @@ export const BlogGuidesView: React.FC<BlogGuidesViewProps> = ({
         </div>
       </div>
 
-      {/* Section 2 : Modèles & Mots-clés par Métier */}
+      {/* Section 3 : Modèles & Mots-clés par Métier */}
       <div>
         <h2 className="text-2xl font-bold text-[#1A3A5C] mb-6 flex items-center gap-2.5">
           <Briefcase className="w-6 h-6 text-emerald-600" />
@@ -105,3 +154,4 @@ export const BlogGuidesView: React.FC<BlogGuidesViewProps> = ({
     </div>
   );
 };
+
