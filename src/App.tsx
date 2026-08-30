@@ -30,6 +30,7 @@ import {
   METADATA_DICTIONARY, 
   generateJobApplicationMetadata 
 } from "./seo/metadata";
+import { trackPageView, trackEvent } from "./utils/analytics";
 
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewState>("landing");
@@ -102,8 +103,11 @@ export default function App() {
     }
   }, [user]);
 
-  // Sync Browser Title & SEO Meta Tags on View / Application changes
+  // Sync Browser Title, SEO Meta Tags & Google Analytics on View / Application changes
   useEffect(() => {
+    let path = "/";
+    let title = METADATA_DICTIONARY.landing.title;
+
     if (currentView === "editor" && currentApplication?.targetJob) {
       const meta = generateJobApplicationMetadata(
         currentApplication.targetJob,
@@ -112,15 +116,28 @@ export default function App() {
         currentApplication.id
       );
       updateDOMMetaTags(meta);
+      path = `/editor/${currentApplication.id || "latest"}`;
+      title = meta.title;
     } else if (currentView === "pricing") {
       updateDOMMetaTags(METADATA_DICTIONARY.pricing);
+      path = "/pricing";
+      title = METADATA_DICTIONARY.pricing.title;
     } else if (currentView === "dashboard" || currentView === "onboarding") {
       updateDOMMetaTags(METADATA_DICTIONARY.onboarding);
+      path = "/generator";
+      title = METADATA_DICTIONARY.onboarding.title;
     } else if (currentView === "history") {
       updateDOMMetaTags(METADATA_DICTIONARY.history);
+      path = "/history";
+      title = METADATA_DICTIONARY.history.title;
     } else {
       updateDOMMetaTags(METADATA_DICTIONARY.landing);
+      path = "/";
+      title = METADATA_DICTIONARY.landing.title;
     }
+
+    // Google Analytics (gtag.js) SPA page view tracking
+    trackPageView(path, title);
   }, [currentView, currentApplication]);
 
   // Load persistence from local storage as offline/initial fallback
@@ -156,6 +173,11 @@ export default function App() {
   };
 
   const handleUpgradePlan = async (plan: SubscriptionPlan) => {
+    trackEvent("upgrade_plan", {
+      plan_name: plan,
+      currency: "EUR",
+      value: plan === "executive" ? 39 : 19,
+    });
     if (user) {
       await upgradeUserPlan(user.uid, plan);
       const updated = await getUserProfile(user.uid);
@@ -231,6 +253,14 @@ export default function App() {
       }
 
       const generatedData: ApplicationResult = await response.json();
+
+      // Track conversion event in Google Analytics
+      trackEvent("generate_application", {
+        job_title: jobInput.jobTitle,
+        company_name: jobInput.companyName,
+        match_score: generatedData.matchScore,
+        language: options.language,
+      });
 
       // Deduct credit
       if (user) {

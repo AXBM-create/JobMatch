@@ -33,6 +33,19 @@
     <meta name="twitter:description" content="Génère un CV et une lettre de motivation adaptés à chaque offre en 30 secondes grâce à l'IA. Passez les filtres ATS avec succès." />
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&h=630&fit=crop&q=80" />
 
+    <!-- Google tag (gtag.js) - Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BMNVDSLKPM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-BMNVDSLKPM', {
+        page_path: window.location.pathname,
+        send_page_view: true
+      });
+    </script>
+
     <!-- Performance & Font Preloading (Inter / Manrope sans-serif) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -128,27 +141,183 @@
   </head>
   <body class="bg-[#F8F9FA] text-[#1F2937] font-sans antialiased selection:bg-[#1A3A5C] selection:text-white">
     <div id="root">
-      <!-- Semantic Static Content immediately available to Search Engine Crawlers & curl requests -->
-      <noscript>
-        <header>
-          <h1>JobMatch AI — Ton CV et Lettre de Motivation parfaits en 30 secondes</h1>
-          <p>Générateur de CV IA et de lettre de motivation sur-mesure calibré pour passer les filtres ATS (Applicant Tracking Systems) et décrocher des entretiens.</p>
+      <!-- Contenu HTML Sémantique Pré-rendu pour l'indexation SEO & Robots Crawlers (Googlebot, Bingbot, cURL) -->
+      <div class="min-h-screen bg-[#F8F9FA] text-[#1F2937] font-sans">
+        <!-- Navigation Header Statut -->
+        <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-40">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="w-9 h-9 rounded-xl bg-[#1A3A5C] text-white flex items-center justify-center font-black text-lg">J</span>
+              <span class="text-xl font-bold text-[#1A3A5C]">JobMatch<span class="text-emerald-600">.ai</span></span>
+            </div>
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+              <a href="/#how-it-works" class="hover:text-[#1A3A5C]">Comment ça marche</a>
+              <a href="/#faq" class="hover:text-[#1A3A5C]">Questions fréquentes</a>
+              <a href="/pricing" class="hover:text-[#1A3A5C]">Tarifs</a>
+            </nav>
+            <div>
+              <a href="/onboarding" class="px-4 py-2 bg-[#1A3A5C] text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm">Créer mon CV</a>
+            </div>
+          </div>
         </header>
+
+        <!-- 1. Hero Section avec H1 Principal SEO -->
         <main>
-          <section>
-            <h2>Comment optimiser son CV pour les logiciels ATS</h2>
-            <ol>
-              <li><strong>Analyse de l'annonce :</strong> Extraction sémantique des mots-clés, hard skills et soft skills sur LinkedIn, Indeed ou Welcome to the Jungle.</li>
-              <li><strong>Parsing et restructuration :</strong> Alignement des réalisations et expériences pour les moteurs Workday, Taleo, Greenhouse, Lever, SmartRecruiters et iCIMS.</li>
-              <li><strong>Génération optimisée :</strong> Score de compatibilité ATS supérieur à 90% et export PDF haute fidélité en 30 secondes.</li>
-            </ol>
+          <section class="relative pt-12 pb-20 md:pt-20 md:pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto">
+              <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold mb-6">
+                <span>Algorithme calibré pour les filtres ATS 2026</span>
+              </div>
+              <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#1A3A5C] tracking-tight leading-[1.15] mb-6">
+                Ton CV et Lettre de Motivation parfaits en <span class="text-emerald-600">30 secondes</span>
+              </h1>
+              <p class="text-base sm:text-lg md:text-xl text-[#6B7280] font-normal leading-relaxed max-w-2xl mx-auto mb-8">
+                Colle l'offre d'emploi, importe ton CV. Notre IA analyse les mots-clés du recruteur et génère une candidature sur-mesure qui passe les filtres ATS.
+              </p>
+              <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-8">
+                <a href="/onboarding" class="w-full sm:w-auto px-7 py-3.5 bg-[#1A3A5C] text-white font-semibold text-base rounded-lg shadow-md flex items-center justify-center gap-2">
+                  <span>Créer ma candidature gratuite</span>
+                  <span>→</span>
+                </a>
+                <a href="/pricing" class="w-full sm:w-auto px-6 py-3.5 bg-white text-[#1A3A5C] border border-slate-300 font-medium text-base rounded-lg shadow-xs">
+                  <span>Découvrir les offres</span>
+                </a>
+              </div>
+              <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-[#6B7280]">
+                <span class="font-bold text-slate-800">★★★★★ 4.9/5 (14 800+ candidats)</span>
+                <span>•</span>
+                <span>Plus de 45 000 candidatures optimisées</span>
+                <span>•</span>
+                <span>100% Conforme RGPD</span>
+              </div>
+            </div>
+
+            <!-- Comparatif Avant / Après -->
+            <div class="mt-14 max-w-5xl mx-auto bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xl">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-rose-50/50 rounded-xl p-5 border border-rose-200">
+                  <span class="text-xs font-bold text-rose-700 uppercase bg-rose-100 px-2 py-0.5 rounded">CV Standard Non Adapté (Score 42%)</span>
+                  <p class="text-xs text-slate-600 mt-3 italic">« Responsable de projets digitaux et management d'équipe. Bonne maîtrise des outils informatiques. »</p>
+                  <p class="text-[11px] text-rose-700 font-semibold mt-3">❌ Risque de rejet automatique par les robots ATS (Workday, Taleo, Greenhouse).</p>
+                </div>
+                <div class="bg-emerald-50/50 rounded-xl p-5 border-2 border-emerald-500">
+                  <span class="text-xs font-bold text-emerald-800 uppercase bg-emerald-100 px-2 py-0.5 rounded">CV Optimisé JobMatch (Score 94%)</span>
+                  <p class="text-xs text-slate-800 mt-3 font-medium">« Pilotage stratégique de 4 projets SaaS à fort trafic. Mots-clés cibles intégrés : Gestion de Produit, Analyse ROI (+28%), Leadership Agile. »</p>
+                  <p class="text-[11px] text-emerald-800 font-semibold mt-3">✓ Maximise vos chances de décrocher un entretien d'embauche.</p>
+                </div>
+              </div>
+            </div>
           </section>
-          <section>
-            <h2>Termes et technologies de recrutement indexés</h2>
-            <p>Optimisation CV ATS, matching offre profil, modèle CV sans rejet, score ATS gratuit, parsing NLP candidature, recruiter screening bot, AI resume builder, compliance RGPD recrutement.</p>
+
+          <!-- 2. Comment ça marche -->
+          <section id="how-it-works" class="py-16 md:py-24 bg-white border-y border-slate-200 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+              <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Processus fluide en 3 étapes</span>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#1A3A5C] mt-3 mb-4">3 étapes pour décrocher plus d'entretiens</h2>
+                <p class="text-sm sm:text-base text-[#6B7280]">Plus besoin de passer 2 heures à reformuler ton CV pour chaque entreprise.</p>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                <article class="bg-[#F8F9FA] rounded-2xl p-6 border border-slate-200">
+                  <span class="w-10 h-10 rounded-xl bg-[#1A3A5C] text-white flex items-center justify-center font-bold mb-4">1</span>
+                  <h3 class="text-lg font-bold text-[#1A3A5C] mb-2">1. Renseigne l'offre visée</h3>
+                  <p class="text-sm text-[#6B7280]">Colle le lien ou le texte brut de l'annonce LinkedIn, Indeed ou Welcome to the Jungle.</p>
+                </article>
+                <article class="bg-[#F8F9FA] rounded-2xl p-6 border border-slate-200">
+                  <span class="w-10 h-10 rounded-xl bg-[#1A3A5C] text-white flex items-center justify-center font-bold mb-4">2</span>
+                  <h3 class="text-lg font-bold text-[#1A3A5C] mb-2">2. L'IA analyse & adapte</h3>
+                  <p class="text-sm text-[#6B7280]">Extraction des compétences requises, reformulation percutante de tes expériences et calcul du score de correspondance.</p>
+                </article>
+                <article class="bg-[#F8F9FA] rounded-2xl p-6 border border-slate-200">
+                  <span class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold mb-4">3</span>
+                  <h3 class="text-lg font-bold text-[#1A3A5C] mb-2">3. Télécharge ton dossier</h3>
+                  <p class="text-sm text-[#6B7280]">Exporte instantanément ton CV et ta lettre de motivation au format PDF haute résolution prêt pour le recruteur.</p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. Bénéfices & Fonctionnalités -->
+          <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">Avantages clés</span>
+              <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#1A3A5C] mt-3 mb-3">Conçu pour maximiser votre taux de réponse</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div class="bg-white rounded-2xl p-6 border border-slate-200">
+                <h3 class="text-lg font-bold text-[#1A3A5C] mb-2">Génération en 30 secondes</h3>
+                <p class="text-xs sm:text-sm text-[#6B7280]">Rédigez un dossier complet 10x plus vite sans sacrifier la qualité rédactionnelle.</p>
+              </div>
+              <div class="bg-white rounded-2xl p-6 border border-slate-200">
+                <h3 class="text-lg font-bold text-[#1A3A5C] mb-2">Optimisation ATS certifiée</h3>
+                <p class="text-xs sm:text-sm text-[#6B7280]">Structure conforme aux exigences des logiciels de tri automatique RH mondiaux.</p>
+              </div>
+              <div class="bg-white rounded-2xl p-6 border border-slate-200">
+                <h3 class="text-lg font-bold text-[#1A3A5C] mb-2">Support Multi-langues</h3>
+                <p class="text-xs sm:text-sm text-[#6B7280]">Générez des candidatures en Français, Anglais, Espagnol, Allemand, Italien et Portugais.</p>
+              </div>
+              <div class="bg-white rounded-2xl p-6 border border-slate-200">
+                <h3 class="text-lg font-bold text-[#1A3A5C] mb-2">Édition & Personnalisation</h3>
+                <p class="text-xs sm:text-sm text-[#6B7280]">Modifiez le contenu directement dans l'éditeur interactif avec régénération par bloc.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. FAQ Section Complète Sémantique -->
+          <section id="faq" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 my-8">
+            <div class="text-center mb-12">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">Foire aux questions</span>
+              <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#1A3A5C] mt-3 mb-3">Questions fréquemment posées</h2>
+            </div>
+            <div class="space-y-6 text-left">
+              <div class="border-b border-slate-200 pb-4">
+                <h3 class="text-base font-bold text-[#1A3A5C]">Comment JobMatch optimise-t-il mon CV pour les filtres ATS ?</h3>
+                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">JobMatch analyse sémantiquement l'offre d'emploi pour extraire les mots-clés exacts, les compétences techniques et le vocabulaire recherché par le recruteur. Il reformule ensuite vos expériences réelles pour mettre en valeur les correspondances directes tout en conservant une mise en page standard 100% lisible par les logiciels ATS.</p>
+              </div>
+              <div class="border-b border-slate-200 pb-4">
+                <h3 class="text-base font-bold text-[#1A3A5C]">Combien de temps prend la génération d'un CV et d'une lettre ?</h3>
+                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">La génération complète prend entre 20 et 30 secondes grâce à notre modèle d'IA haute vitesse.</p>
+              </div>
+              <div class="border-b border-slate-200 pb-4">
+                <h3 class="text-base font-bold text-[#1A3A5C]">Est-ce gratuit pour démarrer ?</h3>
+                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">Oui, JobMatch propose un essai gratuit sans aucune carte bancaire requise. Vous pouvez générer votre première candidature complète immédiatement.</p>
+              </div>
+              <div class="border-b border-slate-200 pb-4">
+                <h3 class="text-base font-bold text-[#1A3A5C]">Mes données personnelles sont-elles protégées ?</h3>
+                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">Absolument. Vos données et CV sont strictement confidentiels, chiffrés en transit et au repos, et ne sont jamais revendus ni utilisés pour entraîner des modèles publics.</p>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-[#1A3A5C]">Quels sont les formats de fichiers acceptés ?</h3>
+                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">Vous pouvez importer votre CV existant au format PDF ou DOCX, ou remplir directement le formulaire interactif.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. CTA Final -->
+          <section class="py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-[#1A3A5C] text-white text-center">
+            <div class="max-w-4xl mx-auto">
+              <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Prêt à décrocher votre prochain poste ?</h2>
+              <p class="text-sm sm:text-base text-slate-300 max-w-xl mx-auto mb-8">Testez gratuitement JobMatch dès maintenant et recevez votre dossier de candidature sur-mesure en 30 secondes.</p>
+              <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="/onboarding" class="px-8 py-4 bg-emerald-500 text-white font-bold text-base rounded-lg shadow-md">Commencer gratuitement →</a>
+                <a href="/pricing" class="px-6 py-4 bg-transparent text-white border border-white/30 font-medium text-sm rounded-lg">Voir les tarifs</a>
+              </div>
+            </div>
           </section>
         </main>
-      </noscript>
+
+        <!-- Footer Sémantique -->
+        <footer class="bg-white border-t border-slate-200 py-12 px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
+          <p>© 2026 JobMatch AI. Tous droits réservés. Optimisation de candidatures assistée par intelligence artificielle.</p>
+          <div class="flex items-center justify-center gap-4 mt-3">
+            <a href="/pricing" class="hover:underline">Tarifs</a>
+            <span>•</span>
+            <a href="/#how-it-works" class="hover:underline">Fonctionnement</a>
+            <span>•</span>
+            <a href="/#faq" class="hover:underline">FAQ</a>
+          </div>
+        </footer>
+      </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
