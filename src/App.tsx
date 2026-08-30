@@ -32,7 +32,8 @@ import {
 import { 
   updateDOMMetaTags, 
   METADATA_DICTIONARY, 
-  generateJobApplicationMetadata 
+  generateJobApplicationMetadata,
+  SITE_URL
 } from "./seo/metadata";
 import { trackPageView, trackEvent } from "./utils/analytics";
 
@@ -189,7 +190,7 @@ export default function App() {
         title: `${selectedLongTailGuide.title} | JobMatch`,
         description: selectedLongTailGuide.metaDescription,
         keywords: [selectedLongTailGuide.targetKeyword, "JobMatch", "score ATS", "optimisation CV", "jobmatch.company"],
-        canonicalUrl: `https://www.jobmatch.company/guides/${selectedLongTailGuide.slug}`,
+        canonicalUrl: `${SITE_URL}/guides/${selectedLongTailGuide.slug}`,
         ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
         robots: "index, follow",
       };
@@ -202,7 +203,7 @@ export default function App() {
         title: titleStr,
         description: `Guide complet pour optimiser votre CV pour l'ATS ${selectedAtsGuide.name} (${selectedAtsGuide.marketShare}). Conseils, règles et mots-clés essentiels.`,
         keywords: ["passer filtre ATS", selectedAtsGuide.name, "optimiser CV", ...selectedAtsGuide.atsKeywordsToInclude],
-        canonicalUrl: `https://www.jobmatch.company/ats/${selectedAtsGuide.slug}`,
+        canonicalUrl: `${SITE_URL}/ats/${selectedAtsGuide.slug}`,
         ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
         robots: "index, follow",
       };

@@ -366,6 +366,27 @@ export function updateDOMMetaTags(config: PageMetadataConfig) {
   }
   canonicalLink.setAttribute("href", config.canonicalUrl);
 
+  // Set/update hreflang alternate links
+  const setAlternateLink = (hreflang: string, href: string) => {
+    let altLink = document.querySelector(`link[rel="alternate"][hreflang="${hreflang}"]`) as HTMLLinkElement | null;
+    if (!altLink) {
+      altLink = document.createElement("link");
+      altLink.setAttribute("rel", "alternate");
+      altLink.setAttribute("hreflang", hreflang);
+      document.head.appendChild(altLink);
+    }
+    altLink.setAttribute("href", href);
+  };
+
+  const cleanBase = config.canonicalUrl.replace(/\/$/, "");
+  const frUrl = config.canonicalUrl;
+  const enUrl = config.canonicalUrl.endsWith("/") ? `${config.canonicalUrl}?lang=en` : `${cleanBase}?lang=en`;
+  const xDefault = config.canonicalUrl;
+
+  setAlternateLink("fr", frUrl);
+  setAlternateLink("en", enUrl);
+  setAlternateLink("x-default", xDefault);
+
   // 7. Dynamic JSON-LD injection if provided
   if (config.jsonLd) {
     let scriptTag = document.getElementById("dynamic-job-jsonld") as HTMLScriptElement | null;
