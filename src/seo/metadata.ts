@@ -1,11 +1,7 @@
 /**
  * Single source of truth for the site's canonical domain.
- * Configurable via VITE_SITE_URL or NEXT_PUBLIC_SITE_URL.
  */
-export const SITE_URL = 
-  (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_SITE_URL) ||
-  (typeof process !== "undefined" && (process.env?.NEXT_PUBLIC_SITE_URL || process.env?.SITE_URL || process.env?.VITE_SITE_URL)) ||
-  "https://www.jobmatch.company";
+export const SITE_URL = "https://www.jobmatch.company";
 
 export interface PageMetadataConfig {
   title: string;
@@ -50,7 +46,7 @@ export interface NextLikeMetadata {
 
 export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
   landing: {
-    title: "JobMatch AI — Ton CV et Lettre de Motivation parfaits en 30 secondes",
+    title: "JobMatch — Générateur de CV & Lettre de Motivation par IA | jobmatch.company",
     description: "L'intelligence artificielle analyse l'offre d'emploi cible et adapte automatiquement votre CV et lettre de motivation pour passer les filtres ATS et décrocher 3x plus d'entretiens.",
     keywords: [
       "optimisation CV ATS",
@@ -58,28 +54,30 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
       "lettre de motivation personnalisée",
       "filtre ATS recrutement",
       "score ATS",
-      "JobMatch AI"
+      "JobMatch",
+      "jobmatch.company"
     ],
     canonicalUrl: `${SITE_URL}/`,
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow, max-image-preview:large, max-snippet:-1",
   },
   pricing: {
-    title: "Tarifs & Formules — JobMatch AI | Accès Gratuit & Pro Illimité",
+    title: "Tarifs & Formules — JobMatch | Accès Gratuit & Pro Illimité (jobmatch.company)",
     description: "Découvrez nos formules transparentes pour booster vos candidatures. 1 candidature complète offerte, formule Pro Illimitée à 14,90€/mois et pack sans engagement.",
     keywords: [
       "prix JobMatch",
       "tarifs optimisation CV",
       "abonnement IA CV",
       "CV gratuit sans carte",
-      "pack candidatures"
+      "pack candidatures",
+      "jobmatch.company"
     ],
     canonicalUrl: `${SITE_URL}/pricing`,
     ogImage: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow",
   },
   onboarding: {
-    title: "Générateur de CV & Lettre ATS en 30s — JobMatch AI",
+    title: "Générateur de CV & Lettre ATS en 30s — JobMatch (jobmatch.company)",
     description: "Collez le lien de votre offre LinkedIn, Indeed ou Welcome to the Jungle et uploadez votre CV actuel pour obtenir instantanément un profil optimisé à +90% ATS.",
     keywords: [
       "créer CV offre emploi",
@@ -93,7 +91,7 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
     robots: "index, follow",
   },
   history: {
-    title: "Mes Candidatures — JobMatch AI",
+    title: "Mes Candidatures — JobMatch (jobmatch.company)",
     description: "Accédez à l'historique de vos CVs et lettres de motivation optimisés, modifiez vos versions et suivez vos envois.",
     keywords: ["tableau de bord", "mes candidatures", "suivi recrutement"],
     canonicalUrl: `${SITE_URL}/history`,
@@ -171,25 +169,25 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
     robots: "index, follow, max-image-preview:large, max-snippet:-1",
   },
   "mentions-legales": {
-    title: "Mentions Légales — JobMatch AI",
-    description: "Consultez les mentions légales de JobMatch AI, éditeur du générateur de CV et lettre de motivation optimisés ATS.",
-    keywords: ["mentions légales", "éditeur JobMatch", "informations légales"],
+    title: "Mentions Légales — JobMatch (jobmatch.company)",
+    description: "Consultez les mentions légales de JobMatch, éditeur du générateur de CV et lettre de motivation optimisés ATS sur jobmatch.company.",
+    keywords: ["mentions légales", "éditeur JobMatch", "informations légales", "jobmatch.company"],
     canonicalUrl: `${SITE_URL}/mentions-legales`,
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow",
   },
   "politique-confidentialite": {
-    title: "Politique de Confidentialité & RGPD — JobMatch AI",
-    description: "Découvrez nos engagements de confidentialité, de sécurité des données et notre conformité RGPD stricte.",
-    keywords: ["politique de confidentialité", "RGPD", "protection données CV"],
+    title: "Politique de Confidentialité & RGPD — JobMatch (jobmatch.company)",
+    description: "Découvrez nos engagements de confidentialité, de sécurité des données et notre conformité RGPD stricte sur jobmatch.company.",
+    keywords: ["politique de confidentialité", "RGPD", "protection données CV", "jobmatch.company"],
     canonicalUrl: `${SITE_URL}/politique-confidentialite`,
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow",
   },
   cgv: {
-    title: "Conditions Générales de Vente (CGV) — JobMatch AI",
-    description: "Conditions générales de vente et d'utilisation du service de génération de CV par IA JobMatch.",
-    keywords: ["conditions générales de vente", "CGV", "CGU"],
+    title: "Conditions Générales de Vente (CGV) — JobMatch (jobmatch.company)",
+    description: "Conditions générales de vente et d'utilisation du service de génération de CV par IA JobMatch sur jobmatch.company.",
+    keywords: ["conditions générales de vente", "CGV", "CGU", "jobmatch.company"],
     canonicalUrl: `${SITE_URL}/cgv`,
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow",
@@ -244,7 +242,7 @@ export function generateJobApplicationMetadata(
     },
     "publisher": {
       "@type": "Organization",
-      "name": "JobMatch AI",
+      "name": "JobMatch",
       "url": SITE_URL,
     },
   };
@@ -283,7 +281,7 @@ export function generatePageMetadata(view: string): NextLikeMetadata {
       title: config.title,
       description: config.description,
       url: config.canonicalUrl,
-      siteName: "JobMatch AI",
+      siteName: "JobMatch",
       images: [
         {
           url: config.ogImage,
@@ -340,14 +338,21 @@ export function updateDOMMetaTags(config: PageMetadataConfig) {
   setMetaTag("property", "og:title", config.title);
   setMetaTag("property", "og:description", config.description);
   setMetaTag("property", "og:url", config.canonicalUrl);
+  setMetaTag("property", "og:site_name", "JobMatch");
   if (config.ogImage) {
     setMetaTag("property", "og:image", config.ogImage);
   }
 
-  // 5. Twitter Card Tags
+  // 5. Twitter Card Tags (both name and property for maximum bot compatibility)
+  setMetaTag("name", "twitter:card", "summary_large_image");
+  setMetaTag("name", "twitter:url", config.canonicalUrl);
+  setMetaTag("property", "twitter:url", config.canonicalUrl);
+  setMetaTag("name", "twitter:title", config.title);
   setMetaTag("property", "twitter:title", config.title);
+  setMetaTag("name", "twitter:description", config.description);
   setMetaTag("property", "twitter:description", config.description);
   if (config.ogImage) {
+    setMetaTag("name", "twitter:image", config.ogImage);
     setMetaTag("property", "twitter:image", config.ogImage);
   }
 

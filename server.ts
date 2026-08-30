@@ -16,7 +16,7 @@ app.use(express.json({ limit: "15mb" }));
 
 // Health check endpoint
 app.get("/api/health", (_req: Request, res: Response) => {
-  res.json({ status: "ok", service: "JobMatch AI", time: new Date().toISOString() });
+  res.json({ status: "ok", service: "JobMatch", domain: "jobmatch.company", time: new Date().toISOString() });
 });
 
 // Dynamic Sitemap.xml generation for Search Engines (SEO)

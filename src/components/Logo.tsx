@@ -140,7 +140,7 @@ export const Logo: React.FC<LogoProps> = ({
             )}
           </div>
           <span className="text-[10px] text-slate-400 font-medium tracking-wide">
-            Candidatures & CV ATS
+            jobmatch.company
           </span>
         </div>
       )}

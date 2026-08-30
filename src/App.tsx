@@ -186,9 +186,9 @@ export default function App() {
     } else if (currentView === "long-tail-guide" && selectedLongTailGuide) {
       const metaKey = `guide-${selectedLongTailGuide.slug}` as keyof typeof METADATA_DICTIONARY;
       const meta = METADATA_DICTIONARY[metaKey] || {
-        title: `${selectedLongTailGuide.title} | JobMatch AI`,
+        title: `${selectedLongTailGuide.title} | JobMatch`,
         description: selectedLongTailGuide.metaDescription,
-        keywords: [selectedLongTailGuide.targetKeyword, "JobMatch AI", "score ATS", "optimisation CV"],
+        keywords: [selectedLongTailGuide.targetKeyword, "JobMatch", "score ATS", "optimisation CV", "jobmatch.company"],
         canonicalUrl: `https://www.jobmatch.company/guides/${selectedLongTailGuide.slug}`,
         ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
         robots: "index, follow",
@@ -409,7 +409,7 @@ export default function App() {
             currentView={currentView}
             onNavigate={(view) => {
               setCurrentView(view);
-              if (view === "landing") window.history.pushState({}, "JobMatch AI", "/");
+              if (view === "landing") window.history.pushState({}, "JobMatch", "/");
               else if (view === "pricing") window.history.pushState({}, "Tarifs JobMatch", "/pricing");
               else if (view === "dashboard" || view === "onboarding") window.history.pushState({}, "Générateur JobMatch", "/onboarding");
               else if (view === "guides") window.history.pushState({}, "Guides & Ressources ATS", "/guides");
@@ -540,7 +540,7 @@ export default function App() {
                 }}
                 onNavigateHome={() => {
                   setCurrentView("landing");
-                  window.history.pushState({}, "JobMatch AI", "/");
+                  window.history.pushState({}, "JobMatch", "/");
                 }}
                 onSelectOtherGuide={(slug) => {
                   const target = LONG_TAIL_GUIDES_DATA.find((g) => g.slug === slug);
