@@ -1,4 +1,4 @@
-import { NextLikeMetadata } from '../../../seo/metadata';
+import { NextLikeMetadata, SITE_URL } from '../../../seo/metadata';
 import { JOB_ROLES_DATA } from '../../../data/seoProgrammaticData';
 import { DashboardCreator } from '../../../components/DashboardCreator';
 
@@ -25,13 +25,13 @@ export async function generateMetadata({ params }: Props): Promise<NextLikeMetad
       description: "Générateur et optimiseur de CV par métier calibré pour les logiciels de recrutement ATS.",
       keywords: ['optimiser CV', 'CV ATS'],
       alternates: {
-        canonical: `https://www.jobmatch.company/optimiser-cv/${params.slug}`,
-        languages: { 'fr-FR': `https://www.jobmatch.company/optimiser-cv/${params.slug}` },
+        canonical: `${SITE_URL}/optimiser-cv/${params.slug}`,
+        languages: { 'fr-FR': `${SITE_URL}/optimiser-cv/${params.slug}` },
       },
       openGraph: {
         title: 'Optimiser son CV — JobMatch AI',
         description: "Générateur et optimiseur de CV par métier calibré pour les logiciels de recrutement ATS.",
-        url: `https://www.jobmatch.company/optimiser-cv/${params.slug}`,
+        url: `${SITE_URL}/optimiser-cv/${params.slug}`,
         siteName: 'JobMatch AI',
         images: [{ url: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80', width: 1200, height: 630, alt: 'Optimiser CV' }],
         locale: 'fr_FR',
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<NextLikeMetad
 
   const title = `CV ${job.title} : Modèle & Mots-Clés ATS Recommandés — JobMatch`;
   const description = `Optimisez votre CV de ${job.title} avec les mots-clés ATS indispensables (${job.topKeywords.slice(0, 5).join(', ')}) et générez une candidature adaptée en 30s.`;
-  const canonicalUrl = `https://www.jobmatch.company/optimiser-cv/${job.slug}`;
+  const canonicalUrl = `${SITE_URL}/optimiser-cv/${job.slug}`;
 
   return {
     title,

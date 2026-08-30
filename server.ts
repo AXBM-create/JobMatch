@@ -21,7 +21,7 @@ app.get("/api/health", (_req: Request, res: Response) => {
 // Dynamic Sitemap.xml generation for Search Engines (SEO)
 app.get("/sitemap.xml", (_req: Request, res: Response) => {
   const currentDate = new Date().toISOString().split("T")[0];
-  const baseUrl = "https://jobmatch.ai";
+  const baseUrl = process.env.SITE_URL || process.env.VITE_SITE_URL || "https://jobmatch.company";
 
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -80,6 +80,7 @@ app.get("/sitemap.xml", (_req: Request, res: Response) => {
 
 // Dynamic Robots.txt for Crawler Indexation Management (SEO)
 app.get("/robots.txt", (_req: Request, res: Response) => {
+  const baseUrl = process.env.SITE_URL || process.env.VITE_SITE_URL || "https://jobmatch.company";
   const robotsTxt = `User-agent: *
 Allow: /
 Allow: /#how-it-works
@@ -89,7 +90,7 @@ Disallow: /api/
 Disallow: /editor/
 Disallow: /history/
 
-Sitemap: https://jobmatch.ai/sitemap.xml
+Sitemap: ${baseUrl}/sitemap.xml
 `;
   res.setHeader("Content-Type", "text/plain; charset=utf-8");
   res.setHeader("Cache-Control", "public, max-age=86400");

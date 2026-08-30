@@ -11,4 +11,4 @@ Disallow: /api/
 Disallow: /editor
 Disallow: /history
 
-Sitemap: https://jobmatch.ai/sitemap.xml
+Sitemap: https://jobmatch.company/sitemap.xml

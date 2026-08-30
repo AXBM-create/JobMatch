@@ -1,3 +1,12 @@
+/**
+ * Single source of truth for the site's canonical domain.
+ * Configurable via VITE_SITE_URL or NEXT_PUBLIC_SITE_URL.
+ */
+export const SITE_URL = 
+  (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_SITE_URL) ||
+  (typeof process !== "undefined" && (process.env?.NEXT_PUBLIC_SITE_URL || process.env?.SITE_URL || process.env?.VITE_SITE_URL)) ||
+  "https://jobmatch.company";
+
 export interface PageMetadataConfig {
   title: string;
   description: string;
@@ -51,7 +60,7 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
       "score ATS",
       "JobMatch AI"
     ],
-    canonicalUrl: "https://www.jobmatch.company/",
+    canonicalUrl: `${SITE_URL}/`,
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow, max-image-preview:large, max-snippet:-1",
   },
@@ -65,7 +74,7 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
       "CV gratuit sans carte",
       "pack candidatures"
     ],
-    canonicalUrl: "https://www.jobmatch.company/pricing",
+    canonicalUrl: `${SITE_URL}/pricing`,
     ogImage: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow",
   },
@@ -79,7 +88,7 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
       "scanner offre emploi",
       "test compatibilité ATS"
     ],
-    canonicalUrl: "https://www.jobmatch.company/onboarding",
+    canonicalUrl: `${SITE_URL}/onboarding`,
     ogImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow",
   },
@@ -87,7 +96,7 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
     title: "Mes Candidatures — JobMatch AI",
     description: "Accédez à l'historique de vos CVs et lettres de motivation optimisés, modifiez vos versions et suivez vos envois.",
     keywords: ["tableau de bord", "mes candidatures", "suivi recrutement"],
-    canonicalUrl: "https://www.jobmatch.company/history",
+    canonicalUrl: `${SITE_URL}/history`,
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "noindex, nofollow",
   },
@@ -101,7 +110,7 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
       "mots-clés CV robot",
       "passer filtre Workday"
     ],
-    canonicalUrl: "https://www.jobmatch.company/test-score-ats",
+    canonicalUrl: `${SITE_URL}/test-score-ats`,
     ogImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow, max-image-preview:large, max-snippet:-1",
   },
@@ -115,7 +124,7 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
       "comment passer les ATS",
       "modèles de CV par métier"
     ],
-    canonicalUrl: "https://www.jobmatch.company/guides",
+    canonicalUrl: `${SITE_URL}/guides`,
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow, max-image-preview:large, max-snippet:-1",
   },
@@ -140,8 +149,8 @@ export function generateJobApplicationMetadata(
   const title = `Candidature ${jobTitle} chez ${company} - JobMatch`;
   const description = `Dossier de candidature${candidateText} optimisé pour le poste de ${jobTitle} chez ${company}${locationText}${scoreText}. CV certifié ATS et lettre de motivation générés avec JobMatch AI.`;
   const canonicalUrl = applicationId 
-    ? `https://www.jobmatch.company/application/${applicationId}`
-    : `https://www.jobmatch.company/editor`;
+    ? `${SITE_URL}/application/${applicationId}`
+    : `${SITE_URL}/editor`;
 
   const keywords = [
     `Candidature ${jobTitle}`,
@@ -170,7 +179,7 @@ export function generateJobApplicationMetadata(
     "publisher": {
       "@type": "Organization",
       "name": "JobMatch AI",
-      "url": "https://www.jobmatch.company",
+      "url": SITE_URL,
     },
   };
 

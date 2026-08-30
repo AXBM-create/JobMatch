@@ -35,7 +35,8 @@ import {
   generateJobApplicationMetadata, 
   updateDOMMetaTags, 
   PageMetadataConfig,
-  METADATA_DICTIONARY 
+  METADATA_DICTIONARY,
+  SITE_URL
 } from "../seo/metadata";
 
 interface GeneratedDocsViewProps {
@@ -905,7 +906,7 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
               </span>
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
                 <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-                  <span className="font-semibold text-slate-700">https://www.jobmatch.company</span>
+                  <span className="font-semibold text-slate-700">{SITE_URL}</span>
                   <span>›</span>
                   <span>application</span>
                   <span>›</span>

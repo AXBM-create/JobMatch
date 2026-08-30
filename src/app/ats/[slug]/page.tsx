@@ -1,4 +1,4 @@
-import { NextLikeMetadata } from '../../../seo/metadata';
+import { NextLikeMetadata, SITE_URL } from '../../../seo/metadata';
 import { ATS_SYSTEMS_DATA } from '../../../data/seoProgrammaticData';
 import { AtsGuideDetailView } from '../../../components/AtsGuideDetailView';
 
@@ -25,13 +25,13 @@ export async function generateMetadata({ params }: Props): Promise<NextLikeMetad
       description: "Guide d'optimisation de CV pour les logiciels de suivi de candidatures (ATS).",
       keywords: ['guide ATS', 'optimiser CV ATS'],
       alternates: {
-        canonical: `https://www.jobmatch.company/ats/${params.slug}`,
-        languages: { 'fr-FR': `https://www.jobmatch.company/ats/${params.slug}` },
+        canonical: `${SITE_URL}/ats/${params.slug}`,
+        languages: { 'fr-FR': `${SITE_URL}/ats/${params.slug}` },
       },
       openGraph: {
         title: 'Guide ATS — JobMatch',
         description: "Guide d'optimisation de CV pour les logiciels de suivi de candidatures (ATS).",
-        url: `https://www.jobmatch.company/ats/${params.slug}`,
+        url: `${SITE_URL}/ats/${params.slug}`,
         siteName: 'JobMatch AI',
         images: [{ url: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80', width: 1200, height: 630, alt: 'Guide ATS' }],
         locale: 'fr_FR',
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<NextLikeMetad
 
   const title = `Comment passer le filtre ATS ${guide.name} ? (Guide & Formatage 2026) — JobMatch`;
   const description = `Découvrez comment formater votre CV pour dépasser 90% de score sur l'ATS ${guide.name}. Évitez les causes de rejet automatique chez ${guide.typicalCompanies.slice(0, 3).join(', ')}.`;
-  const canonicalUrl = `https://www.jobmatch.company/ats/${guide.slug}`;
+  const canonicalUrl = `${SITE_URL}/ats/${guide.slug}`;
 
   return {
     title,

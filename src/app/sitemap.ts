@@ -1,4 +1,5 @@
 import { ATS_SYSTEMS_DATA, JOB_ROLES_DATA } from '../data/seoProgrammaticData';
+import { SITE_URL } from '../seo/metadata';
 
 export interface SitemapItem {
   url: string;
@@ -11,7 +12,7 @@ export interface SitemapItem {
 }
 
 export default function sitemap(): SitemapItem[] {
-  const baseUrl = 'https://www.jobmatch.company';
+  const baseUrl = SITE_URL;
   const lastModified = new Date();
 
   const staticPages: SitemapItem[] = [
