@@ -75,7 +75,7 @@ export default function sitemap(): SitemapItem[] {
     {
       url: `${baseUrl}/pricing`,
       lastModified,
-      changeFrequency: 'weekly',
+      changeFrequency: 'monthly',
       priority: 0.8,
       alternates: {
         languages: {
@@ -85,6 +85,24 @@ export default function sitemap(): SitemapItem[] {
           de: `${baseUrl}/pricing?lang=de`,
         },
       },
+    },
+    {
+      url: `${baseUrl}/mentions-legales`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/politique-confidentialite`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/cgv`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.5,
     },
   ];
 

@@ -5,7 +5,7 @@
 export const SITE_URL = 
   (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_SITE_URL) ||
   (typeof process !== "undefined" && (process.env?.NEXT_PUBLIC_SITE_URL || process.env?.SITE_URL || process.env?.VITE_SITE_URL)) ||
-  "https://jobmatch.company";
+  "https://www.jobmatch.company";
 
 export interface PageMetadataConfig {
   title: string;
@@ -127,6 +127,30 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
     canonicalUrl: `${SITE_URL}/guides`,
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow, max-image-preview:large, max-snippet:-1",
+  },
+  "mentions-legales": {
+    title: "Mentions Légales — JobMatch AI",
+    description: "Consultez les mentions légales de JobMatch AI, éditeur du générateur de CV et lettre de motivation optimisés ATS.",
+    keywords: ["mentions légales", "éditeur JobMatch", "informations légales"],
+    canonicalUrl: `${SITE_URL}/mentions-legales`,
+    ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow",
+  },
+  "politique-confidentialite": {
+    title: "Politique de Confidentialité & RGPD — JobMatch AI",
+    description: "Découvrez nos engagements de confidentialité, de sécurité des données et notre conformité RGPD stricte.",
+    keywords: ["politique de confidentialité", "RGPD", "protection données CV"],
+    canonicalUrl: `${SITE_URL}/politique-confidentialite`,
+    ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow",
+  },
+  cgv: {
+    title: "Conditions Générales de Vente (CGV) — JobMatch AI",
+    description: "Conditions générales de vente et d'utilisation du service de génération de CV par IA JobMatch.",
+    keywords: ["conditions générales de vente", "CGV", "CGU"],
+    canonicalUrl: `${SITE_URL}/cgv`,
+    ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow",
   },
 };
 

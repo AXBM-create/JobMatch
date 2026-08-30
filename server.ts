@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { GoogleGenAI, Type } from "@google/genai";
 import { createServer as createViteServer } from "vite";
 import Stripe from "stripe";
+import { ATS_SYSTEMS_DATA, JOB_ROLES_DATA } from "./src/data/seoProgrammaticData";
 
 dotenv.config();
 
@@ -21,15 +22,41 @@ app.get("/api/health", (_req: Request, res: Response) => {
 // Dynamic Sitemap.xml generation for Search Engines (SEO)
 app.get("/sitemap.xml", (_req: Request, res: Response) => {
   const currentDate = new Date().toISOString().split("T")[0];
-  const baseUrl = process.env.SITE_URL || process.env.VITE_SITE_URL || "https://jobmatch.company";
+  const envUrl = process.env.SITE_URL || process.env.VITE_SITE_URL;
+  const baseUrl = (envUrl && !envUrl.includes("jobmatch.company") ? envUrl : "https://www.jobmatch.company").replace(/\/$/, "");
+
+  const atsEntries = ATS_SYSTEMS_DATA.map((ats) => `  <url>
+    <loc>${baseUrl}/ats/${ats.slug}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/ats/${ats.slug}?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/ats/${ats.slug}?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="${baseUrl}/ats/${ats.slug}?lang=es" />
+    <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/ats/${ats.slug}?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/ats/${ats.slug}" />
+  </url>`).join("\n");
+
+  const jobEntries = JOB_ROLES_DATA.map((job) => `  <url>
+    <loc>${baseUrl}/optimiser-cv/${job.slug}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/optimiser-cv/${job.slug}?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/optimiser-cv/${job.slug}?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="${baseUrl}/optimiser-cv/${job.slug}?lang=es" />
+    <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/optimiser-cv/${job.slug}?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/optimiser-cv/${job.slug}" />
+  </url>`).join("\n");
 
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- 1. Page d'accueil / Landing Page -->
   <url>
     <loc>${baseUrl}/</loc>
     <lastmod>${currentDate}</lastmod>
-    <changefreq>daily</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/?lang=fr" />
     <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/?lang=en" />
@@ -37,21 +64,23 @@ app.get("/sitemap.xml", (_req: Request, res: Response) => {
     <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/?lang=de" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/" />
   </url>
+  <!-- 2. Onboarding & Générateur de CV / Lettre ATS -->
   <url>
     <loc>${baseUrl}/onboarding</loc>
     <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/onboarding?lang=fr" />
     <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/onboarding?lang=en" />
     <xhtml:link rel="alternate" hreflang="es" href="${baseUrl}/onboarding?lang=es" />
     <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/onboarding?lang=de" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/onboarding" />
   </url>
+  <!-- 3. Page Tarifs & Abonnements -->
   <url>
     <loc>${baseUrl}/pricing</loc>
     <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/pricing?lang=fr" />
     <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/pricing?lang=en" />
@@ -59,18 +88,43 @@ app.get("/sitemap.xml", (_req: Request, res: Response) => {
     <xhtml:link rel="alternate" hreflang="de" href="${baseUrl}/pricing?lang=de" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/pricing" />
   </url>
+  <!-- 4. Testeur de score ATS -->
   <url>
-    <loc>${baseUrl}/#how-it-works</loc>
+    <loc>${baseUrl}/test-score-ats</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- 5. Guides & Conseils ATS -->
   <url>
-    <loc>${baseUrl}/#faq</loc>
+    <loc>${baseUrl}/guides</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- 6. Pages Légales & Conformité -->
+  <url>
+    <loc>${baseUrl}/mentions-legales</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/politique-confidentialite</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/cgv</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <!-- 7. Guides ATS Détaillés -->
+${atsEntries}
+  <!-- 8. Modèles de CV par Métier -->
+${jobEntries}
 </urlset>`;
 
   res.setHeader("Content-Type", "application/xml; charset=utf-8");
@@ -80,15 +134,29 @@ app.get("/sitemap.xml", (_req: Request, res: Response) => {
 
 // Dynamic Robots.txt for Crawler Indexation Management (SEO)
 app.get("/robots.txt", (_req: Request, res: Response) => {
-  const baseUrl = process.env.SITE_URL || process.env.VITE_SITE_URL || "https://jobmatch.company";
-  const robotsTxt = `User-agent: *
+  const envUrl = process.env.SITE_URL || process.env.VITE_SITE_URL;
+  const baseUrl = (envUrl && !envUrl.includes("jobmatch.company") ? envUrl : "https://www.jobmatch.company").replace(/\/$/, "");
+  const robotsTxt = `# Robots.txt for JobMatch
+User-agent: *
 Allow: /
-Allow: /#how-it-works
-Allow: /#pricing
-Allow: /#faq
+Allow: /pricing
+Allow: /onboarding
+Allow: /guides
+Allow: /test-score-ats
+Allow: /ats/
+Allow: /optimiser-cv/
+Allow: /mentions-legales
+Allow: /politique-confidentialite
+Allow: /cgv
+
+# Private & Authenticated user routes
 Disallow: /api/
+Disallow: /editor
 Disallow: /editor/
+Disallow: /application/
+Disallow: /history
 Disallow: /history/
+Disallow: /dashboard
 
 Sitemap: ${baseUrl}/sitemap.xml
 `;

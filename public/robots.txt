@@ -1,14 +1,23 @@
 # Robots.txt for JobMatch AI
 User-agent: *
 Allow: /
-Allow: /onboarding
 Allow: /pricing
-Allow: /#how-it-works
-Allow: /#faq
+Allow: /onboarding
+Allow: /guides
+Allow: /test-score-ats
+Allow: /ats/
+Allow: /optimiser-cv/
+Allow: /mentions-legales
+Allow: /politique-confidentialite
+Allow: /cgv
 
-# Block sensitive user editor and auth routes from indexation
+# Block sensitive private user application and api routes from indexation
 Disallow: /api/
 Disallow: /editor
+Disallow: /editor/
+Disallow: /application/
 Disallow: /history
+Disallow: /history/
+Disallow: /dashboard
 
-Sitemap: https://jobmatch.company/sitemap.xml
+Sitemap: https://www.jobmatch.company/sitemap.xml
