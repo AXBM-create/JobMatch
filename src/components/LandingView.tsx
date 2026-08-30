@@ -469,9 +469,14 @@ export const LandingView: React.FC<LandingViewProps> = ({
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. SECTION FAQ (Accordéon interactif + Balisage SEO) */}
+      {/* 5. SECTION FAQ (Accordéon interactif + Balisage SEO Schema.org FAQPage) */}
       {/* ========================================================================= */}
-      <section id="faq" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <section
+        id="faq"
+        className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto"
+        itemScope
+        itemType="https://schema.org/FAQPage"
+      >
         <div className="text-center mb-12">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
             {t("faq_badge")}
@@ -488,22 +493,41 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <div
                 key={index}
                 className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-2xs transition-all"
+                itemScope
+                itemProp="mainEntity"
+                itemType="https://schema.org/Question"
               >
                 <button
                   type="button"
                   onClick={() => setActiveFaqIndex(isOpen ? null : index)}
                   className="w-full px-5 py-4 text-left font-semibold text-[#1A3A5C] flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/80 transition-colors"
                 >
-                  <span className="text-sm sm:text-base">{item.q}</span>
+                  <span className="text-sm sm:text-base" itemProp="name">
+                    {item.q}
+                  </span>
                   <ChevronDown
                     className={`w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200 ${
                       isOpen ? "transform rotate-180 text-[#1A3A5C]" : ""
                     }`}
                   />
                 </button>
-                {isOpen && (
-                  <div className="px-5 pb-5 pt-1 text-sm text-[#6B7280] leading-relaxed border-t border-slate-100 bg-slate-50/40">
-                    {item.a}
+                {isOpen ? (
+                  <div
+                    className="px-5 pb-5 pt-1 text-sm text-[#6B7280] leading-relaxed border-t border-slate-100 bg-slate-50/40"
+                    itemScope
+                    itemProp="acceptedAnswer"
+                    itemType="https://schema.org/Answer"
+                  >
+                    <div itemProp="text">{item.a}</div>
+                  </div>
+                ) : (
+                  <div
+                    className="hidden"
+                    itemScope
+                    itemProp="acceptedAnswer"
+                    itemType="https://schema.org/Answer"
+                  >
+                    <meta itemProp="text" content={item.a} />
                   </div>
                 )}
               </div>

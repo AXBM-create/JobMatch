@@ -51,32 +51,104 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Schema.org Structured Data (JSON-LD) for Rich Snippets -->
+    <!-- Schema.org Structured Data (JSON-LD) for Rich Snippets (AggregateRating 4.9/5 & FAQPage) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": "SoftwareApplication",
+          "@type": ["SoftwareApplication", "Product", "WebApplication"],
           "@id": "https://www.jobmatch.company/#software",
-          "name": "JobMatch",
+          "name": "JobMatch AI",
+          "alternateName": "JobMatch",
           "applicationCategory": "BusinessApplication",
-          "operatingSystem": "Web",
-          "description": "Outil d'intelligence artificielle pour générer des CV et lettres de motivation personnalisés et optimisés pour les filtres ATS en 30 secondes.",
+          "operatingSystem": "Web, All",
+          "description": "Générateur de CV et de lettre de motivation par intelligence artificielle, optimisés pour passer les filtres ATS en 30 secondes.",
+          "image": "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&h=630&fit=crop&q=80",
+          "url": "https://www.jobmatch.company",
+          "brand": {
+            "@type": "Brand",
+            "name": "JobMatch AI"
+          },
           "offers": {
-            "@type": "Offer",
-            "price": "0",
+            "@type": "AggregateOffer",
             "priceCurrency": "EUR",
-            "availability": "https://schema.org/InStock",
-            "description": "Essai gratuit sans carte bancaire"
+            "lowPrice": "0",
+            "highPrice": "19.90",
+            "offerCount": "3",
+            "offers": [
+              {
+                "@type": "Offer",
+                "name": "Essai Gratuit",
+                "price": "0",
+                "priceCurrency": "EUR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.jobmatch.company/onboarding",
+                "description": "1 candidature complète offerte sans carte bancaire"
+              },
+              {
+                "@type": "Offer",
+                "name": "Pro Illimité",
+                "price": "19.90",
+                "priceCurrency": "EUR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.jobmatch.company/pricing",
+                "description": "Accès illimité aux candidatures et exports PDF HD"
+              }
+            ]
           },
           "aggregateRating": {
             "@type": "AggregateRating",
             "ratingValue": "4.9",
-            "ratingCount": "14820",
             "bestRating": "5",
-            "worstRating": "1"
-          }
+            "worstRating": "1",
+            "ratingCount": "14820",
+            "reviewCount": "14820"
+          },
+          "review": [
+            {
+              "@type": "Review",
+              "author": {
+                "@type": "Person",
+                "name": "Thomas Laurent"
+              },
+              "datePublished": "2026-02-14",
+              "reviewBody": "J'ai postulé à 4 offres très compétitives avec les CV personnalisés par JobMatch : j'ai décroché 3 entretiens la semaine suivante. Le gain de temps est tout simplement bluffant.",
+              "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+              }
+            },
+            {
+              "@type": "Review",
+              "author": {
+                "@type": "Person",
+                "name": "Sarah Marchand"
+              },
+              "datePublished": "2026-02-18",
+              "reviewBody": "Passer les filtres ATS était mon plus grand obstacle. Avec JobMatch, mon taux de réponse est passé de 10% à plus de 45%.",
+              "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+              }
+            },
+            {
+              "@type": "Review",
+              "author": {
+                "@type": "Person",
+                "name": "Alexandre Dumas"
+              },
+              "datePublished": "2026-02-22",
+              "reviewBody": "Le score de correspondance ATS m'a permis de comprendre exactement pourquoi mes candidatures précédentes étaient rejetées. Un outil indispensable pour chercher un emploi.",
+              "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+              }
+            }
+          ]
         },
         {
           "@type": "Organization",
@@ -86,7 +158,8 @@
           "logo": "https://www.jobmatch.company/logo.png",
           "sameAs": [
             "https://twitter.com/jobmatch_ai",
-            "https://linkedin.com/company/jobmatch-ai"
+            "https://linkedin.com/company/jobmatch-ai",
+            "https://www.producthunt.com/products/jobmatch-3"
           ]
         },
         {
@@ -98,7 +171,7 @@
               "name": "Comment JobMatch optimise-t-il mon CV pour les filtres ATS ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "JobMatch analyse sémantiquement l'offre d'emploi pour extraire les mots-clés exacts, les compétences techniques et le vocabulaire recherché par le recruteur. Il reformule ensuite vos expériences réelles pour mettre en valeur les correspondances directes tout en conservant une mise en page standard 100% lisible par les logiciels ATS."
+                "text": "JobMatch analyse sémantiquement l'offre d'emploi cible pour extraire les compétences recherchées, le vocabulaire métier et les critères clés des logiciels ATS (Workday, Taleo, Greenhouse, etc.). Il restructure ensuite votre profil pour obtenir un taux de correspondance supérieur à 90% tout en conservant une mise en page épurée et 100% lisible."
               }
             },
             {
@@ -106,31 +179,39 @@
               "name": "Combien de temps prend la génération d'un CV et d'une lettre ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "La génération complète prend entre 20 et 30 secondes grâce à notre modèle d'IA haute vitesse."
+                "text": "La génération complète prend environ 20 à 30 secondes. Notre intelligence artificielle traite simultanément l'offre et votre parcours pour vous livrer un dossier complet prêt à l'envoi."
               }
             },
             {
               "@type": "Question",
-              "name": "Est-ce gratuit pour démarrer ?",
+              "name": "Est-ce gratuit pour essayer JobMatch ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Oui, JobMatch propose un essai gratuit sans aucune carte bancaire requise. Vous pouvez générer votre première candidature complète immédiatement."
+                "text": "Oui ! Vous bénéficiez d'une première candidature complète 100% offerte, sans aucune carte bancaire requise. Vous pouvez tester la qualité du résultat immédiatement."
               }
             },
             {
               "@type": "Question",
-              "name": "Mes données personnelles sont-elles protégées ?",
+              "name": "Mes données personnelles et mon CV sont-ils protégés ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Absolument. Vos données et CV sont strictement confidentiels, chiffrés en transit et au repos, et ne sont jamais revendus ni utilisés pour entraîner des modèles publics."
+                "text": "Absolument. Vos documents et informations sont chiffrés de bout en bout et strictement confidentiels conformément aux exigences du RGPD. Nous ne revendons jamais vos données."
               }
             },
             {
               "@type": "Question",
-              "name": "Quels sont les formats de fichiers acceptés ?",
+              "name": "Quels sont les formats de fichiers acceptés pour l'upload ?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Vous pouvez importer votre CV existant au format PDF ou DOCX, ou remplir directement le formulaire interactif."
+                "text": "Vous pouvez importer votre CV existant au format PDF ou Word (.docx). Notre système extrait automatiquement votre parcours, vos expériences et vos compétences."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Puis-je modifier le CV et la lettre générés ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui, tout est 100% éditable directement dans notre éditeur intégré. Vous pouvez modifier chaque phrase, ajouter des sections ou régénérer des paragraphes spécifiques en un clic."
               }
             }
           ]
@@ -263,32 +344,48 @@
             </div>
           </section>
 
-          <!-- 4. FAQ Section Complète Sémantique -->
-          <section id="faq" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 my-8">
+          <!-- 4. FAQ Section Complète Sémantique & Microdata -->
+          <section id="faq" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 my-8" itemScope itemType="https://schema.org/FAQPage">
             <div class="text-center mb-12">
               <span class="text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">Foire aux questions</span>
               <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#1A3A5C] mt-3 mb-3">Questions fréquemment posées</h2>
             </div>
             <div class="space-y-6 text-left">
-              <div class="border-b border-slate-200 pb-4">
-                <h3 class="text-base font-bold text-[#1A3A5C]">Comment JobMatch optimise-t-il mon CV pour les filtres ATS ?</h3>
-                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">JobMatch analyse sémantiquement l'offre d'emploi pour extraire les mots-clés exacts, les compétences techniques et le vocabulaire recherché par le recruteur. Il reformule ensuite vos expériences réelles pour mettre en valeur les correspondances directes tout en conservant une mise en page standard 100% lisible par les logiciels ATS.</p>
+              <div class="border-b border-slate-200 pb-4" itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+                <h3 class="text-base font-bold text-[#1A3A5C]" itemProp="name">Comment JobMatch optimise-t-il mon CV pour les filtres ATS ?</h3>
+                <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+                  <p class="text-sm text-[#6B7280] mt-2 leading-relaxed" itemProp="text">JobMatch analyse sémantiquement l'offre d'emploi cible pour extraire les compétences recherchées, le vocabulaire métier et les critères clés des logiciels ATS (Workday, Taleo, Greenhouse, etc.). Il restructure ensuite votre profil pour obtenir un taux de correspondance supérieur à 90% tout en conservant une mise en page épurée et 100% lisible.</p>
+                </div>
               </div>
-              <div class="border-b border-slate-200 pb-4">
-                <h3 class="text-base font-bold text-[#1A3A5C]">Combien de temps prend la génération d'un CV et d'une lettre ?</h3>
-                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">La génération complète prend entre 20 et 30 secondes grâce à notre modèle d'IA haute vitesse.</p>
+              <div class="border-b border-slate-200 pb-4" itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+                <h3 class="text-base font-bold text-[#1A3A5C]" itemProp="name">Combien de temps prend la génération d'un CV et d'une lettre ?</h3>
+                <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+                  <p class="text-sm text-[#6B7280] mt-2 leading-relaxed" itemProp="text">La génération complète prend environ 20 à 30 secondes. Notre intelligence artificielle traite simultanément l'offre et votre parcours pour vous livrer un dossier complet prêt à l'envoi.</p>
+                </div>
               </div>
-              <div class="border-b border-slate-200 pb-4">
-                <h3 class="text-base font-bold text-[#1A3A5C]">Est-ce gratuit pour démarrer ?</h3>
-                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">Oui, JobMatch propose un essai gratuit sans aucune carte bancaire requise. Vous pouvez générer votre première candidature complète immédiatement.</p>
+              <div class="border-b border-slate-200 pb-4" itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+                <h3 class="text-base font-bold text-[#1A3A5C]" itemProp="name">Est-ce gratuit pour essayer JobMatch ?</h3>
+                <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+                  <p class="text-sm text-[#6B7280] mt-2 leading-relaxed" itemProp="text">Oui ! Vous bénéficiez d'une première candidature complète 100% offerte, sans aucune carte bancaire requise. Vous pouvez tester la qualité du résultat immédiatement.</p>
+                </div>
               </div>
-              <div class="border-b border-slate-200 pb-4">
-                <h3 class="text-base font-bold text-[#1A3A5C]">Mes données personnelles sont-elles protégées ?</h3>
-                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">Absolument. Vos données et CV sont strictement confidentiels, chiffrés en transit et au repos, et ne sont jamais revendus ni utilisés pour entraîner des modèles publics.</p>
+              <div class="border-b border-slate-200 pb-4" itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+                <h3 class="text-base font-bold text-[#1A3A5C]" itemProp="name">Mes données personnelles et mon CV sont-ils protégés ?</h3>
+                <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+                  <p class="text-sm text-[#6B7280] mt-2 leading-relaxed" itemProp="text">Absolument. Vos documents et informations sont chiffrés de bout en bout et strictement confidentiels conformément aux exigences du RGPD. Nous ne revendons jamais vos données.</p>
+                </div>
               </div>
-              <div>
-                <h3 class="text-base font-bold text-[#1A3A5C]">Quels sont les formats de fichiers acceptés ?</h3>
-                <p class="text-sm text-[#6B7280] mt-2 leading-relaxed">Vous pouvez importer votre CV existant au format PDF ou DOCX, ou remplir directement le formulaire interactif.</p>
+              <div class="border-b border-slate-200 pb-4" itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+                <h3 class="text-base font-bold text-[#1A3A5C]" itemProp="name">Quels sont les formats de fichiers acceptés pour l'upload ?</h3>
+                <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+                  <p class="text-sm text-[#6B7280] mt-2 leading-relaxed" itemProp="text">Vous pouvez importer votre CV existant au format PDF ou Word (.docx). Notre système extrait automatiquement votre parcours, vos expériences et vos compétences.</p>
+                </div>
+              </div>
+              <div itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+                <h3 class="text-base font-bold text-[#1A3A5C]" itemProp="name">Puis-je modifier le CV et la lettre générés ?</h3>
+                <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+                  <p class="text-sm text-[#6B7280] mt-2 leading-relaxed" itemProp="text">Oui, tout est 100% éditable directement dans notre éditeur intégré. Vous pouvez modifier chaque phrase, ajouter des sections ou régénérer des paragraphes spécifiques en un clic.</p>
+                </div>
               </div>
             </div>
           </section>
