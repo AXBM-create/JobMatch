@@ -10,6 +10,8 @@ import { PricingView } from "./components/PricingView";
 import { BlogGuidesView } from "./components/BlogGuidesView";
 import { AtsGuideDetailView } from "./components/AtsGuideDetailView";
 import { LongTailGuideDetailView } from "./components/LongTailGuideDetailView";
+import { PillarGuideView } from "./components/PillarGuideView";
+import { SatelliteGuideView } from "./components/SatelliteGuideView";
 import { MatchScoreModal } from "./components/MatchScoreModal";
 import { RegenerateModal } from "./components/RegenerateModal";
 import { SendApplicationModal } from "./components/SendApplicationModal";
@@ -17,8 +19,10 @@ import { AuthModal } from "./components/AuthModal";
 import { LegalModal } from "./components/LegalModal";
 import { UpgradeModal } from "./components/UpgradeModal";
 import { FirstGenerationSuccessModal } from "./components/FirstGenerationSuccessModal";
+import { NotFoundView } from "./components/NotFoundView";
 import { DEFAULT_ALEXANDRE_DUBOIS } from "./data/mockData";
 import { ATS_SYSTEMS_DATA, LONG_TAIL_GUIDES_DATA, AtsSystemData, LongTailGuideData } from "./data/seoProgrammaticData";
+import { SATELLITE_PAGES_DATA } from "./data/semanticClusterData";
 import { ApplicationResult, CandidateFormInput, JobFormInput, ViewState, UserProfile, SubscriptionPlan } from "./types";
 import { auth, onAuthStateChanged, User } from "./firebase";
 import { 
@@ -46,6 +50,7 @@ export default function App() {
   // Selected guide states for deep-linking and SEO
   const [selectedAtsGuide, setSelectedAtsGuide] = useState<AtsSystemData | null>(null);
   const [selectedLongTailGuide, setSelectedLongTailGuide] = useState<LongTailGuideData | null>(null);
+  const [selectedSatelliteRoute, setSelectedSatelliteRoute] = useState<string | null>(null);
 
   // User auth state & profile
   const [user, setUser] = useState<User | null>(null);
@@ -69,12 +74,33 @@ export default function App() {
     const handleUrlRouting = () => {
       const pathname = window.location.pathname.toLowerCase();
       
-      if (pathname.startsWith("/guides/")) {
+      if (pathname === "" || pathname === "/") {
+        setCurrentView("landing");
+        return;
+      } else if (pathname === "/guide-cv-ats" || pathname === "/guide-cv-ats/") {
+        setCurrentView("pillar-guide");
+        return;
+      } else if (pathname === "/cv-developpeur" || pathname === "/cv-developpeur/") {
+        setSelectedSatelliteRoute("/cv-developpeur");
+        setCurrentView("satellite-guide");
+        return;
+      } else if (pathname === "/cv-commercial" || pathname === "/cv-commercial/") {
+        setSelectedSatelliteRoute("/cv-commercial");
+        setCurrentView("satellite-guide");
+        return;
+      } else if (pathname === "/cv-sante" || pathname === "/cv-sante/") {
+        setSelectedSatelliteRoute("/cv-sante");
+        setCurrentView("satellite-guide");
+        return;
+      } else if (pathname.startsWith("/guides/")) {
         const slug = pathname.replace("/guides/", "").replace(/\/$/, "");
         const guide = LONG_TAIL_GUIDES_DATA.find((g) => g.slug === slug);
         if (guide) {
           setSelectedLongTailGuide(guide);
           setCurrentView("long-tail-guide");
+          return;
+        } else {
+          setCurrentView("not-found");
           return;
         }
       } else if (pathname === "/guides" || pathname === "/guides/") {
@@ -87,6 +113,9 @@ export default function App() {
           setSelectedAtsGuide(ats);
           setCurrentView("ats-guide");
           return;
+        } else {
+          setCurrentView("not-found");
+          return;
         }
       } else if (pathname === "/pricing" || pathname === "/pricing/") {
         setCurrentView("pricing");
@@ -96,6 +125,13 @@ export default function App() {
         return;
       } else if (pathname === "/history" || pathname === "/history/") {
         setCurrentView("history");
+        return;
+      } else if (pathname === "/404" || pathname === "/404/") {
+        setCurrentView("not-found");
+        return;
+      } else if (!window.location.hash) {
+        // Unknown route -> 404 page
+        setCurrentView("not-found");
         return;
       }
     };
@@ -134,21 +170,42 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Listen for Stripe redirect parameters (e.g. ?payment_success=true&plan=pro)
+  // Listen for Stripe redirect parameters (e.g. ?payment_success=true&plan={CHECKOUT_SESSION_ID})
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("payment_success") === "true") {
-      const plan = (urlParams.get("plan") as SubscriptionPlan) || "pro";
-      if (user) {
-        upgradeUserPlan(user.uid, plan).then(() => {
-          getUserProfile(user.uid).then((p) => {
-            if (p) setUserProfile(p);
+      const planParam = urlParams.get("plan");
+      const sessionId = urlParams.get("session_id") || (planParam && planParam.startsWith("cs_") ? planParam : null);
+
+      const applyUpgrade = (targetPlan: SubscriptionPlan) => {
+        if (user) {
+          upgradeUserPlan(user.uid, targetPlan).then(() => {
+            getUserProfile(user.uid).then((p) => {
+              if (p) setUserProfile(p);
+            });
           });
-        });
+        } else {
+          setUserProfile((prev) => prev ? { ...prev, plan: targetPlan, subscriptionStatus: "active", creditsRemaining: 999 } : null);
+        }
+      };
+
+      if (sessionId) {
+        // Query Stripe session details to get exact planId ("pro" | "executive")
+        fetch(`/api/checkout-session-details?session_id=${sessionId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            const detectedPlan: SubscriptionPlan = data?.planId === "executive" ? "executive" : "pro";
+            applyUpgrade(detectedPlan);
+          })
+          .catch(() => {
+            applyUpgrade("pro");
+          });
       } else {
-        setUserProfile((prev) => prev ? { ...prev, plan, subscriptionStatus: "active", creditsRemaining: 999 } : null);
+        const directPlan: SubscriptionPlan = planParam === "executive" ? "executive" : "pro";
+        applyUpgrade(directPlan);
       }
-      // Clean query string
+
+      // Clean query string from URL bar without reloading
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, [user]);
@@ -210,6 +267,24 @@ export default function App() {
       updateDOMMetaTags(meta);
       path = `/ats/${selectedAtsGuide.slug}`;
       title = meta.title;
+    } else if (currentView === "pillar-guide") {
+      updateDOMMetaTags(METADATA_DICTIONARY["guide-cv-ats"]);
+      path = "/guide-cv-ats";
+      title = METADATA_DICTIONARY["guide-cv-ats"].title;
+    } else if (currentView === "satellite-guide") {
+      if (selectedSatelliteRoute === "/cv-commercial") {
+        updateDOMMetaTags(METADATA_DICTIONARY["cv-commercial"]);
+        path = "/cv-commercial";
+        title = METADATA_DICTIONARY["cv-commercial"].title;
+      } else if (selectedSatelliteRoute === "/cv-sante") {
+        updateDOMMetaTags(METADATA_DICTIONARY["cv-sante"]);
+        path = "/cv-sante";
+        title = METADATA_DICTIONARY["cv-sante"].title;
+      } else {
+        updateDOMMetaTags(METADATA_DICTIONARY["cv-developpeur"]);
+        path = "/cv-developpeur";
+        title = METADATA_DICTIONARY["cv-developpeur"].title;
+      }
     } else {
       updateDOMMetaTags(METADATA_DICTIONARY.landing);
       path = "/";
@@ -218,7 +293,7 @@ export default function App() {
 
     // Google Analytics (gtag.js) SPA page view tracking
     trackPageView(path, title);
-  }, [currentView, currentApplication, selectedLongTailGuide, selectedAtsGuide]);
+  }, [currentView, currentApplication, selectedLongTailGuide, selectedAtsGuide, selectedSatelliteRoute]);
 
   // Load persistence from local storage as offline/initial fallback
   useEffect(() => {
@@ -568,12 +643,102 @@ export default function App() {
                 }}
               />
             )}
+
+            {currentView === "pillar-guide" && (
+              <PillarGuideView
+                onNavigateHome={() => {
+                  setCurrentView("landing");
+                  window.history.pushState({}, "JobMatch", "/");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onStartOnboarding={() => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onNavigateSatellite={(route) => {
+                  setSelectedSatelliteRoute(route);
+                  setCurrentView("satellite-guide");
+                  window.history.pushState({}, "Guide Spécialisé JobMatch", route);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              />
+            )}
+
+            {currentView === "satellite-guide" && (
+              <SatelliteGuideView
+                data={
+                  selectedSatelliteRoute === "/cv-commercial"
+                    ? SATELLITE_PAGES_DATA.commercial
+                    : selectedSatelliteRoute === "/cv-sante"
+                    ? SATELLITE_PAGES_DATA.sante
+                    : SATELLITE_PAGES_DATA.developpeur
+                }
+                onNavigateHome={() => {
+                  setCurrentView("landing");
+                  window.history.pushState({}, "JobMatch", "/");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onNavigatePillar={() => {
+                  setCurrentView("pillar-guide");
+                  window.history.pushState({}, "Guide complet ATS 2026", "/guide-cv-ats");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onStartOnboarding={() => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              />
+            )}
+
+            {currentView === "not-found" && (
+              <NotFoundView
+                onNavigateHome={() => {
+                  setCurrentView("landing");
+                  window.history.pushState({}, "JobMatch", "/");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onNavigatePillar={() => {
+                  setCurrentView("pillar-guide");
+                  window.history.pushState({}, "Guide complet ATS 2026", "/guide-cv-ats");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onNavigatePricing={() => {
+                  setCurrentView("pricing");
+                  window.history.pushState({}, "Tarifs JobMatch", "/pricing");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onNavigateOnboarding={() => {
+                  setCurrentView("dashboard");
+                  window.history.pushState({}, "Générateur JobMatch", "/onboarding");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onNavigateSatellite={(route) => {
+                  setSelectedSatelliteRoute(route);
+                  setCurrentView("satellite-guide");
+                  window.history.pushState({}, "Guide Spécialisé JobMatch", route);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              />
+            )}
           </main>
 
           {/* Footer */}
           <Footer 
-            onOpenLegalModal={(tab) => setLegalModalTab(tab)} 
+            onOpenLegalModal={(tab) => setLegalModalTab(tab)}
+            onNavigatePillar={() => {
+              setCurrentView("pillar-guide");
+              window.history.pushState({}, "Guide complet ATS 2026", "/guide-cv-ats");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             onNavigateGuides={(slug) => {
+              if (slug === "guide-cv-ats") {
+                setCurrentView("pillar-guide");
+                window.history.pushState({}, "Guide complet ATS 2026", "/guide-cv-ats");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                return;
+              }
               if (slug) {
                 const target = LONG_TAIL_GUIDES_DATA.find((g) => g.slug === slug);
                 if (target) {

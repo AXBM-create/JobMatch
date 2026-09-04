@@ -1,23 +1,36 @@
 import React from 'react';
 import { ArrowLeft, CheckCircle2, AlertTriangle, ShieldCheck, ArrowRight, Building, BookOpen } from 'lucide-react';
 import { AtsSystemData } from '../data/seoProgrammaticData';
+import { Breadcrumbs } from './Breadcrumbs';
 
 interface AtsGuideDetailViewProps {
   guide: AtsSystemData;
   onBack: () => void;
   onStartForAts: () => void;
+  onNavigateHome?: () => void;
 }
 
 export const AtsGuideDetailView: React.FC<AtsGuideDetailViewProps> = ({
   guide,
   onBack,
   onStartForAts,
+  onNavigateHome,
 }) => {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      {/* Breadcrumb Navigation with Schema.org JSON-LD */}
+      <Breadcrumbs
+        items={[
+          { name: "Accueil", url: "/", onClick: onNavigateHome },
+          { name: "Guides ATS & CV", url: "/guides", onClick: onBack },
+          { name: `Filtre ATS ${guide.name}`, url: `/ats/${guide.slug}` },
+        ]}
+        className="mb-6 px-0 py-0"
+      />
+
       <button
         onClick={onBack}
-        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-[#1A3A5C] mb-8 transition-colors cursor-pointer"
+        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-[#1A3A5C] mb-6 transition-colors cursor-pointer"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>Retour aux guides</span>

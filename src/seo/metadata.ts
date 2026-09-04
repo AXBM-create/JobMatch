@@ -1,7 +1,12 @@
 /**
  * Single source of truth for the site's canonical domain.
  */
-export const SITE_URL = "https://www.jobmatch.company";
+const metaEnv = typeof import.meta !== "undefined" ? (import.meta as any).env : undefined;
+const envSiteUrl = metaEnv?.VITE_SITE_URL ? String(metaEnv.VITE_SITE_URL).trim() : "";
+
+export const SITE_URL = envSiteUrl
+  ? (envSiteUrl.includes("jobmatch.company") ? "https://www.jobmatch.company" : envSiteUrl.replace(/\/$/, ""))
+  : "https://www.jobmatch.company";
 
 export interface PageMetadataConfig {
   title: string;
@@ -191,6 +196,156 @@ export const METADATA_DICTIONARY: Record<string, PageMetadataConfig> = {
     canonicalUrl: `${SITE_URL}/cgv`,
     ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
     robots: "index, follow",
+  },
+  "guide-cv-ats": {
+    title: "Optimiser son CV pour les ATS en 2026 : Guide Complet",
+    description: "Découvrez comment optimiser votre CV pour passer tous les filtres ATS en 2026. Règles d'or, structure infaillible, erreurs à éviter et rôle clé de l'IA.",
+    keywords: [
+      "optimiser son CV pour les ATS",
+      "filtres ATS 2026",
+      "guide complet CV ATS",
+      "logiciel recrutement ATS",
+      "score CV ATS",
+      "JobMatch",
+      "jobmatch.company"
+    ],
+    canonicalUrl: `${SITE_URL}/guide-cv-ats`,
+    ogImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow, max-image-preview:large, max-snippet:-1",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Guide complet : optimiser son CV pour les ATS en 2026",
+      "name": "Optimiser son CV pour les ATS en 2026 : Guide Complet",
+      "description": "Découvrez comment optimiser votre CV pour passer tous les filtres ATS en 2026. Règles d'or, structure infaillible, erreurs à éviter et rôle clé de l'IA.",
+      "datePublished": "2026-03-01T08:00:00+01:00",
+      "dateModified": "2026-03-01T08:00:00+01:00",
+      "author": {
+        "@type": "Organization",
+        "name": "JobMatch",
+        "url": SITE_URL
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "JobMatch",
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${SITE_URL}/logo.png`
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `${SITE_URL}/guide-cv-ats`
+      }
+    }
+  },
+  "cv-developpeur": {
+    title: "CV Développeur IA & ATS : Modèle et Conseils 2026",
+    description: "Comment créer un CV de développeur adapté aux ATS grâce à l'IA en 2026. Mots-clés tech, projets GitHub, compétences stack et astuces de recrutement.",
+    keywords: [
+      "CV développeur IA",
+      "CV tech ATS",
+      "modèle CV ingénieur logiciel",
+      "mots clés CV développeur",
+      "JobMatch"
+    ],
+    canonicalUrl: `${SITE_URL}/cv-developpeur`,
+    ogImage: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow, max-image-preview:large, max-snippet:-1",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "CV Développeur & Tech par IA : Réussir les Filtres ATS en 2026",
+      "name": "CV Développeur IA & ATS : Modèle et Conseils 2026",
+      "description": "Comment créer un CV de développeur adapté aux ATS grâce à l'IA en 2026. Mots-clés tech, projets GitHub, compétences stack et astuces de recrutement.",
+      "datePublished": "2026-03-02T09:00:00+01:00",
+      "dateModified": "2026-03-02T09:00:00+01:00",
+      "author": {
+        "@type": "Organization",
+        "name": "JobMatch",
+        "url": SITE_URL
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "JobMatch"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `${SITE_URL}/cv-developpeur`
+      }
+    }
+  },
+  "cv-commercial": {
+    title: "CV Commercial IA & ATS : Modèle et Mots-Clés 2026",
+    description: "Optimisez votre CV commercial avec l'IA pour passer les filtres ATS. Métriques de vente (ARR, quota, CRM), compétences clés et modèle de CV performant.",
+    keywords: [
+      "CV commercial IA",
+      "CV business developer ATS",
+      "modèle CV commercial 2026",
+      "mots clés vente ATS",
+      "JobMatch"
+    ],
+    canonicalUrl: `${SITE_URL}/cv-commercial`,
+    ogImage: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow, max-image-preview:large, max-snippet:-1",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "CV Commercial & Business Developer par IA : Passer les ATS en 2026",
+      "name": "CV Commercial IA & ATS : Modèle et Mots-Clés 2026",
+      "description": "Optimisez votre CV commercial avec l'IA pour passer les filtres ATS. Métriques de vente (ARR, quota, CRM), compétences clés et modèle de CV performant.",
+      "datePublished": "2026-03-02T09:00:00+01:00",
+      "dateModified": "2026-03-02T09:00:00+01:00",
+      "author": {
+        "@type": "Organization",
+        "name": "JobMatch",
+        "url": SITE_URL
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "JobMatch"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `${SITE_URL}/cv-commercial`
+      }
+    }
+  },
+  "cv-sante": {
+    title: "CV Métiers de la Santé par IA : Guide ATS 2026",
+    description: "Créez un CV du secteur santé et médical optimisé pour les logiciels ATS. Diplômes d'État, spécialisations, protocoles de soins et modèle IA en 30s.",
+    keywords: [
+      "CV santé IA",
+      "CV médical ATS",
+      "modèle CV infirmier hôpital",
+      "mots clés santé ATS",
+      "JobMatch"
+    ],
+    canonicalUrl: `${SITE_URL}/cv-sante`,
+    ogImage: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&auto=format&fit=crop&q=80",
+    robots: "index, follow, max-image-preview:large, max-snippet:-1",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "CV Santé & Médical par IA : Optimisation ATS et Conseils 2026",
+      "name": "CV Métiers de la Santé par IA : Guide ATS 2026",
+      "description": "Créez un CV du secteur santé et médical optimisé pour les logiciels ATS. Diplômes d'État, spécialisations, protocoles de soins et modèle IA en 30s.",
+      "datePublished": "2026-03-02T09:00:00+01:00",
+      "dateModified": "2026-03-02T09:00:00+01:00",
+      "author": {
+        "@type": "Organization",
+        "name": "JobMatch",
+        "url": SITE_URL
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "JobMatch"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `${SITE_URL}/cv-sante`
+      }
+    }
   },
 };
 

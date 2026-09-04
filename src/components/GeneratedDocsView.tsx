@@ -27,7 +27,8 @@ import {
   Tag,
   Copy,
   Info,
-  X
+  X,
+  Linkedin
 } from "lucide-react";
 import { ApplicationResult, ExperienceItem, UserProfile } from "../types";
 import { useLanguage } from "../i18n/LanguageContext";
@@ -64,10 +65,23 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
   const [showCompanyLogo, setShowCompanyLogo] = useState(false);
   const [activeTabMobile, setActiveTabMobile] = useState<"resume" | "cover">("resume");
   const [saveToast, setSaveToast] = useState(false);
+  const [linkedinToast, setLinkedinToast] = useState(false);
+  const [showManualCopyModal, setShowManualCopyModal] = useState(false);
   const [showSeoMetaModal, setShowSeoMetaModal] = useState(false);
   const [copiedMeta, setCopiedMeta] = useState(false);
 
   const printRef = useRef<HTMLDivElement>(null);
+  const linkedinToastTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const manualTextareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (linkedinToastTimerRef.current) {
+        clearTimeout(linkedinToastTimerRef.current);
+      }
+    };
+  }, []);
 
   const { resume, coverLetter, matchScore, targetJob } = application;
 
@@ -169,6 +183,109 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
     const newExperiences = [...resume.experiences];
     newExperiences[expIndex].highlights.splice(hlIndex, 1);
     handleResumeChange("experiences", newExperiences);
+  };
+
+  // Construct full text of the cover letter
+  const getFullCoverLetterText = () => {
+    if (!coverLetter) return "";
+    const parts: string[] = [];
+
+    // Date
+    if (coverLetter.date) {
+      parts.push(coverLetter.date);
+    }
+
+    // Recipient info block
+    const recipientParts: string[] = [];
+    if (coverLetter.recipient?.name) recipientParts.push(coverLetter.recipient.name);
+    if (coverLetter.recipient?.title) recipientParts.push(coverLetter.recipient.title);
+    if (coverLetter.recipient?.company) recipientParts.push(coverLetter.recipient.company);
+    if (coverLetter.recipient?.address) recipientParts.push(coverLetter.recipient.address);
+    if (recipientParts.length > 0) {
+      parts.push(recipientParts.join("\n"));
+    }
+
+    // Salutation
+    if (coverLetter.salutation) {
+      parts.push(coverLetter.salutation);
+    }
+
+    // Paragraphs
+    if (coverLetter.paragraphs && coverLetter.paragraphs.length > 0) {
+      parts.push(coverLetter.paragraphs.join("\n\n"));
+    }
+
+    // Sign-off and Signer
+    const closingParts: string[] = [];
+    if (coverLetter.signOff) closingParts.push(coverLetter.signOff);
+    if (coverLetter.signerName) closingParts.push(coverLetter.signerName);
+    if (coverLetter.signerTitle) closingParts.push(coverLetter.signerTitle);
+    if (closingParts.length > 0) {
+      parts.push(closingParts.join("\n"));
+    }
+
+    return parts.join("\n\n");
+  };
+
+  // Copy full cover letter and open the job posting in a new tab
+  const handleApplyOnLinkedIn = async () => {
+    const fullText = getFullCoverLetterText();
+    let copySuccess = false;
+
+    // 1. Copy cover letter to clipboard via Clipboard API or fallback
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(fullText);
+        copySuccess = true;
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = fullText;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        copySuccess = document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+    } catch (err) {
+      console.warn("Clipboard writeText failed:", err);
+      copySuccess = false;
+    }
+
+    // 2. Determine target job URL (from application data stored during onboarding step 1)
+    let targetUrl = targetJob?.url?.trim();
+    if (targetUrl) {
+      if (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://")) {
+        targetUrl = `https://${targetUrl}`;
+      }
+    } else {
+      // Graceful fallback to LinkedIn job search with job title and company if no exact link was provided
+      const searchQuery = [targetJob?.title, targetJob?.company].filter(Boolean).join(" ");
+      targetUrl = searchQuery
+        ? `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(searchQuery)}`
+        : "https://www.linkedin.com/jobs/";
+    }
+
+    // Open target job URL in a new tab
+    try {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+    } catch (openErr) {
+      console.warn("Could not open job URL:", openErr);
+    }
+
+    // 3. Show confirmation toast or trigger manual copy modal
+    if (copySuccess) {
+      setLinkedinToast(true);
+      if (linkedinToastTimerRef.current) {
+        clearTimeout(linkedinToastTimerRef.current);
+      }
+      linkedinToastTimerRef.current = setTimeout(() => {
+        setLinkedinToast(false);
+      }, 3500);
+    } else {
+      setShowManualCopyModal(true);
+    }
   };
 
   // PDF Print Trigger
@@ -351,10 +468,22 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
           <button
             onClick={handleDownloadPDF}
             id="btn-download-pdf"
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#10b981] hover:bg-[#059669] text-white text-xs sm:text-sm font-medium transition-all shadow-sm active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#10b981] hover:bg-[#059669] text-white text-xs sm:text-sm font-medium transition-all shadow-sm active:scale-95 cursor-pointer"
+            title="Télécharger votre CV et votre lettre de motivation en format PDF"
           >
             <Download className="w-4 h-4" />
             <span>{t("docs_download_pdf")}</span>
+          </button>
+
+          {/* Copier et postuler sur LinkedIn */}
+          <button
+            onClick={handleApplyOnLinkedIn}
+            id="btn-linkedin-apply"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#0A66C2] hover:bg-[#004182] text-white text-xs sm:text-sm font-medium transition-all shadow-sm active:scale-95 cursor-pointer"
+            title="Copie la lettre de motivation et ouvre l'offre d'emploi"
+          >
+            <Linkedin className="w-4 h-4" />
+            <span>Copier et postuler sur LinkedIn</span>
           </button>
         </div>
       </div>
@@ -494,7 +623,11 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
                     <img
                       referrerPolicy="no-referrer"
                       src={resume.personalInfo.avatarUrl}
-                      alt={resume.personalInfo.fullName}
+                      alt={`Photo de profil du candidat ${resume.personalInfo.fullName}`}
+                      width="72"
+                      height="72"
+                      loading="lazy"
+                      decoding="async"
                       className="w-16 h-16 sm:w-18 sm:h-18 rounded-full object-cover border-2 border-slate-100 shadow-xs"
                     />
                     {isEditing && (
@@ -981,6 +1114,96 @@ export const GeneratedDocsView: React.FC<GeneratedDocsViewProps> = ({
               >
                 {copiedMeta ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                 <span>{copiedMeta ? "Copié !" : "Copier le code HTML des balises"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* LinkedIn Copy & Apply Toast Notification */}
+      {linkedinToast && (
+        <div
+          id="linkedin-apply-toast"
+          role="status"
+          className="fixed bottom-6 right-6 z-50 bg-[#0A66C2] text-white text-xs sm:text-sm px-4 py-3 rounded-xl shadow-2xl flex items-start sm:items-center gap-3 border border-blue-400/40 max-w-md animate-in slide-in-from-bottom-5 duration-200"
+        >
+          <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-5 h-5 text-white" />
+          </div>
+          <div className="flex-1">
+            <p className="font-bold text-white text-xs sm:text-sm">
+              Lettre de motivation copiée !
+            </p>
+            <p className="text-[11px] sm:text-xs text-blue-100 mt-0.5 leading-snug">
+              Colle-la dans le formulaire de candidature LinkedIn qui vient de s'ouvrir.
+            </p>
+          </div>
+          <button
+            onClick={() => setLinkedinToast(false)}
+            className="text-white/80 hover:text-white p-1 rounded-md hover:bg-white/10 cursor-pointer"
+            aria-label="Fermer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {/* Manual Copy Fallback Modal if Clipboard API fails */}
+      {showManualCopyModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
+                  <Copy className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                    Copier la lettre de motivation manuellement
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    L'accès automatique au presse-papier n'a pas pu être validé par votre navigateur.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowManualCopyModal(false)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-600 mb-2.5">
+              Sélectionnez et copiez tout le texte ci-dessous (<strong>Ctrl+C</strong> ou <strong>Cmd+C</strong>), puis collez-le dans le formulaire LinkedIn :
+            </p>
+
+            <textarea
+              readOnly
+              ref={manualTextareaRef}
+              value={getFullCoverLetterText()}
+              onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+              rows={8}
+              className="w-full text-xs font-sans leading-relaxed p-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-slate-800 resize-none select-all"
+            />
+
+            <div className="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => {
+                  if (manualTextareaRef.current) {
+                    manualTextareaRef.current.select();
+                  }
+                }}
+                className="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 font-medium text-xs transition-colors cursor-pointer"
+              >
+                Tout sélectionner
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowManualCopyModal(false)}
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors cursor-pointer"
+              >
+                J'ai copié le texte
               </button>
             </div>
           </div>

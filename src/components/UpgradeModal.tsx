@@ -3,6 +3,7 @@ import { X, Check, Sparkles, Shield, Zap, ArrowRight, Loader2 } from "lucide-rea
 import { User } from "../firebase";
 import { UserProfile, SubscriptionPlan } from "../types";
 import { Logo } from "./Logo";
+import { SITE_URL } from "../seo/metadata";
 
 interface UpgradeModalProps {
   isOpen: boolean;
@@ -45,8 +46,8 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
           planId: plan,
           userId: user.uid,
           userEmail: user.email,
-          successUrl: window.location.origin + "?payment_success=true&plan=" + plan,
-          cancelUrl: window.location.origin + "?payment_canceled=true",
+          successUrl: `${SITE_URL}/onboarding?payment_success=true&plan={CHECKOUT_SESSION_ID}`,
+          cancelUrl: `${SITE_URL}/pricing?payment_canceled=true`,
         }),
       });
 

@@ -114,4 +114,4 @@ export interface UserProfile {
   createdAt: string;
 }
 
-export type ViewState = "landing" | "onboarding" | "dashboard" | "loading" | "editor" | "history" | "pricing" | "guides" | "ats-guide" | "long-tail-guide";
+export type ViewState = "landing" | "onboarding" | "dashboard" | "loading" | "editor" | "history" | "pricing" | "guides" | "ats-guide" | "long-tail-guide" | "pillar-guide" | "satellite-guide" | "not-found";

@@ -46,10 +46,25 @@
       });
     </script>
 
-    <!-- Performance & Font Preloading (Inter / Manrope sans-serif) -->
+    <!-- Performance & Font Preloading (Plus Jakarta Sans non-blocking) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    </noscript>
+
+    <!-- Preconnect to Unsplash Image CDN for LCP < 2.5s -->
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+
+    <!-- RSS & Atom Feed Auto-Discovery for Crawlers & Aggregators -->
+    <link rel="alternate" type="application/rss+xml" title="Flux RSS JobMatch — Guides & Conseils ATS" href="https://www.jobmatch.company/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Flux Atom JobMatch" href="https://www.jobmatch.company/feed.xml" />
+
+    <!-- IndexNow Meta Discovery -->
+    <meta name="indexnow" content="f28a93e1b7c4495cb2e1398d5a71df89" />
 
     <!-- Schema.org Structured Data (JSON-LD) for Rich Snippets (AggregateRating 4.9/5 & FAQPage) -->
     <script type="application/ld+json">

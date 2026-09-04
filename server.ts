@@ -5,25 +5,64 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { createServer as createViteServer } from "vite";
 import Stripe from "stripe";
 import { ATS_SYSTEMS_DATA, JOB_ROLES_DATA, LONG_TAIL_GUIDES_DATA } from "./src/data/seoProgrammaticData";
+import { PILLAR_PAGE_DATA, SATELLITE_PAGES_DATA } from "./src/data/semanticClusterData";
+import { INDEXNOW_KEY, submitToIndexNow, PRIMARY_INDEXNOW_URLS } from "./src/services/indexNowService";
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
 
+// 301 Canonical Domain & HTTPS Enforcement Middleware (SEO)
+// Ensures jobmatch.company (non-www) permanently redirects to www.jobmatch.company (301, no chains)
+app.use((req, res, next) => {
+  const host = (req.headers.host || "").toLowerCase();
+  const forwardedProto = req.headers["x-forwarded-proto"];
+
+  // 1. Force apex non-www to canonical www (Single 301 hop)
+  if (host === "jobmatch.company") {
+    return res.redirect(301, `https://www.jobmatch.company${req.originalUrl}`);
+  }
+
+  // 2. Enforce HTTPS in production when forwarded from HTTP proxy
+  if (
+    forwardedProto === "http" &&
+    !host.includes("localhost") &&
+    !host.includes("127.0.0.1") &&
+    !host.includes("run.app")
+  ) {
+    return res.redirect(301, `https://${host}${req.originalUrl}`);
+  }
+
+  next();
+});
+
 // Middleware - raw body for stripe webhook if needed
 app.use(express.json({ limit: "15mb" }));
 
+// Helper to get the canonical site base URL from environment (SITE_URL / VITE_SITE_URL)
+export function getSiteBaseUrl(): string {
+  const envUrl = process.env.SITE_URL || process.env.VITE_SITE_URL;
+  if (!envUrl) {
+    return "https://www.jobmatch.company";
+  }
+  const clean = envUrl.trim().replace(/\/$/, "");
+  // Normalize apex domain or internal dev links to canonical domain
+  if (clean === "https://jobmatch.company" || clean === "http://jobmatch.company" || clean.includes("jobmatch.company")) {
+    return "https://www.jobmatch.company";
+  }
+  return clean;
+}
+
 // Health check endpoint
 app.get("/api/health", (_req: Request, res: Response) => {
-  res.json({ status: "ok", service: "JobMatch", domain: "jobmatch.company", time: new Date().toISOString() });
+  res.json({ status: "ok", service: "JobMatch", domain: "jobmatch.company", siteUrl: getSiteBaseUrl(), time: new Date().toISOString() });
 });
 
 // Dynamic Sitemap.xml generation for Search Engines (SEO)
 app.get("/sitemap.xml", (_req: Request, res: Response) => {
   const currentDate = new Date().toISOString().split("T")[0];
-  const envUrl = process.env.SITE_URL || process.env.VITE_SITE_URL;
-  const baseUrl = (envUrl && !envUrl.includes("jobmatch.company") ? envUrl : "https://www.jobmatch.company").replace(/\/$/, "");
+  const baseUrl = getSiteBaseUrl();
 
   const atsEntries = ATS_SYSTEMS_DATA.map((ats) => `  <url>
     <loc>${baseUrl}/ats/${ats.slug}</loc>
@@ -114,6 +153,44 @@ app.get("/sitemap.xml", (_req: Request, res: Response) => {
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- Page Pilier Cocon Sémantique (Guide Complet ATS 2026) -->
+  <url>
+    <loc>${baseUrl}/guide-cv-ats</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/guide-cv-ats" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/guide-cv-ats?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/guide-cv-ats" />
+  </url>
+  <!-- Pages Satellites Sémantiques Spécialisées -->
+  <url>
+    <loc>${baseUrl}/cv-developpeur</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/cv-developpeur" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/cv-developpeur?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/cv-developpeur" />
+  </url>
+  <url>
+    <loc>${baseUrl}/cv-commercial</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/cv-commercial" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/cv-commercial?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/cv-commercial" />
+  </url>
+  <url>
+    <loc>${baseUrl}/cv-sante</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/cv-sante" />
+    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/cv-sante?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/cv-sante" />
+  </url>
   <!-- 6. Pages Légales & Conformité -->
   <url>
     <loc>${baseUrl}/mentions-legales</loc>
@@ -146,13 +223,115 @@ ${jobEntries}
   res.send(sitemapXml.trim());
 });
 
+// Helper to escape XML special characters
+function escapeXml(unsafe: string): string {
+  return (unsafe || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+// Dynamic RSS 2.0 & Atom Feed for Blog, Pillar & Guides (SEO & Feed Discovery)
+app.get(["/rss.xml", "/feed.xml"], (_req: Request, res: Response) => {
+  const baseUrl = getSiteBaseUrl();
+  const buildDate = new Date().toUTCString();
+
+  const itemsXml = [
+    // 1. Page Pilier ATS 2026
+    `    <item>
+      <title>${escapeXml(PILLAR_PAGE_DATA.h1)}</title>
+      <link>${baseUrl}/guide-cv-ats</link>
+      <guid isPermaLink="true">${baseUrl}/guide-cv-ats</guid>
+      <description>${escapeXml(PILLAR_PAGE_DATA.metaDescription)}</description>
+      <category>Filtres ATS</category>
+      <pubDate>Sun, 01 Mar 2026 08:00:00 GMT</pubDate>
+    </item>`,
+
+    // 2. Pages Satellites (Métiers)
+    ...Object.values(SATELLITE_PAGES_DATA).map((sat) => `    <item>
+      <title>${escapeXml(sat.h1)}</title>
+      <link>${baseUrl}${sat.route}</link>
+      <guid isPermaLink="true">${baseUrl}${sat.route}</guid>
+      <description>${escapeXml(sat.metaDescription)}</description>
+      <category>${escapeXml(sat.badge)}</category>
+      <pubDate>Mon, 02 Mar 2026 09:00:00 GMT</pubDate>
+    </item>`),
+
+    // 3. Guides Longue Traîne
+    ...LONG_TAIL_GUIDES_DATA.map((guide) => `    <item>
+      <title>${escapeXml(guide.title)}</title>
+      <link>${baseUrl}/guides/${guide.slug}</link>
+      <guid isPermaLink="true">${baseUrl}/guides/${guide.slug}</guid>
+      <description>${escapeXml(guide.metaDescription)}</description>
+      <category>${escapeXml(guide.category)}</category>
+      <pubDate>Wed, 25 Feb 2026 10:00:00 GMT</pubDate>
+    </item>`),
+
+    // 4. Décryptages Logiciels ATS
+    ...ATS_SYSTEMS_DATA.map((ats) => `    <item>
+      <title>Comment passer le filtre ATS ${escapeXml(ats.name)} ? Guide &amp; Règles</title>
+      <link>${baseUrl}/ats/${ats.slug}</link>
+      <guid isPermaLink="true">${baseUrl}/ats/${ats.slug}</guid>
+      <description>Décryptage du logiciel ATS ${escapeXml(ats.name)} (${escapeXml(ats.marketShare)} de part de marché) et règles d'optimisation de CV.</description>
+      <category>Logiciels ATS</category>
+      <pubDate>Fri, 20 Feb 2026 12:00:00 GMT</pubDate>
+    </item>`),
+  ].join("\n");
+
+  const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JobMatch — Guides Recrutement &amp; Optimisation CV ATS</title>
+    <link>${baseUrl}</link>
+    <description>Tous les guides pratiques, conseils d'experts et décryptages des logiciels de recrutement ATS (Workday, Taleo, Greenhouse) par JobMatch.</description>
+    <language>fr-FR</language>
+    <lastBuildDate>${buildDate}</lastBuildDate>
+    <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />
+${itemsXml}
+  </channel>
+</rss>`;
+
+  res.setHeader("Content-Type", "application/xml; charset=utf-8");
+  res.setHeader("Cache-Control", "public, max-age=3600");
+  res.send(rssXml.trim());
+});
+
+// IndexNow Key Verification Route (HTTP 200 with raw key)
+app.get(`/${INDEXNOW_KEY}.txt`, (_req: Request, res: Response) => {
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.setHeader("Cache-Control", "public, max-age=86400");
+  res.send(INDEXNOW_KEY);
+});
+
+// IndexNow Trigger API: Notifies search engines about new or modified URLs
+app.post("/api/indexnow/notify", async (req: Request, res: Response) => {
+  try {
+    const urls: string[] = req.body?.urls && Array.isArray(req.body.urls) && req.body.urls.length > 0
+      ? req.body.urls
+      : PRIMARY_INDEXNOW_URLS;
+
+    const result = await submitToIndexNow(urls);
+    res.json(result);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to notify IndexNow",
+    });
+  }
+});
+
 // Dynamic Robots.txt for Crawler Indexation Management (SEO)
 app.get("/robots.txt", (_req: Request, res: Response) => {
-  const envUrl = process.env.SITE_URL || process.env.VITE_SITE_URL;
-  const baseUrl = (envUrl && !envUrl.includes("jobmatch.company") ? envUrl : "https://www.jobmatch.company").replace(/\/$/, "");
-  const robotsTxt = `# Robots.txt for JobMatch
+  const baseUrl = getSiteBaseUrl();
+  const robotsTxt = `# Robots.txt for JobMatch (https://www.jobmatch.company)
 User-agent: *
 Allow: /
+Allow: /guide-cv-ats
+Allow: /cv-developpeur
+Allow: /cv-commercial
+Allow: /cv-sante
 Allow: /pricing
 Allow: /onboarding
 Allow: /guides
@@ -611,7 +790,7 @@ app.post("/api/create-checkout-session", async (req: Request, res: Response) => 
     const { planId, userId, userEmail, successUrl, cancelUrl } = req.body;
 
     const stripe = getStripe();
-    const appUrl = process.env.APP_URL || "http://localhost:3000";
+    const siteBaseUrl = getSiteBaseUrl();
 
     // Price definitions in EUR
     const planDetails: Record<string, { name: string; amount: number; priceIdEnv?: string }> = {
@@ -667,6 +846,21 @@ app.post("/api/create-checkout-session", async (req: Request, res: Response) => 
       ];
     }
 
+    // Helper to identify internal development or sandbox container URLs
+    const isInternalUrl = (url?: string) =>
+      !url || url.includes("run.app") || url.includes("localhost:") || url.includes("ais-dev") || url.includes("ais-pre");
+
+    // Canonical redirect URLs based on environment SITE_URL:
+    // success_url: "https://www.jobmatch.company/onboarding?payment_success=true&plan={CHECKOUT_SESSION_ID}"
+    // cancel_url: "https://www.jobmatch.company/pricing?payment_canceled=true"
+    const resolvedSuccessUrl = isInternalUrl(successUrl)
+      ? `${siteBaseUrl}/onboarding?payment_success=true&plan={CHECKOUT_SESSION_ID}`
+      : successUrl!;
+
+    const resolvedCancelUrl = isInternalUrl(cancelUrl)
+      ? `${siteBaseUrl}/pricing?payment_canceled=true`
+      : cancelUrl!;
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer_email: userEmail || undefined,
@@ -676,8 +870,8 @@ app.post("/api/create-checkout-session", async (req: Request, res: Response) => 
         planId: planId || "pro",
       },
       line_items: lineItems,
-      success_url: successUrl || `${appUrl}?payment_success=true&plan=${planId}`,
-      cancel_url: cancelUrl || `${appUrl}?payment_canceled=true`,
+      success_url: resolvedSuccessUrl,
+      cancel_url: resolvedCancelUrl,
     });
 
     return res.json({ url: session.url, sessionId: session.id });
@@ -687,12 +881,39 @@ app.post("/api/create-checkout-session", async (req: Request, res: Response) => 
   }
 });
 
+// Stripe Checkout Session details verification endpoint
+app.get("/api/checkout-session-details", async (req: Request, res: Response) => {
+  try {
+    const sessionId = req.query.session_id as string;
+    if (!sessionId) {
+      return res.status(400).json({ error: "Paramètre session_id manquant" });
+    }
+    const stripe = getStripe();
+    if (!stripe) {
+      return res.json({ planId: "pro", simulated: true });
+    }
+
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    return res.json({
+      sessionId: session.id,
+      planId: session.metadata?.planId || "pro",
+      userId: session.client_reference_id || session.metadata?.userId,
+      customerEmail: session.customer_email || session.customer_details?.email,
+      paymentStatus: session.payment_status,
+      status: session.status,
+    });
+  } catch (err: any) {
+    console.error("Error retrieving checkout session details:", err);
+    return res.status(500).json({ error: err.message || "Erreur de récupération de session", planId: "pro" });
+  }
+});
+
 // Stripe Billing Portal endpoint
 app.post("/api/create-customer-portal", async (req: Request, res: Response) => {
   try {
     const { customerId, returnUrl } = req.body;
     const stripe = getStripe();
-    const appUrl = process.env.APP_URL || "http://localhost:3000";
+    const siteBaseUrl = getSiteBaseUrl();
 
     if (!stripe || !customerId) {
       return res.json({
@@ -701,9 +922,16 @@ app.post("/api/create-customer-portal", async (req: Request, res: Response) => {
       });
     }
 
+    const isInternalUrl = (url?: string) =>
+      !url || url.includes("run.app") || url.includes("localhost:") || url.includes("ais-dev") || url.includes("ais-pre");
+
+    const resolvedReturnUrl = isInternalUrl(returnUrl)
+      ? `${siteBaseUrl}/pricing`
+      : returnUrl!;
+
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: returnUrl || appUrl,
+      return_url: resolvedReturnUrl,
     });
 
     return res.json({ url: portalSession.url });

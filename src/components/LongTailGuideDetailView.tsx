@@ -16,6 +16,7 @@ import {
   FileText
 } from "lucide-react";
 import { LongTailGuideData } from "../data/seoProgrammaticData";
+import { Breadcrumbs } from "./Breadcrumbs";
 
 interface LongTailGuideDetailViewProps {
   guide: LongTailGuideData;
@@ -70,27 +71,16 @@ export const LongTailGuideDetailView: React.FC<LongTailGuideDetailViewProps> = (
   };
 
   return (
-    <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14" itemScope itemType="https://schema.org/Article">
-      {/* Breadcrumb Navigation */}
-      <nav aria-label="Fil d'Ariane" className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6 flex-wrap">
-        <button
-          type="button"
-          onClick={onNavigateHome}
-          className="hover:text-[#1A3A5C] transition-colors cursor-pointer"
-        >
-          Accueil
-        </button>
-        <span>/</span>
-        <button
-          type="button"
-          onClick={onBack}
-          className="hover:text-[#1A3A5C] transition-colors cursor-pointer"
-        >
-          Guides ATS & CV
-        </button>
-        <span>/</span>
-        <span className="text-slate-900 font-semibold truncate max-w-[200px] sm:max-w-xs">{guide.title}</span>
-      </nav>
+    <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10" itemScope itemType="https://schema.org/Article">
+      {/* Breadcrumb Navigation with Schema.org JSON-LD */}
+      <Breadcrumbs
+        items={[
+          { name: "Accueil", url: "/", onClick: onNavigateHome },
+          { name: "Guides ATS & CV", url: "/guides", onClick: onBack },
+          { name: guide.title, url: `/guides/${guide.slug}` },
+        ]}
+        className="mb-6 px-0 py-0"
+      />
 
       {/* Back Button */}
       <button
@@ -136,7 +126,11 @@ export const LongTailGuideDetailView: React.FC<LongTailGuideDetailViewProps> = (
           <div className="flex items-center gap-3 pt-2">
             <img
               src={guide.author.avatar}
-              alt={guide.author.name}
+              alt={`${guide.author.name}, ${guide.author.role} - Auteur JobMatch`}
+              width="40"
+              height="40"
+              loading="lazy"
+              decoding="async"
               className="w-10 h-10 rounded-full object-cover border border-slate-200"
               referrerPolicy="no-referrer"
               itemProp="image"

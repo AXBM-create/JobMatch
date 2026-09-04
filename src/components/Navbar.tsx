@@ -157,7 +157,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full border border-slate-200 text-xs text-slate-800">
                 {user.photoURL ? (
-                  <img src={user.photoURL} alt="Avatar" className="w-5 h-5 rounded-full" referrerPolicy="no-referrer" />
+                  <img
+                    src={user.photoURL}
+                    alt="Photo de profil du compte utilisateur"
+                    width="20"
+                    height="20"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-5 h-5 rounded-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
                 ) : (
                   <div className="w-5 h-5 rounded-full bg-[#1A3A5C] text-white flex items-center justify-center text-[10px] font-bold">
                     {user.email ? user.email.charAt(0).toUpperCase() : "U"}

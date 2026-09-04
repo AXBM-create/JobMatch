@@ -34,6 +34,7 @@ import {
 import { PRESET_PROFILES, PRESET_JOBS } from "../data/mockData";
 import { CandidateFormInput, JobFormInput, UserProfile } from "../types";
 import { useLanguage } from "../i18n/LanguageContext";
+import { Breadcrumbs } from "./Breadcrumbs";
 
 interface DashboardCreatorProps {
   onGenerate: (candidate: CandidateFormInput, job: JobFormInput, options: { language: string; tone: string }) => void;
@@ -221,7 +222,16 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      {/* Breadcrumbs with Schema.org JSON-LD */}
+      <Breadcrumbs
+        items={[
+          { name: "Accueil", url: "/" },
+          { name: "Générateur ATS", url: "/onboarding" },
+        ]}
+        className="mb-6 px-0 py-0"
+      />
+
       {/* ========================================================================= */}
       {/* BARRE DE PROGRESSION EN HAUT (1/2 -> 2/2) */}
       {/* ========================================================================= */}

@@ -8,7 +8,7 @@
  * - Multilingue : Tous les libellés, fonctionnalités et FAQs traduits dynamiquement.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Check,
   X,
@@ -20,11 +20,14 @@ import {
   Loader2,
   CreditCard,
   Lock,
-  Star
+  Star,
+  AlertCircle
 } from "lucide-react";
 import { User } from "../firebase";
 import { UserProfile, SubscriptionPlan } from "../types";
 import { useLanguage } from "../i18n/LanguageContext";
+import { SITE_URL } from "../seo/metadata";
+import { Breadcrumbs } from "./Breadcrumbs";
 
 interface PricingViewProps {
   onStartFree: () => void;
@@ -46,6 +49,16 @@ export const PricingView: React.FC<PricingViewProps> = ({
   const { t } = useLanguage();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [showCanceledBanner, setShowCanceledBanner] = useState(false);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("payment_canceled") === "true") {
+      setShowCanceledBanner(true);
+      // Clean query parameter from browser bar without reloading
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   const handleSubscribe = async (plan: "pro" | "executive") => {
     if (!user) {
@@ -63,8 +76,8 @@ export const PricingView: React.FC<PricingViewProps> = ({
           userId: user.uid,
           userEmail: user.email,
           billingCycle,
-          successUrl: window.location.origin + "?payment_success=true&plan=" + plan,
-          cancelUrl: window.location.origin + "?payment_canceled=true",
+          successUrl: `${SITE_URL}/onboarding?payment_success=true&plan={CHECKOUT_SESSION_ID}`,
+          cancelUrl: `${SITE_URL}/pricing?payment_canceled=true`,
         }),
       });
 
@@ -85,7 +98,35 @@ export const PricingView: React.FC<PricingViewProps> = ({
   const currentPlan = userProfile?.plan || "starter";
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      {/* Breadcrumbs with Schema.org JSON-LD */}
+      <Breadcrumbs
+        items={[
+          { name: "Accueil", url: "/" },
+          { name: "Tarifs & Formules", url: "/pricing" },
+        ]}
+        className="mb-6 px-0 py-0"
+      />
+
+      {/* Canceled Payment Notice */}
+      {showCanceledBanner && (
+        <div className="mb-8 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex items-center justify-between gap-3 animate-in fade-in">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+            <p className="text-xs sm:text-sm font-medium">
+              Le paiement a été interrompu ou annulé. Aucun montant n'a été prélevé. Vous pouvez choisir une formule ci-dessous quand vous le souhaitez.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowCanceledBanner(false)}
+            className="text-amber-700 hover:text-amber-900 p-1 rounded-lg hover:bg-amber-100 transition-colors shrink-0"
+            aria-label="Fermer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* Title & Subtitle */}
       <div className="text-center max-w-2xl mx-auto mb-10">
         <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">

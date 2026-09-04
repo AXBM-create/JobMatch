@@ -1,12 +1,14 @@
 import React from 'react';
 import { BookOpen, ArrowRight, ShieldCheck, CheckCircle2, ChevronRight, Briefcase, Sparkles, Clock } from 'lucide-react';
 import { ATS_SYSTEMS_DATA, JOB_ROLES_DATA, LONG_TAIL_GUIDES_DATA, AtsSystemData, LongTailGuideData } from '../data/seoProgrammaticData';
+import { Breadcrumbs } from './Breadcrumbs';
 
 interface BlogGuidesViewProps {
   onSelectAtsGuide: (guide: AtsSystemData) => void;
   onSelectJobRole: (roleId: string) => void;
   onSelectLongTailGuide: (guide: LongTailGuideData) => void;
   onStartGenerator: () => void;
+  onNavigateHome?: () => void;
 }
 
 export const BlogGuidesView: React.FC<BlogGuidesViewProps> = ({
@@ -14,9 +16,19 @@ export const BlogGuidesView: React.FC<BlogGuidesViewProps> = ({
   onSelectJobRole,
   onSelectLongTailGuide,
   onStartGenerator,
+  onNavigateHome,
 }) => {
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+      {/* Breadcrumbs with Schema.org JSON-LD */}
+      <Breadcrumbs
+        items={[
+          { name: "Accueil", url: "/", onClick: onNavigateHome },
+          { name: "Guides & Ressources ATS", url: "/guides" },
+        ]}
+        className="mb-6 px-0 py-0"
+      />
+
       <div className="text-center max-w-3xl mx-auto mb-12">
         <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
           Centre de Ressources & Guides ATS

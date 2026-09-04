@@ -1,6 +1,10 @@
 # Robots.txt for JobMatch (https://www.jobmatch.company)
 User-agent: *
 Allow: /
+Allow: /guide-cv-ats
+Allow: /cv-developpeur
+Allow: /cv-commercial
+Allow: /cv-sante
 Allow: /pricing
 Allow: /onboarding
 Allow: /guides
@@ -11,7 +15,7 @@ Allow: /mentions-legales
 Allow: /politique-confidentialite
 Allow: /cgv
 
-# Block sensitive private user application and api routes from indexation
+# Block private user application & internal routes from crawler indexation
 Disallow: /api/
 Disallow: /editor
 Disallow: /editor/

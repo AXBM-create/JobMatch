@@ -73,6 +73,54 @@ export default function sitemap(): SitemapItem[] {
       },
     },
     {
+      url: `${baseUrl}/guide-cv-ats`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+      alternates: {
+        languages: {
+          fr: `${baseUrl}/guide-cv-ats`,
+          en: `${baseUrl}/guide-cv-ats?lang=en`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/cv-developpeur`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+      alternates: {
+        languages: {
+          fr: `${baseUrl}/cv-developpeur`,
+          en: `${baseUrl}/cv-developpeur?lang=en`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/cv-commercial`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+      alternates: {
+        languages: {
+          fr: `${baseUrl}/cv-commercial`,
+          en: `${baseUrl}/cv-commercial?lang=en`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/cv-sante`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+      alternates: {
+        languages: {
+          fr: `${baseUrl}/cv-sante`,
+          en: `${baseUrl}/cv-sante?lang=en`,
+        },
+      },
+    },
+    {
       url: `${baseUrl}/pricing`,
       lastModified,
       changeFrequency: 'monthly',
