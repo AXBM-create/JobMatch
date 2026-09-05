@@ -58,6 +58,14 @@ export const PricingView: React.FC<PricingViewProps> = ({
       // Clean query parameter from browser bar without reloading
       window.history.replaceState({}, document.title, window.location.pathname);
     }
+
+    // Ensure Stripe Buy Button script is dynamically loaded
+    if (!document.querySelector('script[src="https://js.stripe.com/v3/buy-button.js"]')) {
+      const script = document.createElement("script");
+      script.src = "https://js.stripe.com/v3/buy-button.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
   }, []);
 
   const handleSubscribe = async (plan: "pro" | "executive") => {
@@ -283,20 +291,15 @@ export const PricingView: React.FC<PricingViewProps> = ({
             </ul>
           </div>
 
-          <button
-            onClick={() => handleSubscribe("pro")}
-            disabled={loadingPlan === "pro"}
-            className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
-          >
-            {loadingPlan === "pro" ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <>
-                <span>{t("pricing_pro_btn")}</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
+          {/* Bouton d'accès illimité Stripe Officiel */}
+          <div className="w-full flex flex-col items-center justify-center min-h-[50px] rounded-lg overflow-hidden [&>stripe-buy-button]:w-full">
+            {React.createElement("stripe-buy-button", {
+              "buy-button-id": "buy_btn_1UCJzZIhxtlG92jqGtqjogl2",
+              "publishable-key": "pk_live_51U0Ss4IhxtlG92jqDsVzKEMkW2O0LAyD96YEgx4ym30rSDA5DYji8t7XcPRvKuKxa2OyJQ0jmXJDhBDaDNAJUCO400sdB2qKD2",
+              ...(user?.uid ? { "client-reference-id": user.uid } : {}),
+              ...(user?.email ? { "customer-email": user.email } : {}),
+            })}
+          </div>
         </div>
 
         {/* ================= CARD 3 : PACK CRÉDITS (EXECUTIVE) ================= */}

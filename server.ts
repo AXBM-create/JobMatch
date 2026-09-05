@@ -37,8 +37,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware - raw body for stripe webhook if needed
-app.use(express.json({ limit: "15mb" }));
+// Middleware - preserve raw body for Stripe webhook signature verification
+app.use(
+  express.json({
+    limit: "15mb",
+    verify: (req: any, _res, buf) => {
+      req.rawBody = buf;
+    },
+  })
+);
 
 // Helper to get the canonical site base URL from environment (SITE_URL / VITE_SITE_URL)
 export function getSiteBaseUrl(): string {
@@ -965,7 +972,17 @@ app.post("/api/stripe-webhook", async (req: Request, res: Response) => {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.client_reference_id || session.metadata?.userId;
       const planId = session.metadata?.planId || "pro";
-      console.log(`[Stripe Webhook] Payment completed for user: ${userId}, plan: ${planId}`);
+      console.log(`[Stripe Webhook] Checkout completed for user: ${userId}, plan: ${planId}, customer: ${session.customer}`);
+      break;
+    }
+    case "invoice.payment_succeeded": {
+      const invoice = event.data.object as Stripe.Invoice;
+      console.log(`[Stripe Webhook] Invoice payment succeeded: ${invoice.id}, customer: ${invoice.customer}`);
+      break;
+    }
+    case "customer.subscription.updated": {
+      const subscription = event.data.object as Stripe.Subscription;
+      console.log(`[Stripe Webhook] Subscription updated: ${subscription.id}, status: ${subscription.status}`);
       break;
     }
     case "customer.subscription.deleted": {
