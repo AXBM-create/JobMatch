@@ -1,8 +1,9 @@
 import React from "react";
 import { Logo } from "./Logo";
-import { ShieldCheck, Lock, FileText, Mail } from "lucide-react";
+import { ShieldCheck, Lock, FileText, Mail, ExternalLink } from "lucide-react";
 import { useLanguage } from "../i18n/LanguageContext";
 import { LanguageSelector } from "./LanguageSelector";
+import { getExternalClientPortalUrl } from "../services/portalService";
 
 interface FooterProps {
   onOpenLegalModal?: (tab: "cgv" | "privacy" | "mentions") => void;
@@ -131,6 +132,18 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegalModal, onNavigateGuid
             >
               <Mail className="w-3.5 h-3.5 text-slate-400" />
               <span>Support</span>
+            </a>
+
+            <a
+              href={getExternalClientPortalUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              id="footer-link-espace-client"
+              className="hover:text-[#1A3A5C] font-medium transition-colors flex items-center gap-1"
+              title="Accéder à l'espace client externe pour gérer votre abonnement"
+            >
+              <span>Espace Client</span>
+              <ExternalLink className="w-3 h-3 text-slate-400" />
             </a>
 
             <div className="border-l border-slate-200 pl-4">

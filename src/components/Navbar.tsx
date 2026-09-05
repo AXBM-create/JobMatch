@@ -4,12 +4,13 @@
  */
 
 import React from "react";
-import { Sparkles, PlusCircle, LogOut, Menu, X } from "lucide-react";
+import { Sparkles, PlusCircle, LogOut, Menu, X, ExternalLink, UserCheck } from "lucide-react";
 import { ViewState, UserProfile } from "../types";
 import { User, signOut, auth } from "../firebase";
 import { Logo } from "./Logo";
 import { LanguageSelector } from "./LanguageSelector";
 import { useLanguage } from "../i18n/LanguageContext";
+import { getExternalClientPortalUrl } from "../services/portalService";
 
 interface NavbarProps {
   currentView: ViewState;
@@ -147,6 +148,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               {t("nav_history")}
             </button>
           )}
+
+          {/* Lien vers l'espace client externe */}
+          <a
+            href={getExternalClientPortalUrl(user?.email || undefined)}
+            target="_blank"
+            rel="noopener noreferrer"
+            id="nav-link-espace-client"
+            className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-slate-600 hover:text-[#1A3A5C] hover:bg-slate-50 rounded-lg transition-all"
+            title="Accéder à votre espace client (factures, gestion de l'abonnement)"
+          >
+            <span>Espace Client</span>
+            <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+          </a>
         </nav>
 
         {/* Right Actions */}
@@ -254,6 +268,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               {t("nav_history")}
             </button>
           )}
+          <a
+            href={getExternalClientPortalUrl(user?.email || undefined)}
+            target="_blank"
+            rel="noopener noreferrer"
+            id="mobile-nav-link-espace-client"
+            className="flex items-center justify-between w-full px-3 py-2 text-sm font-semibold text-slate-800 rounded-lg hover:bg-slate-100"
+          >
+            <span className="flex items-center gap-2">
+              <UserCheck className="w-4 h-4 text-[#1A3A5C]" />
+              <span>Espace Client</span>
+            </span>
+            <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+          </a>
         </div>
       )}
     </header>

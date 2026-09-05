@@ -21,13 +21,15 @@ import {
   CreditCard,
   Lock,
   Star,
-  AlertCircle
+  AlertCircle,
+  ExternalLink
 } from "lucide-react";
 import { User } from "../firebase";
 import { UserProfile, SubscriptionPlan } from "../types";
 import { useLanguage } from "../i18n/LanguageContext";
 import { SITE_URL } from "../seo/metadata";
 import { Breadcrumbs } from "./Breadcrumbs";
+import { getExternalClientPortalUrl } from "../services/portalService";
 
 interface PricingViewProps {
   onStartFree: () => void;
@@ -381,6 +383,23 @@ export const PricingView: React.FC<PricingViewProps> = ({
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Redirection vers l'Espace Client Externe */}
+      <div className="mt-8 text-center">
+        <p className="text-xs sm:text-sm text-slate-500">
+          Vous disposez déjà d'un abonnement actif ?{" "}
+          <a
+            href={getExternalClientPortalUrl(user?.email || undefined)}
+            target="_blank"
+            rel="noopener noreferrer"
+            id="link-pricing-espace-client"
+            className="font-bold text-[#1A3A5C] hover:text-emerald-700 underline underline-offset-4 inline-flex items-center gap-1 cursor-pointer transition-colors"
+          >
+            <span>Accéder à mon espace client (factures & gestion)</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </p>
       </div>
     </div>
   );

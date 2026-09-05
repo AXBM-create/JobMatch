@@ -42,6 +42,8 @@ interface DashboardCreatorProps {
   onQuickViewSample: () => void;
   userProfile?: UserProfile | null;
   onOpenPricing?: () => void;
+  isFreeTrialUsed?: boolean;
+  onOpenPaywall?: () => void;
 }
 
 export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
@@ -50,8 +52,15 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
   onQuickViewSample,
   userProfile,
   onOpenPricing,
+  isFreeTrialUsed,
+  onOpenPaywall,
 }) => {
   const { t, language: uiLang } = useLanguage();
+
+  const isPaidUser = userProfile?.plan === "pro" || userProfile?.plan === "executive";
+  const freeUsedEffective = isPaidUser
+    ? false
+    : (isFreeTrialUsed ?? (typeof window !== "undefined" && localStorage.getItem("jobmatch_free_cv_used") === "true"));
   
   // Multi-step onboarding state: Step 1 (Job offer URL/Details) -> Step 2 (CV Upload & Options)
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
@@ -218,6 +227,14 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (freeUsedEffective) {
+      if (onOpenPaywall) {
+        onOpenPaywall();
+      } else if (onOpenPricing) {
+        onOpenPricing();
+      }
+      return;
+    }
     onGenerate(candidate, job, { language, tone });
   };
 
@@ -278,9 +295,26 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
         {currentStep === 1 && (
           <div>
             <div className="mb-6">
-              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 uppercase tracking-wide">
-                Étape 1 sur 2
-              </span>
+              <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 uppercase tracking-wide">
+                  Étape 1 sur 2
+                </span>
+                {!isPaidUser && (
+                  freeUsedEffective ? (
+                    <button
+                      type="button"
+                      onClick={onOpenPaywall || onOpenPricing}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100 transition-colors cursor-pointer"
+                    >
+                      <span>🔒 Limite gratuite atteinte</span>
+                    </button>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      <span>🎁 1 essai gratuit disponible</span>
+                    </span>
+                  )
+                )}
+              </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1A3A5C] mt-2 mb-2">
                 Colle le lien de l'offre d'emploi cible
               </h1>
@@ -573,25 +607,63 @@ export const DashboardCreator: React.FC<DashboardCreatorProps> = ({
             </div>
 
             {/* Actions : Retour / Bouton Générer Principal */}
-            <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200">
               <button
                 type="button"
                 onClick={() => setCurrentStep(1)}
-                className="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:text-[#1A3A5C] flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:text-[#1A3A5C] flex items-center gap-1.5 transition-colors cursor-pointer order-2 sm:order-1"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Modifier l'offre</span>
               </button>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                id="btn-generate-cv"
-                className="px-7 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer active:scale-98 disabled:opacity-50"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Générer mon CV & Lettre optimisés (30s)</span>
-              </button>
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto order-1 sm:order-2">
+                {/* Bannière d'information / Badge du quota */}
+                {isPaidUser ? (
+                  <span
+                    id="badge-quota-status"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs whitespace-nowrap"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>⚡ Accès Pro Illimité</span>
+                  </span>
+                ) : freeUsedEffective ? (
+                  <button
+                    type="button"
+                    id="badge-quota-status"
+                    onClick={onOpenPaywall || onOpenPricing}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 shadow-2xs cursor-pointer hover:bg-amber-100 transition-colors whitespace-nowrap"
+                    title="Cliquez pour voir les offres Premium"
+                  >
+                    <span>🔒 Limite gratuite atteinte</span>
+                  </button>
+                ) : (
+                  <span
+                    id="badge-quota-status"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs whitespace-nowrap"
+                  >
+                    <span>🎁 1 essai gratuit disponible</span>
+                  </span>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  id="btn-generate-cv"
+                  className={`w-full sm:w-auto px-7 py-3.5 text-white text-sm font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 disabled:opacity-50 ${
+                    freeUsedEffective
+                      ? "bg-slate-900 hover:bg-slate-800 ring-1 ring-slate-700 hover:shadow-lg"
+                      : "bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg"
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>
+                    {freeUsedEffective
+                      ? "Passer à Premium pour générer (30s)"
+                      : "Générer mon CV & Lettre optimisés (30s)"}
+                  </span>
+                </button>
+              </div>
             </div>
           </form>
         )}

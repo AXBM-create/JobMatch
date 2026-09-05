@@ -948,6 +948,23 @@ app.post("/api/create-customer-portal", async (req: Request, res: Response) => {
   }
 });
 
+// Redirection directe vers l'espace client externe (Portail client Stripe / Espace membre)
+app.get(["/espace-client", "/client-portal", "/portal", "/espace-abonne"], (req: Request, res: Response) => {
+  const externalPortalUrl = process.env.EXTERNAL_CLIENT_PORTAL_URL || process.env.VITE_EXTERNAL_CLIENT_PORTAL_URL;
+  if (externalPortalUrl && externalPortalUrl.trim() !== "") {
+    const userEmail = req.query.email as string | undefined;
+    let targetUrl = externalPortalUrl.trim();
+    if (userEmail && targetUrl.includes("billing.stripe.com/p/login") && !targetUrl.includes("prefilled_email")) {
+      const sep = targetUrl.includes("?") ? "&" : "?";
+      targetUrl = `${targetUrl}${sep}prefilled_email=${encodeURIComponent(userEmail)}`;
+    }
+    return res.redirect(302, targetUrl);
+  }
+
+  // Fallback si l'URL n'est pas encore définie dans l'environnement
+  return res.redirect(302, "/pricing");
+});
+
 // Stripe Webhook listener
 app.post("/api/stripe-webhook", async (req: Request, res: Response) => {
   const stripe = getStripe();

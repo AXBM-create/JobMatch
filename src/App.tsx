@@ -18,6 +18,7 @@ import { SendApplicationModal } from "./components/SendApplicationModal";
 import { AuthModal } from "./components/AuthModal";
 import { LegalModal } from "./components/LegalModal";
 import { UpgradeModal } from "./components/UpgradeModal";
+import { PaywallModal } from "./components/PaywallModal";
 import { FirstGenerationSuccessModal } from "./components/FirstGenerationSuccessModal";
 import { NotFoundView } from "./components/NotFoundView";
 import { DEFAULT_ALEXANDRE_DUBOIS } from "./data/mockData";
@@ -62,8 +63,23 @@ export default function App() {
   const [showRegenerateModal, setShowRegenerateModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showPaywallModal, setShowPaywallModal] = useState(false);
   const [showFirstGenSuccessModal, setShowFirstGenSuccessModal] = useState(false);
   const [legalModalTab, setLegalModalTab] = useState<"cgv" | "privacy" | "mentions" | null>(null);
+
+  // Local track for 1-time free CV trial (localStorage key: jobmatch_free_cv_used)
+  const [freeTrialUsedLocal, setFreeTrialUsedLocal] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("jobmatch_free_cv_used") === "true";
+    }
+    return false;
+  });
+
+  const isPaidUser = userProfile?.plan === "pro" || userProfile?.plan === "executive";
+  const isFreeQuotaExhausted = !isPaidUser && (
+    freeTrialUsedLocal ||
+    (userProfile?.plan === "starter" && ((userProfile.generationsCount ?? 0) >= 1 || (userProfile.creditsRemaining !== undefined && userProfile.creditsRemaining <= 0)))
+  );
 
   // Loading state tracking
   const [loadingJobTitle, setLoadingJobTitle] = useState("");
@@ -150,6 +166,14 @@ export default function App() {
         const profile = await getUserProfile(currentUser.uid, currentUser.email || undefined, currentUser.displayName || undefined);
         setUserProfile(profile);
 
+        // Sync local storage if quota already used in Firestore
+        if (profile.plan === "starter" && ((profile.generationsCount || 0) >= 1 || profile.creditsRemaining <= 0)) {
+          if (typeof window !== "undefined") {
+            localStorage.setItem("jobmatch_free_cv_used", "true");
+          }
+          setFreeTrialUsedLocal(true);
+        }
+
         // Load user's cloud applications
         const cloudHistory = await loadUserApplicationsFromFirestore(currentUser.uid);
         if (cloudHistory.length > 0) {
@@ -158,10 +182,12 @@ export default function App() {
         }
       } else {
         // Unauthenticated local profile fallback
+        const freeUsed = typeof window !== "undefined" && localStorage.getItem("jobmatch_free_cv_used") === "true";
+        if (freeUsed) setFreeTrialUsedLocal(true);
         setUserProfile({
           uid: "guest",
           plan: "starter",
-          creditsRemaining: 1,
+          creditsRemaining: freeUsed ? 0 : 1,
           subscriptionStatus: "free",
           createdAt: new Date().toISOString(),
         });
@@ -348,9 +374,13 @@ export default function App() {
     jobInput: JobFormInput,
     options: { language: string; tone: string }
   ) => {
-    // Check credits/plan
-    if (userProfile && userProfile.plan === "starter" && userProfile.creditsRemaining <= 0) {
-      setShowUpgradeModal(true);
+    // 1. Quota Check: Strictly prevent any API call to Google AI Studio if free quota is already used
+    const isPaid = userProfile?.plan === "pro" || userProfile?.plan === "executive";
+    const freeUsedInStorage = typeof window !== "undefined" && localStorage.getItem("jobmatch_free_cv_used") === "true";
+    const freeUsedInProfile = userProfile?.plan === "starter" && ((userProfile.generationsCount ?? 0) >= 1 || (userProfile.creditsRemaining !== undefined && userProfile.creditsRemaining <= 0));
+
+    if (!isPaid && (freeUsedInStorage || freeUsedInProfile || freeTrialUsedLocal)) {
+      setShowPaywallModal(true);
       return;
     }
 
@@ -409,6 +439,13 @@ export default function App() {
 
       const generatedData: ApplicationResult = await response.json();
 
+      // Mark free trial as used in localStorage and record date
+      if (typeof window !== "undefined") {
+        localStorage.setItem("jobmatch_free_cv_used", "true");
+        localStorage.setItem("jobmatch_free_cv_date", new Date().toISOString());
+      }
+      setFreeTrialUsedLocal(true);
+
       // Track conversion event in Google Analytics
       trackEvent("generate_application", {
         job_title: jobInput.jobTitle,
@@ -423,7 +460,7 @@ export default function App() {
         const updated = await getUserProfile(user.uid);
         if (updated) setUserProfile(updated);
       } else {
-        setUserProfile((prev) => prev ? { ...prev, creditsRemaining: Math.max(0, prev.creditsRemaining - 1) } : null);
+        setUserProfile((prev) => prev ? { ...prev, creditsRemaining: 0, generationsCount: (prev.generationsCount || 0) + 1 } : null);
       }
 
       // Minimum animation experience
@@ -538,6 +575,8 @@ export default function App() {
                 onGenerate={handleGenerate}
                 isLoading={isLoading}
                 userProfile={userProfile}
+                isFreeTrialUsed={isFreeQuotaExhausted}
+                onOpenPaywall={() => setShowPaywallModal(true)}
                 onOpenPricing={() => {
                   setCurrentView("pricing");
                   window.history.pushState({}, "Tarifs JobMatch", "/pricing");
@@ -769,6 +808,18 @@ export default function App() {
             userProfile={userProfile}
             onSuccessUpgrade={handleUpgradePlan}
             onOpenAuth={() => setShowAuthModal(true)}
+          />
+
+          <PaywallModal
+            isOpen={showPaywallModal}
+            onClose={() => setShowPaywallModal(false)}
+            userEmail={user?.email || undefined}
+            onViewPricing={() => {
+              setShowPaywallModal(false);
+              setCurrentView("pricing");
+              window.history.pushState({}, "Tarifs & Abonnements JobMatch", "/pricing");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
           />
 
           <FirstGenerationSuccessModal

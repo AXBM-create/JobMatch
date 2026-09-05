@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { X, Check, Sparkles, Shield, Zap, ArrowRight, Loader2 } from "lucide-react";
+import { X, Check, Sparkles, Shield, Zap, ArrowRight, Loader2, ExternalLink } from "lucide-react";
 import { User } from "../firebase";
 import { UserProfile, SubscriptionPlan } from "../types";
 import { Logo } from "./Logo";
 import { SITE_URL } from "../seo/metadata";
+import { getExternalClientPortalUrl } from "../services/portalService";
 
 interface UpgradeModalProps {
   isOpen: boolean;
@@ -209,6 +210,19 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
               <span>Garantie 14 jours</span>
               <span>•</span>
               <span>Sans engagement</span>
+            </div>
+
+            <div className="pt-2 text-center border-t border-slate-100">
+              <a
+                href={getExternalClientPortalUrl(user?.email || undefined)}
+                target="_blank"
+                rel="noopener noreferrer"
+                id="link-modal-espace-client"
+                className="text-xs text-slate-500 hover:text-[#1A3A5C] inline-flex items-center gap-1 transition-colors"
+              >
+                <span>Déjà abonné ? Gérer mon abonnement sur l'espace client</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
           </div>
         </div>
